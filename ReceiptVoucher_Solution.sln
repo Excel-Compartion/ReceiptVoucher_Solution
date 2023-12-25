@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptVoucher", "ReceiptVoucher\ReceiptVoucher\ReceiptVoucher.csproj", "{1E044CE9-94D5-437E-ABD1-D55B90738D2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptVoucher.Client", "ReceiptVoucher\ReceiptVoucher.Client\ReceiptVoucher.Client.csproj", "{EECE2B98-6330-4A47-9521-2412375918B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E044CE9-94D5-437E-ABD1-D55B90738D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E044CE9-94D5-437E-ABD1-D55B90738D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E044CE9-94D5-437E-ABD1-D55B90738D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E044CE9-94D5-437E-ABD1-D55B90738D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECE2B98-6330-4A47-9521-2412375918B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECE2B98-6330-4A47-9521-2412375918B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECE2B98-6330-4A47-9521-2412375918B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECE2B98-6330-4A47-9521-2412375918B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4059B198-99CC-43CE-9992-6417C135EC92}
+	EndGlobalSection
+EndGlobal
