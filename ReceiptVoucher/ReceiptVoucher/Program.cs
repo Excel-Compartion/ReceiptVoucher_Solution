@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using ReceiptVoucher.Client.Pages;
-using ReceiptVoucher.Components;
+//using ReceiptVoucher.Components;
+using ReceiptVoucher.Core;
 using ReceiptVoucher.EF;
+using ReceiptVoucher.Server.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefualtConnect
 
 builder.Services.AddDbContext<ReceiptVoucherDbContext>(options =>
         options.UseSqlServer(connectionString, b => b.MigrationsAssembly(typeof(ReceiptVoucherDbContext).Assembly.FullName))); // Register DbContext 
+
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();    // Register IUnitOfWork
 
 
 var app = builder.Build();
