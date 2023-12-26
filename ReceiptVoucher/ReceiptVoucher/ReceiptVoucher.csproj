@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <ProjectReference Include="..\..\ReceiptVoucher.Core\ReceiptVoucher.Core.csproj" />
+	  <ProjectReference Include="..\..\ReceiptVoucher.EF\ReceiptVoucher.EF.csproj" />
     <ProjectReference Include="..\ReceiptVoucher.Client\ReceiptVoucher.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
   </ItemGroup>

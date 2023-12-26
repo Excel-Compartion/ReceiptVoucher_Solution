@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptVoucher", "ReceiptVoucher\ReceiptVoucher\ReceiptVoucher.csproj", "{1E044CE9-94D5-437E-ABD1-D55B90738D2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiptVoucher", "ReceiptVoucher\ReceiptVoucher\ReceiptVoucher.csproj", "{1E044CE9-94D5-437E-ABD1-D55B90738D2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptVoucher.Client", "ReceiptVoucher\ReceiptVoucher.Client\ReceiptVoucher.Client.csproj", "{EECE2B98-6330-4A47-9521-2412375918B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiptVoucher.Client", "ReceiptVoucher\ReceiptVoucher.Client\ReceiptVoucher.Client.csproj", "{EECE2B98-6330-4A47-9521-2412375918B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiptVoucher.Core", "ReceiptVoucher.Core\ReceiptVoucher.Core.csproj", "{737473B9-3D02-493A-A8CD-691D561FA8C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptVoucher.EF", "ReceiptVoucher.EF\ReceiptVoucher.EF.csproj", "{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{EECE2B98-6330-4A47-9521-2412375918B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EECE2B98-6330-4A47-9521-2412375918B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EECE2B98-6330-4A47-9521-2412375918B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{737473B9-3D02-493A-A8CD-691D561FA8C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{737473B9-3D02-493A-A8CD-691D561FA8C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{737473B9-3D02-493A-A8CD-691D561FA8C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{737473B9-3D02-493A-A8CD-691D561FA8C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
