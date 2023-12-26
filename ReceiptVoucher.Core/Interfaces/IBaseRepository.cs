@@ -6,7 +6,7 @@ namespace ReceiptVoucher.Core.Interfaces
         T GetById(int id);
         Task<T> GetByIdAsync(int id);
 
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync();
 
         Task<T> FindAsync(Expression<Func<T, bool>> match, string[] includes = null);
 
