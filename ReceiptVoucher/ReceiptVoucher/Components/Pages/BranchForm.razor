@@ -1,0 +1,23 @@
+﻿@page "/branch-create"
+@page "/branch-edit/{id:int}"
+
+<h3>Create Branch</h3>
+
+<EditForm Model="Branch" OnSubmit="HandelSubmit">
+    <label>Name</label>
+    <InputText @bind-Value="Branch.Name">@Branch.Name</InputText>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Branch Branch { get; set; } = new();
+
+    private async Task HandelSubmit()
+    {
+        
+    }
+
+}

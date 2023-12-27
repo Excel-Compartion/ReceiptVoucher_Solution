@@ -1,19 +1,21 @@
 ﻿@page "/Branches"
 @attribute [StreamRendering(true)]
+@rendermode InteractiveServer
 
 @inject IUnitOfWork _IUnitOfWork
+@inject NavigationManager _NavigationManager
 
 <div class="row mt-4">
     <div class="col-6">
         <h4 class="card-title text-primary">Category List</h4>
     </div>
     <div class="col-4 offset-2">
-        <a href="Branch/create" class="btn btn-primary form-control">Add New Branch </a>
+        <button @onclick="CreateBranch" class="btn btn-primary form-control">Add New Branch </button> <!-- href="branch-create" -->
     </div>
     <div class="col-12 p-3">
         @if(Branches == null)
         {
-            <span>Loading...</span>
+            <span>Loading....................................................</span>
         }
 
         else if (Branches.Count == 0)
@@ -50,10 +52,17 @@
     </div>
 </div>
 @code {
+
     public List<Branch?> Branches = null;
 
     protected override async Task OnInitializedAsync()
     {
         Branches = await _IUnitOfWork.Branches.GetAllAsync();
     }
+
+    private void CreateBranch()
+    {
+        _NavigationManager.NavigateTo("/branch-create");
+    }
+
 }
