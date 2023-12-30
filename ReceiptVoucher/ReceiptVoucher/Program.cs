@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
 //using ReceiptVoucher.Components;
 using ReceiptVoucher.Core;
@@ -11,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddMudServices();  // MudBlazor
 
 var connectionString = builder.Configuration.GetConnectionString("DefualtConnection")
             ?? throw new InvalidOperationException("No Connection String Was Found");
