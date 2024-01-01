@@ -1,7 +1,7 @@
 ﻿namespace ReceiptVoucher.Core.Models;
 
 [Table("CompanyInfo")]
-public partial class CompanyInfo
+public  class CompanyInfo
 {
     [Key]
     public int Id { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 namespace ReceiptVoucher.Core.Models;
 
-public partial class Branch
+public  class Branch
 {
     [Key]
     public int Id { get; set; }

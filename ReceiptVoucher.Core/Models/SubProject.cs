@@ -1,7 +1,7 @@
 ﻿namespace ReceiptVoucher.Core.Models;
 
 [Table("Sub_Projects")]
-public partial class SubProject
+public  class SubProject
 {
     [Key]
     public int Id { get; set; }
