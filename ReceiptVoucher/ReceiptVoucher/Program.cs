@@ -13,7 +13,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddControllers();
+
 builder.Services.AddMudServices();  // MudBlazor
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefualtConnection")
             ?? throw new InvalidOperationException("No Connection String Was Found");
@@ -47,5 +50,10 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Counter).Assembly);
+
+// Configure the HTTP request pipeline.
+app.MapControllers();
+
+
 
 app.Run();
