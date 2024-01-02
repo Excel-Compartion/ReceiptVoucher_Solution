@@ -1,0 +1,107 @@
+﻿@inject IUnitOfWork _IUnitOfWork
+@inject ISnackbar _Snackbar
+
+<MudDialog Class="custom-modal">
+    <DialogContent>
+        <EditForm Model="@branch" Class="custom-form" >
+            <DataAnnotationsValidator />
+            <MudTextField Immediate="true" @bind-Value="@branch.Name" Label="اسم الفرع" Required="true"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="Color.Success"></MudTextField>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Class="custom-button">اضافة الفرع</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose {get; set; }
+
+    public Branch branch {get; set; }
+
+    void Submit()
+    {
+        if (!string.IsNullOrWhiteSpace(branch.Name))
+        {
+            // Your code for adding a new branch goes here
+            _IUnitOfWork.Branches.AddOneAsync(branch);
+            _IUnitOfWork.Complete();
+            MudDialog.Close(DialogResult.Ok(true));
+
+            // Show a success message
+            _Snackbar.Add("Branch added successfully!", Severity.Success);
+
+            // Trigger the OnClose event
+            OnClose.InvokeAsync(true);
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+        protected override async Task OnInitializedAsync()
+        {
+            branch = new Branch();
+        }
+}
+
+
+
+
+@* <MudDialog>
+    <DialogContent>
+        <EditForm Model="@branch">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="@branch.Name" Label="Name" Required="true"></MudTextField>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    Branch branch = new Branch();
+
+    void Submit()
+    {
+        if (!string.IsNullOrWhiteSpace(branch.Name))
+        {
+            // Your code for adding a new branch goes here
+
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+} *@
+
+
+
+@* <style>
+.custom-modal {
+    display: block;
+    position: absolute;
+    left: 60%;
+    height: 50%;
+    width: 28%;
+    overflow-y:auto;
+    overflow-x:auto;
+    border-radius: 0px;
+}
+
+.custom-form {
+    /* Add your form styles here */
+}
+
+.custom-button {
+    /* Add your button styles here */
+}
+</style> *@

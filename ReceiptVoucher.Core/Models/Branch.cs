@@ -1,7 +1,7 @@
 ﻿
 namespace ReceiptVoucher.Core.Models;
 
-public partial class Branch
+public  class Branch
 {
     [Key]
     public int Id { get; set; }
@@ -9,8 +9,9 @@ public partial class Branch
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
+    [Required]
     public DateTime CreatedDate { get; set; }
 
 

@@ -7,7 +7,9 @@ namespace ReceiptVoucher.EF
         private readonly ReceiptVoucherDbContext _context;
 
 
-        public IBaseRepository<Branch> Branches { get; private set; }
+        //public IBaseRepository<Branch> Branches { get; private set; }
+
+        public IBranchRepository Branches { get; private set; }
 
         public IBaseRepository<Project> Projects { get; private set; }
 
@@ -21,7 +23,7 @@ namespace ReceiptVoucher.EF
         {
             _context = context;
 
-            Branches = new BaseRepository<Branch>(context);
+            Branches = new BranchRepository(context);
             Projects = new BaseRepository<Project>(context);
             CompanyInfo = new BaseRepository<CompanyInfo>(context);
             Receipts = new BaseRepository<Receipt>(context);

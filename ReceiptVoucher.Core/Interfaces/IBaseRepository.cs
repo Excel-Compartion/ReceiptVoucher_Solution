@@ -16,18 +16,19 @@ namespace ReceiptVoucher.Core.Interfaces
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> match, int? take, int? skip,
             Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);
 
-        T AddOne(T entity);
+        Task<T> AddOneAsync(T entity);
 
         IEnumerable<T> AddRange(IEnumerable<T> entities);
 
-        //T Update(T entity);
+        T Update(T entity);
 
-        //void Delete(T entity);
+        void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entities);
 
-        //void Attach(T entity);
+        void Attach(T entity);
 
-        //int Count();
-        //int Count(Expression<Func<T, bool>> match);
+        int Count();
+        int Count(Expression<Func<T, bool>> match);
 
     }
 }
