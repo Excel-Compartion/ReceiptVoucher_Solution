@@ -9,8 +9,9 @@ public  class Branch
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
+    [Required]
     public DateTime CreatedDate { get; set; }
 
 
