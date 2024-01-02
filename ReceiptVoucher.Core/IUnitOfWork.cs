@@ -9,7 +9,9 @@ namespace ReceiptVoucher.Core
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepository<Branch> Branches { get; }
+        //IBaseRepository<Branch> Branches { get; }
+        IBranchRepository Branches { get; }
+
         IBaseRepository<Project> Projects { get; }
         IBaseRepository<CompanyInfo> CompanyInfo { get; }
         IBaseRepository<Receipt> Receipts { get; }

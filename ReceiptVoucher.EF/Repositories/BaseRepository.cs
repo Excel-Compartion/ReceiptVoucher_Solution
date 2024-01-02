@@ -85,10 +85,10 @@ namespace ReceiptVoucher.EF.Repositories
             return await query.ToListAsync();
         }
 
-        public T AddOne(T entity)
+        public async Task<T> AddOneAsync(T entity)
         {
             _context.Set<T>().Add(entity);
-            _context.SaveChanges();
+            //_context.SaveChanges(); no need , becuase it done in UnitOfWor
 
             return entity;
         }
@@ -96,8 +96,38 @@ namespace ReceiptVoucher.EF.Repositories
         public IEnumerable<T> AddRange(IEnumerable<T> entities)
         {
             _context.Set<T>().AddRange(entities);
-            _context.SaveChanges();
             return entities;
+        }
+
+        public T Update(T entity)
+        {
+            _context.Update(entity);
+            return entity;
+        }
+
+        public void Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
+
+        public void Attach(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+        }
+
+        public int Count()
+        {
+            return _context.Set<T>().Count();
+        }
+
+        public int Count(Expression<Func<T, bool>> match)
+        {
+            return _context.Set<T>().Count(match);
         }
     }
 }
