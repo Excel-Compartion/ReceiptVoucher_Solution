@@ -3,9 +3,9 @@
 
 <MudDialog Class="custom-modal">
     <DialogContent>
-        <EditForm Model="@branch" Class="custom-form" >
+        <EditForm Model="@Branch" Class="custom-form" >
             <DataAnnotationsValidator />
-            <MudTextField Immediate="true" @bind-Value="@branch.Name" Label="اسم الفرع" Required="true"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@Branch.Name" Label="اسم الفرع" Required="true"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="Color.Success"></MudTextField>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -22,19 +22,62 @@
     [Parameter]
     public EventCallback<bool> OnClose {get; set; }
 
-    public Branch branch {get; set; }
+    [Parameter]
+    public Branch OriginalBranch { get; set; }
+
+    public Branch Branch {get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (OriginalBranch == null)
+        {
+            // No branch was passed, we are in add mode
+            Branch = new Branch();
+
+        }
+        else
+        {
+            // A branch was passed, we are in edit mode
+            // Create a copy of the branch to avoid modifying the original branch
+
+            Branch = new Branch
+            {
+                Id = OriginalBranch.Id,
+                Name = OriginalBranch.Name
+                // Copy other properties as needed
+            };
+
+
+        }
+    }
 
     void Submit()
     {
-        if (!string.IsNullOrWhiteSpace(branch.Name))
+        if (!string.IsNullOrWhiteSpace(Branch.Name))
         {
-            // Your code for adding a new branch goes here
-            _IUnitOfWork.Branches.AddOneAsync(branch);
+            if (Branch.Id == 0)
+            {
+                // The branch has no ID, so it's a new branch
+                _IUnitOfWork.Branches.AddOneAsync(Branch);
+
+                // Show a success message
+                _Snackbar.Add("Branch added successfully!", Severity.Success);
+            }
+
+            else
+            {
+                // The branch has an ID, so it's an existing branch
+                // Detach the original branch
+                _IUnitOfWork.Detach(OriginalBranch);
+
+                // Update the copy
+                _IUnitOfWork.Branches.Update(Branch);
+                _Snackbar.Add("Branch updated successfully!", Severity.Success);
+            }
+            
             _IUnitOfWork.Complete();
             MudDialog.Close(DialogResult.Ok(true));
 
-            // Show a success message
-            _Snackbar.Add("Branch added successfully!", Severity.Success);
 
             // Trigger the OnClose event
             OnClose.InvokeAsync(true);
@@ -43,45 +86,16 @@
 
     void Cancel() => MudDialog.Cancel();
 
-        protected override async Task OnInitializedAsync()
-        {
-            branch = new Branch();
-        }
+    // protected override async Task OnInitializedAsync()   no need
+    // {
+    //     Branch = new Branch();
+    // }
 }
 
 
 
 
-@* <MudDialog>
-    <DialogContent>
-        <EditForm Model="@branch">
-            <DataAnnotationsValidator />
-            <MudTextField @bind-Value="@branch.Name" Label="Name" Required="true"></MudTextField>
-        </EditForm>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
-</MudDialog>
 
-@code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
-    Branch branch = new Branch();
-
-    void Submit()
-    {
-        if (!string.IsNullOrWhiteSpace(branch.Name))
-        {
-            // Your code for adding a new branch goes here
-
-            MudDialog.Close(DialogResult.Ok(true));
-        }
-    }
-
-    void Cancel() => MudDialog.Cancel();
-} *@
 
 
 

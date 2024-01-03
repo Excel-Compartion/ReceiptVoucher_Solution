@@ -1,4 +1,6 @@
 ﻿
+using ReceiptVoucher.Core.Entities;
+
 namespace ReceiptVoucher.EF
 {
     public class UnitOfWork : IUnitOfWork
@@ -36,9 +38,22 @@ namespace ReceiptVoucher.EF
             return _context.SaveChanges();
         }
 
+
+      
+        public void Detach<T>(T entity) where T : class
+        {
+            var entry = _context.Entry(entity);
+            if (entry != null)
+            {
+                entry.State = EntityState.Detached;
+            }
+        }
+
+
         public void Dispose()
         {
             _context.Dispose();
         }
+
     }
 }

@@ -20,7 +20,7 @@ namespace ReceiptVoucher.Core.Interfaces
 
         IEnumerable<T> AddRange(IEnumerable<T> entities);
 
-        T Update(T entity);
+        T? Update(T entity);
 
         Task<bool> DeleteAsync(int id);
         void DeleteRange(IEnumerable<T> entities);

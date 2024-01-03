@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core;
+using ReceiptVoucher.Core.Entities;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -21,7 +22,7 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(await _unitOfWork.Branches.GetAllAsync());
         }
 
-       [HttpPost("AddOneAsync")]
+        [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(Branch branch)
         {
             if (!ModelState.IsValid)
@@ -35,8 +36,28 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
+        [HttpPut]
+        //[AutoValidateAntiforgeryToken]
+        public IActionResult Update(Branch branch , int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            // Edit Entity in Database using Service Or UnitOfWork : var entity = _service.Edit(model)
+
+            Branch? editedBranch = _unitOfWork.Branches.Update(branch);
+
+            // check if entity null , means that BadRequest , this happen during edting
+            if (editedBranch is null)
+                return BadRequest();
+
+            _unitOfWork.Complete();
+            return Ok(editedBranch);
+        }
+
+
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsycn(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             bool isDeleted = await _unitOfWork.Branches.DeleteAsync(id);
 

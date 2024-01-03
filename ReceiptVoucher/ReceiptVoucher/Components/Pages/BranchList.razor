@@ -12,9 +12,9 @@
 
 <MudTable Items="@Branches" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<Branch,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Branches</MudText>
+        <MudText Typo="Typo.h6">قائمه الفروع</MudText>
         <MudSpacer />
-        <MudButton OnClick="OpenDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة فرع</MudButton>
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة فرع</MudButton>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
@@ -27,7 +27,7 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Actions" >
                 @* <NavLink href="@($"branch/edit/{context.Id}")" class="btn-primary btn">Edit</NavLink> *@
-                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary">Edit</MudButton>
+                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
@@ -51,7 +51,7 @@
     @code {
     private bool dense = false;
     private bool hover = true;
-    private bool striped = false;
+    private bool striped = true;
     private bool bordered = false;
     private string searchString1 = "";
     private Branch selectedItem1 = null;
@@ -75,13 +75,32 @@
         return false;
     }
 
-    private void OpenDialog()
-    {    
-        DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
-        var dialogParameters = new DialogParameters { { "OnClose", EventCallback.Factory.Create<bool>(this, RefreshData) } };
 
-        _DialogService.Show<_Branch_Add_Dialog>("اضافة فرع جديد", dialogParameters , closeOnEscapeKey);
+    <!--==================     Add / Edit Dialog      =========================================-->
+    private void OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+
+        _DialogService.Show<_Branch_Add_Dialog>("اضافة فرع جديد", parameters);
     }
+
+    private void OpenEditDialog(Branch branch)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+        parameters.Add("OriginalBranch", branch);
+
+        _DialogService.Show<_Branch_Add_Dialog>("تعديل الفرع", parameters);
+    }
+
+    // private void OpenDialog()
+    // {    
+    //     DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+    //     var dialogParameters = new DialogParameters { { "OnClose", EventCallback.Factory.Create<bool>(this, RefreshData) } };
+
+    //     _DialogService.Show<_Branch_Add_Dialog>("اضافة فرع جديد", dialogParameters , closeOnEscapeKey);
+    // }
 
     private async void RefreshData(bool dialogResult)
     {
@@ -92,6 +111,8 @@
         }
     }
 
+
+    <!--============================================================-->
     private async Task DeleteBranch(int branchId)
     {
         Branch? selectedBranch = Branches.SingleOrDefault(b => b.Id == branchId);

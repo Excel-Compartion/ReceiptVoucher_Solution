@@ -16,3 +16,24 @@ Content-Type: application/json
 DELETE {{ReceiptVoucher.Server_HostAddress}}/api/branches?id=4
 
 ###
+
+DELETE {{ReceiptVoucher.Server_HostAddress}}/api/branches?id=0
+
+###
+
+PUT {{ReceiptVoucher.Server_HostAddress}}/api/branches
+Content-Type: application/json
+
+{
+  
+   {
+    "id": 12,
+    "name": "77777الفرع7"
+  }
+}
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
+
+###

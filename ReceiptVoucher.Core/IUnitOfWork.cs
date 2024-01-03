@@ -1,4 +1,5 @@
-﻿using ReceiptVoucher.Core.Interfaces;
+﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace ReceiptVoucher.Core
         IBaseRepository<CompanyInfo> CompanyInfo { get; }
         IBaseRepository<Receipt> Receipts { get; }
         IBaseRepository<SubProject> SubProjects { get; }
+
+        void Detach<T>(T entity ) where T : class;
 
         int Complete();
     }
