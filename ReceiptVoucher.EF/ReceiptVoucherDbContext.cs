@@ -1,4 +1,6 @@
 ﻿
+using ReceiptVoucher.Core.Entities;
+
 namespace ReceiptVoucher.EF;
 
 public class ReceiptVoucherDbContext : DbContext

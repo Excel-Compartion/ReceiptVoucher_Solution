@@ -1,7 +1,6 @@
-﻿
-namespace ReceiptVoucher.Core.Models;
+﻿namespace ReceiptVoucher.Core.Entities;
 
-public  class Branch
+public class Branch
 {
     [Key]
     public int Id { get; set; }
@@ -17,5 +16,5 @@ public  class Branch
 
     //-------- Navigation Properties ---
 
-    public  ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();
+    public ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();
 }
