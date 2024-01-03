@@ -22,7 +22,7 @@ namespace ReceiptVoucher.Core.Interfaces
 
         T Update(T entity);
 
-        void Delete(T entity);
+        Task<bool> DeleteAsync(int id);
         void DeleteRange(IEnumerable<T> entities);
 
         void Attach(T entity);

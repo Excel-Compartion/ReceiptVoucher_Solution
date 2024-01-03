@@ -6,6 +6,8 @@
 @inject IUnitOfWork _IUnitOfWork
 @inject NavigationManager _NavigationManager
 @inject IDialogService _DialogService
+@inject ISnackbar _Snackbar
+
 
 
 <MudTable Items="@Branches" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<Branch,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
@@ -26,7 +28,7 @@
             <MudTd DataLabel="Actions" >
                 @* <NavLink href="@($"branch/edit/{context.Id}")" class="btn-primary btn">Edit</NavLink> *@
                 <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary">Edit</MudButton>
-                @* <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteBranch(context.Id))">Delete</MudButton> *@
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -90,45 +92,46 @@
         }
     }
 
-    // private async Task DeleteBranch(int branchId)
-    // {
-    //     var dialog = _DialogService.Show<_ConfirmDeleteDialog>("Please confirm");
-    //     var result = await dialog.Result;
-
-    //     if (!result.Cancelled && result.Data is bool data && data)
-    //     {
-    //         // User confirmed deletion, proceed with deletion
-    //         var branch = Branches.FirstOrDefault(b => b.Id == branchId);
-    //         if (branch != null)
-    //         {
-    //             await _IUnitOfWork.Branches(branch);
-    //             Branches.Remove(branch);
-    //             StateHasChanged();
-    //         }
-    //     }
-    // } 
-
-    @* private void CreateBranch()
+    private async Task DeleteBranch(int branchId)
     {
-        _NavigationManager.NavigateTo("/branch-create");
-    } *@
+        Branch? selectedBranch = Branches.SingleOrDefault(b => b.Id == branchId);
 
+        if (selectedBranch != null)
+        {
+            var parameters = new DialogParameters() { { "BranchName", selectedBranch.Name } };
+            var dialog = _DialogService.Show<_ConfirmDeleteDialog>("الرجاء التأكيد" ,  parameters );
+            
+            var result = await dialog.Result;
 
-    @* private bool isDialogOpen = false; *@
+            if (!result.Cancelled && result.Data is bool data && data)
+            {
+                // User confirmed deletion, proceed with deletion
 
+                // Try to delete the branch
 
+                bool deleteResult = await _IUnitOfWork.Branches.DeleteAsync(branchId);
 
-    @* private void CloseDialog()
-    {
-        isDialogOpen = false;
-    } *@
+                if (deleteResult)
+                {
+                    // Deletion was successful
+                    Branches.Remove(selectedBranch);
 
-    @* private void AddBranch()
-    {
-        // Your code for adding a new branch goes here
+                    // Show a success message
+                    _Snackbar.Add("تم حذف بيانات الفرع بنجاح", Severity.Success);
+                }
+                else
+                {
+                    // Deletion failed
+                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات الفرع!", Severity.Error);
+                }
+               
+                StateHasChanged();
+            }
+        }
+        
+    } 
 
-        CloseDialog();
-    } *@
+   
 
 }
 

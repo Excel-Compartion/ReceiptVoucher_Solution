@@ -105,9 +105,23 @@ namespace ReceiptVoucher.EF.Repositories
             return entity;
         }
 
-        public void Delete(T entity)
+        public async Task<bool> DeleteAsync(int id)
         {
-            _context.Set<T>().Remove(entity);
+            var isDeleted = false;
+
+            T? model = await _context.Set<T>().FindAsync(id);
+
+            if (model is null)
+                return false;
+
+            _context.Set<T>().Remove(model);
+
+            int effectedRows = await _context.SaveChangesAsync();
+
+            if (effectedRows > 0)
+                isDeleted = true;
+
+            return isDeleted;
         }
 
         public void DeleteRange(IEnumerable<T> entities)
@@ -129,5 +143,7 @@ namespace ReceiptVoucher.EF.Repositories
         {
             return _context.Set<T>().Count(match);
         }
+
+        
     }
 }
