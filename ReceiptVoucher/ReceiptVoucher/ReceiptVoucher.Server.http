@@ -1,0 +1,18 @@
+﻿@ReceiptVoucher.Server_HostAddress = https://localhost:7210
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/branches/AddOneAsync
+Content-Type: application/json
+
+{
+  //Branch
+}
+
+###
+
+DELETE {{ReceiptVoucher.Server_HostAddress}}/api/branches?id=4
+
+###
