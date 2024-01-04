@@ -8,5 +8,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 {
     public class Branch_ViewModel
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = null!;
     }
 }

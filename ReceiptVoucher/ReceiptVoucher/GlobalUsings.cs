@@ -10,3 +10,4 @@ global using ReceiptVoucher.Core.Models.ViewModels;
 global using ReceiptVoucher.Core.Models.Dtos;
 global using MudBlazor;
 global using ReceiptVoucher.Core;
+global using AutoMapper;

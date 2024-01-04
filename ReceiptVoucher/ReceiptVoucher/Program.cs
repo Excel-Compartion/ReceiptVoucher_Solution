@@ -16,6 +16,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers();
 
 builder.Services.AddMudServices();  // MudBlazor
+builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefualtConnection")
