@@ -1,4 +1,4 @@
-﻿@inject IUnitOfWork _IUnitOfWork
+﻿@* @inject IUnitOfWork _IUnitOfWork *@
 @inject ISnackbar _Snackbar
 
 <MudDialog Class="custom-modal">
@@ -58,7 +58,7 @@
             if (Branch.Id == 0)
             {
                 // The branch has no ID, so it's a new branch
-                _IUnitOfWork.Branches.AddOneAsync(Branch);
+                // _IUnitOfWork.Branches.AddOneAsync(Branch);
 
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
@@ -68,14 +68,14 @@
             {
                 // The branch has an ID, so it's an existing branch
                 // Detach the original branch
-                _IUnitOfWork.Detach(OriginalBranch);
+                // _IUnitOfWork.Detach(OriginalBranch);
 
                 // Update the copy
-                _IUnitOfWork.Branches.Update(Branch);
+                // _IUnitOfWork.Branches.Update(Branch);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
             
-            _IUnitOfWork.Complete();
+            // _IUnitOfWork.Complete();
             MudDialog.Close(DialogResult.Ok(true));
 
 
