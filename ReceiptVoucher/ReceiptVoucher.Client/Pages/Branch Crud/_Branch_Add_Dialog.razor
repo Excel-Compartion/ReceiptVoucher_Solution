@@ -1,5 +1,4 @@
-﻿@* @inject IUnitOfWork _IUnitOfWork *@
-@inject ISnackbar _Snackbar
+﻿@inject ISnackbar _Snackbar
 @rendermode InteractiveAuto
 @inject HttpClient Http
 
@@ -34,27 +33,24 @@
     {
         if (OriginalBranch == null)
         {
-            // No branch was passed, we are in add mode
             Branch = new Branch();
 
         }
         else
         {
-            // A branch was passed, we are in edit mode
-            // Create a copy of the branch to avoid modifying the original branch
 
             Branch = new Branch
             {
                 Id = OriginalBranch.Id,
                 Name = OriginalBranch.Name
-                // Copy other properties as needed
+                
             };
 
 
         }
     }
 
-    void Submit()
+    async void Submit()
     {
         if (!string.IsNullOrWhiteSpace(Branch.Name))
         {
@@ -62,9 +58,7 @@
             {
                 // The branch has no ID, so it's a new branch
 
-                // _IUnitOfWork.Branches.AddOneAsync(Branch);
-
-                Http.PostAsJsonAsync("https://localhost:7210/api/Branches/AddOneAsync", Branch);
+                await Http.PostAsJsonAsync("https://localhost:7210/api/Branches/AddOneAsync", Branch);
 
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
@@ -72,32 +66,22 @@
 
             else
             {
-                // The branch has an ID, so it's an existing branch
-                // Detach the original branch
-                // _IUnitOfWork.Detach(OriginalBranch);
 
-                // Update the copy
-                // _IUnitOfWork.Branches.Update(Branch);
-
-                Http.PutAsJsonAsync("https://localhost:7210/api/Branches", Branch);
+                await Http.PutAsJsonAsync("https://localhost:7210/api/Branches", Branch);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
-            
-            // _IUnitOfWork.Complete();
-            MudDialog.Close(DialogResult.Ok(true));
 
+            MudDialog.Close(DialogResult.Ok(true));
 
             // Trigger the OnClose event
             OnClose.InvokeAsync(true);
         }
     }
 
+
     void Cancel() => MudDialog.Cancel();
 
-    // protected override async Task OnInitializedAsync()   no need
-    // {
-    //     Branch = new Branch();
-    // }
+    
 }
 
 

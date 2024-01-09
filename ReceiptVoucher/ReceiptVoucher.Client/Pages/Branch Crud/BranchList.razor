@@ -3,62 +3,10 @@
 
 @inject HttpClient Http
 
-@* @attribute [StreamRendering(true)] *@
-@* @rendermode @(new InteractiveServerRenderMode(prerender: false)) *@
-
-
 @inject IDialogService _DialogService 
 @inject ISnackbar _Snackbar
 
-
-
-@* <MudTable Items="@Branches" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<Branch,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">قائمه الفروع</MudText>
-        <MudSpacer />
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة فرع</MudButton>
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-
-    <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Actions</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Actions" >
-               
-                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable> *@
-
-
-@*     <div class="d-flex flex-wrap mt-4">
-        <MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
-        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary">Dense</MudSwitch>
-        <MudSwitch @bind-Checked="@striped" Color="Color.Tertiary">Striped</MudSwitch>
-        <MudSwitch @bind-Checked="@bordered" Color="Color.Warning">Bordered</MudSwitch>
-        <MudSpacer />
-        <div style="min-width:200px;">
-            <MudText Inline="true" Class="align-self-center">Selected1: @selectedItem1?.Name</MudText>
-        </div>
-    </div> *@
-
-
-
-
-
-
-
-
-
-
+<br />
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Branch>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
@@ -96,8 +44,8 @@
     </PagerContent>
 </MudTable>
 
-@code {
-    private IEnumerable<Branch> pagedData;
+    @code {
+    public IEnumerable<Branch> pagedData;
     private MudTable<Branch> table;
 
     private int totalItems;
@@ -106,9 +54,12 @@
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
+
+    public IEnumerable<Branch> data = new List<Branch>();
+
     private async Task<TableData<Branch>> ServerReload(TableState state)
     {
-        IEnumerable<Branch> data = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
        
         data = data.Where(branch =>
         {
@@ -144,48 +95,12 @@
 
 
 
-
-
     @code {
-    private bool dense = false;
-    private bool hover = true;
-    private bool striped = true;
-    private bool bordered = false;
-    private string searchString1 = "";
-    private Branch selectedItem1 = null;
-    private HashSet<Branch> selectedItems = new HashSet<Branch>();
 
-
-
-    public List<Branch?> Branches = new List<Branch?>
-    {
-        // new Branch() {Id = 1  , Name = "kd" , CreatedDate = DateTime.Now , IsActive = true  }
-    };
-
-    //private NavigationManager _NavigationManager;
-
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
-
-        if(result!=null){ Branches = result; }
-    }
-
-    private bool FilterFunc1(Branch branch) => FilterFunc(branch, searchString1);
-
-    private bool FilterFunc(Branch branch, string searchString)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (branch.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
-    }
 
 
     //<!--==================     Add / Edit Dialog      =========================================-->
+
     private void OpenAddDialog()
     {
         var parameters = new DialogParameters();
@@ -203,24 +118,21 @@
         _DialogService.Show<_Branch_Add_Dialog>("تعديل الفرع", parameters);
     }
 
-
-
     private async void RefreshData(bool dialogResult)
     {
         if (dialogResult)
         {
-            var result = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
-
-            if (result != null) { Branches = result; }
-
-            StateHasChanged();
+            // Reload the table data
+            table.ReloadServerData();
         }
     }
 
 
+
+
     private async Task DeleteBranch(int branchId)
     {
-        Branch? selectedBranch = Branches.SingleOrDefault(b => b.Id == branchId);
+        Branch? selectedBranch = data.SingleOrDefault(b => b.Id == branchId);
 
         if (selectedBranch != null)
         {
@@ -238,11 +150,11 @@
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Deletion was successful
-                    Branches.Remove(selectedBranch);
-
                     // Show a success message
                     _Snackbar.Add("تم حذف بيانات الفرع بنجاح", Severity.Success);
+
+                    // Reload the table data
+                    table.ReloadServerData();
                 }
                 else
                 {
@@ -254,6 +166,7 @@
             }
         }
     }
+
 
 
 }
