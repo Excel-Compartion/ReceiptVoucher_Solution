@@ -1,0 +1,21 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>هل انت متأكد من حذف بيانات الفرع: @BranchName ؟ </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@(() => MudDialog.Close(DialogResult.Ok(false)))">No</MudButton>
+        <MudButton Color="Color.Error" OnClick="@(() => MudDialog.Close(DialogResult.Ok(true)))">Yes</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string? BranchName { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+}

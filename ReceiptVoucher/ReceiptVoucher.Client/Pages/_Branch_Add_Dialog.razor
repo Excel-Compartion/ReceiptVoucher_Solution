@@ -1,5 +1,8 @@
 ﻿@* @inject IUnitOfWork _IUnitOfWork *@
 @inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
 
 <MudDialog Class="custom-modal">
     <DialogContent>
@@ -58,7 +61,10 @@
             if (Branch.Id == 0)
             {
                 // The branch has no ID, so it's a new branch
+
                 // _IUnitOfWork.Branches.AddOneAsync(Branch);
+
+                Http.PostAsJsonAsync("https://localhost:7210/api/Branches/AddOneAsync", Branch);
 
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
@@ -72,6 +78,8 @@
 
                 // Update the copy
                 // _IUnitOfWork.Branches.Update(Branch);
+
+                Http.PutAsJsonAsync("https://localhost:7210/api/Branches", Branch);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
             

@@ -38,7 +38,7 @@ namespace ReceiptVoucher.Server.Controllers
 
         [HttpPut]
         //[AutoValidateAntiforgeryToken]
-        public IActionResult Update(Branch branch , int id)
+        public IActionResult Update(Branch branch /*, int id*/)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -56,7 +56,7 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             bool isDeleted = await _unitOfWork.Branches.DeleteAsync(id);

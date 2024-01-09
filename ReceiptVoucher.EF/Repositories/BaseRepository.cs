@@ -88,7 +88,7 @@ namespace ReceiptVoucher.EF.Repositories
         public async Task<T> AddOneAsync(T entity)
         {
             _context.Set<T>().Add(entity);
-            //_context.SaveChanges(); no need , becuase it done in UnitOfWor
+            _context.SaveChanges(); //no need, becuase it done in UnitOfWor
 
             return entity;
         }
