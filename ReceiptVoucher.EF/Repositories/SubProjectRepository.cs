@@ -20,30 +20,54 @@ namespace ReceiptVoucher.EF.Repositories
             return await _context.SubProjects.Include(p => p.Project).ToListAsync();
         }
 
-        public async Task<SubProject> AddSubProjectAsync(SubProject subProject)
+        public async Task<DTO> AddSubProjectAsync(DTO dTO)
         {
 
             // تأكد من أن ProjectId يشير إلى مشروع موجود
-            var project = await _context.Projects.FindAsync(subProject.ProjectId);
+            var project = await _context.Projects.FindAsync(dTO.ProjectId);
             if (project == null)
             {
-                return subProject;
+                return dTO;
             }
             else
             {
-                // تعيين الكائن Project
-                subProject.Project = project;
+                SubProject subProject = new SubProject
+                {
+                    CreatedDate = DateTime.Now,
+                    IsActive = true,
+                    Duration = dTO.Duration,
+                    ProjectId = dTO.ProjectId,
+                    Name = dTO.Name,
+
+                };
 
                 _context.SubProjects.Add(subProject);
                 await _context.SaveChangesAsync();
 
 
-                return subProject;
+                return dTO;
             }
            
            
         }
 
+        public async Task<DTO> UpdateSubProjectAsync(DTO dTO)
+        {
+            var subProject =await _context.SubProjects.FindAsync(dTO.SubProjectId);
 
+            if (subProject != null)
+            {
+                subProject.Name= dTO.Name;
+                subProject.Duration=dTO.Duration;
+                subProject.ProjectId=dTO.ProjectId;
+
+                _context.Update(subProject);
+                await _context.SaveChangesAsync();
+
+            }
+
+           
+            return dTO;
+        }
     }
 }

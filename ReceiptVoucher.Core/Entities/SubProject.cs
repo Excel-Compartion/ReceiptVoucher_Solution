@@ -23,7 +23,7 @@ public class SubProject
 
     [ForeignKey("ProjectId")]
 
-    public Project Project { get; set; } = null!;
+    public Project? Project { get; set; } = null!;
 
     public ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();
 }
