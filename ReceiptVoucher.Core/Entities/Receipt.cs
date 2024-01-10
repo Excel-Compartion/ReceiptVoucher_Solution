@@ -27,8 +27,8 @@ public class Receipt
 
     //-------- Navigation Properties ---
     [ForeignKey("BranchId")]
-    public Branch Branch { get; set; } = null!;
+    public Branch? Branch { get; set; } = null!;
 
     [ForeignKey("SubProjectId")]
-    public SubProject SubProject { get; set; } = null!;
+    public SubProject? SubProject { get; set; } = null!;
 }
