@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Interfaces;
 
 namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Sub_ProjectsController : ControllerBase
+    public class SubProjectsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public Sub_ProjectsController(IUnitOfWork unitOfWork)
+        private readonly ISubProjectRepository _subProjectRepository;
+        protected ReceiptVoucherDbContext _context;
+
+        public SubProjectsController(IUnitOfWork unitOfWork, ISubProjectRepository subProjectRepository, ReceiptVoucherDbContext context)
         {
             _unitOfWork = unitOfWork;
+
+            _subProjectRepository = subProjectRepository;
+            _context = context;
         }
 
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _unitOfWork.SubProjects.GetAllAsync());
+            return Ok(await _subProjectRepository.GetAllSubProjectAsync());
         }
 
         [HttpPost("AddOneAsync")]
@@ -29,8 +37,11 @@ namespace ReceiptVoucher.Server.Controllers
 
             await _unitOfWork.SubProjects.AddOneAsync(subProject);
 
-            return Ok("subProject Created Succesfully.");
+            return Ok("Branch Created Succesfully.");
         }
+
+
+
 
 
         [HttpPut]

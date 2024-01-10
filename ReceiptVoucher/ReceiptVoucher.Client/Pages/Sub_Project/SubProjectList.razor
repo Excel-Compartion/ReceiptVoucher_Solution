@@ -1,0 +1,201 @@
+﻿@page "/SubProject"
+@rendermode InteractiveAuto
+
+@inject HttpClient Http
+
+@inject IDialogService _DialogService 
+@inject ISnackbar _Snackbar
+
+<br />
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<SubProject>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة مشروع فرعي</MudButton>
+        &nbsp;&nbsp;
+        <MudText Typo="Typo.h6">SubProject</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="SubProject">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="SubProject">Project</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">Duration</MudTableSortLabel></MudTh>
+      
+        
+       
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Project">@context.Project.Name</MudTd>
+            <MudTd DataLabel="Duration">@context.Duration</MudTd>
+
+
+        <MudTd DataLabel="Actions">
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
+
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+    @code {
+    public IEnumerable<SubProject> pagedData;
+    private MudTable<SubProject> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    public List<Project> Projects { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Projects = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+    }
+
+
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+
+    public IEnumerable<SubProject> data = new List<SubProject>();
+
+    private async Task<TableData<SubProject>> ServerReload(TableState state)
+    {
+        data = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/GetAllAsync");
+       
+        data = data.Where(subProject =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (subProject.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{subProject.Id}".Contains(searchString))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                break;
+            case "name_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<SubProject>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}
+
+
+
+
+    @code {
+
+
+
+    //<!--==================     Add / Edit Dialog      =========================================-->
+
+    private void OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+
+        parameters.Add("BtnName", "اضافه");
+        parameters.Add("Projects", Projects);  // Pass the projects list here
+        
+
+        _DialogService.Show<_SubProject_Add_Dialog>("اضافة مشروع فرعي جديد", parameters);
+    }
+
+    private void OpenEditDialog(SubProject subProject)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+        parameters.Add("OriginalSubProject", subProject);
+        parameters.Add("BtnName", "تعديل");
+        parameters.Add("Projects", Projects);  // Pass the projects list here
+       
+
+        _DialogService.Show<_SubProject_Add_Dialog>("تعديل المشروع الفردي", parameters);
+    }
+
+    private async void RefreshData(bool dialogResult)
+    {
+        if (dialogResult)
+        {
+            // Reload the table data
+            table.ReloadServerData();
+        }
+    }
+
+
+
+    private async Task DeleteBranch(int subProjectId)
+    {
+        SubProject? selectedSubProject = data.SingleOrDefault(b => b.Id == subProjectId);
+
+        if (selectedSubProject != null)
+        {
+            var parameters = new DialogParameters() { { "SubProjectName", selectedSubProject.Name } };
+            var dialog = _DialogService.Show<_SubProjectConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+
+            var result = await dialog.Result;
+
+            if (!result.Cancelled && result.Data is bool data && data)
+            {
+                // User confirmed deletion, proceed with deletion
+
+                // Try to delete the branch using the API controller
+                var response = await Http.DeleteAsync($"https://localhost:7210/api/SubProjects/{subProjectId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Show a success message
+                    _Snackbar.Add("تم حذف بيانات المشروع الفرعي بنجاح", Severity.Success);
+
+                    // Reload the table data
+                    table.ReloadServerData();
+                }
+                else
+                {
+                    // Deletion failed
+                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات الفرع!", Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
+
+}
+
+

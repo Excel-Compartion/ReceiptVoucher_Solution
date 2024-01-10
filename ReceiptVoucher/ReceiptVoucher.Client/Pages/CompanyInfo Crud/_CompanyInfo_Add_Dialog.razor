@@ -1,0 +1,104 @@
+﻿@inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
+
+
+<MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
+    <DialogContent>
+        <EditForm Model="@CompanyInfo" Class="custom-form">
+            <DataAnnotationsValidator />
+
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Name"  Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
+
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Mobile"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.LicenseNumber" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Telephone" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Email" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Web" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.IVT" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+
+
+            
+             </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Class="custom-button">@BtnName</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+
+    @code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public CompanyInfo OriginalCompanyInfo { get; set; }  // تم تغيير النوع إلى CompanyInfo
+
+    [Parameter]
+    public string BtnName { get; set; }
+
+    string Icon = string.Empty;
+
+    public CompanyInfo CompanyInfo { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (OriginalCompanyInfo == null)
+        {
+            CompanyInfo = new CompanyInfo();
+        }
+        else
+        {
+   
+            CompanyInfo = new CompanyInfo
+                {
+                    Id = OriginalCompanyInfo.Id,
+                    Name = OriginalCompanyInfo.Name,
+                    Mobile=OriginalCompanyInfo.Mobile,
+                    LicenseNumber=OriginalCompanyInfo.LicenseNumber,
+                    Telephone = OriginalCompanyInfo.Telephone,
+                    Email = OriginalCompanyInfo.Email,
+                    Web = OriginalCompanyInfo.Web,
+                    IVT = OriginalCompanyInfo.IVT,
+                    
+                };
+        }
+    }
+
+    async void Submit()
+    {
+        if (!string.IsNullOrWhiteSpace(CompanyInfo.Name))
+        {
+            if (CompanyInfo.Id == 0)
+            {
+                // The CompanyInfo has no ID, so it's a new CompanyInfo
+                await Http.PostAsJsonAsync("https://localhost:7210/api/CompanyInfos/AddOneAsync", CompanyInfo);
+                // Show a success message
+                _Snackbar.Add("CompanyInfo added successfully!", Severity.Success);
+            }
+            else
+            {
+                await Http.PutAsJsonAsync("https://localhost:7210/api/CompanyInfos", CompanyInfo);
+                _Snackbar.Add("CompanyInfo updated successfully!", Severity.Success);
+            }
+
+            MudDialog.Close(DialogResult.Ok(true));
+            // Trigger the OnClose event
+            OnClose.InvokeAsync(true);
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}
+
+
+
+
+

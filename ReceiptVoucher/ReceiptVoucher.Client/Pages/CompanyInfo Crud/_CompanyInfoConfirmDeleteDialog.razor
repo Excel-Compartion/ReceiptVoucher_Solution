@@ -1,0 +1,21 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>هل أنت متأكد من حذف بيانات الشركة: @CompanyInfoName ؟ </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@(() => MudDialog.Close(DialogResult.Ok(false)))">لا</MudButton>
+        <MudButton Color="Color.Error" OnClick="@(() => MudDialog.Close(DialogResult.Ok(true)))">نعم</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string? CompanyInfoName { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+}

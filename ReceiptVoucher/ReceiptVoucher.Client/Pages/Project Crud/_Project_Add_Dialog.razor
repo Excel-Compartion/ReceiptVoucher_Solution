@@ -5,16 +5,16 @@
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@Branch" Class="custom-form" >
+        <EditForm Model="@Project" Class="custom-form" >
             <DataAnnotationsValidator />
             @if (BtnName == "اضافه")
             {
-                <MudTextField Immediate="true" @bind-Value="@Branch.Name" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+                <MudTextField Immediate="true" @bind-Value="@Project.Name" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
             }
             else
             {
-                <MudTextField Immediate="true" @bind-Value="@Branch.Name" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Edit" AdornmentColor="Color.Success"></MudTextField>
+                <MudTextField Immediate="true" @bind-Value="@Project.Name" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Edit" AdornmentColor="Color.Success"></MudTextField>
             }
             
              </EditForm>
@@ -36,33 +36,33 @@
     public EventCallback<bool> OnClose {get; set; }
 
     [Parameter]
-    public Branch OriginalBranch { get; set; }
+    public Project OriginalProject { get; set; }
 
 
     [Parameter]
     public string BtnName { get; set; }
 
-    string Icon = string.Empty;
+ 
 
 
-    public Branch Branch {get; set; }
+  public Project Project {get; set; }
 
   
 
     protected override void OnParametersSet()
     {
-        if (OriginalBranch == null)
+        if (OriginalProject == null)
         {
-            Branch = new Branch();
+            Project = new Project();
 
         }
         else
         {
 
-            Branch = new Branch
+            Project = new Project
             {
-                Id = OriginalBranch.Id,
-                Name = OriginalBranch.Name
+                    Id = OriginalProject.Id,
+                    Name = OriginalProject.Name
                 
             };
 
@@ -72,13 +72,13 @@
 
     async void Submit()
     {
-        if (!string.IsNullOrWhiteSpace(Branch.Name))
+        if (!string.IsNullOrWhiteSpace(Project.Name))
         {
-            if (Branch.Id == 0)
+            if (Project.Id == 0)
             {
                 // The branch has no ID, so it's a new branch
 
-                await Http.PostAsJsonAsync("https://localhost:7210/api/Branches/AddOneAsync", Branch);
+                await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
 
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
@@ -87,7 +87,7 @@
             else
             {
 
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Branches", Branch);
+                await Http.PutAsJsonAsync("https://localhost:7210/api/Projects", Project);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
 

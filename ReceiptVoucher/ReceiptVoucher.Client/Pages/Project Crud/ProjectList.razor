@@ -1,0 +1,181 @@
+﻿@page "/Project"
+@rendermode InteractiveAuto
+
+@inject HttpClient Http
+
+@inject IDialogService _DialogService 
+@inject ISnackbar _Snackbar
+
+<br />
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة مشروع</MudButton>
+        &nbsp;&nbsp;
+        <MudText Typo="Typo.h6">Project</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Project">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">Name</MudTableSortLabel></MudTh>
+        
+       
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Actions">
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
+
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+    @code {
+    public IEnumerable<Project> pagedData;
+    private MudTable<Project> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+
+    public IEnumerable<Project> data = new List<Project>();
+
+    private async Task<TableData<Project>> ServerReload(TableState state)
+    {
+        data = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+       
+        data = data.Where(project =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (project.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{project.Id}".Contains(searchString))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                break;
+            case "name_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<Project>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}
+
+
+
+    @code {
+
+
+
+    //<!--==================     Add / Edit Dialog      =========================================-->
+
+    private void OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+
+        parameters.Add("BtnName", "اضافه");
+
+        _DialogService.Show<_Project_Add_Dialog>("اضافة مشروع جديد", parameters);
+    }
+
+    private void OpenEditDialog(Project project)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+        parameters.Add("OriginalProject", project);
+        parameters.Add("BtnName", "تعديل");
+
+        _DialogService.Show<_Project_Add_Dialog>("تعديل مشروع", parameters);
+    }
+
+    private async void RefreshData(bool dialogResult)
+    {
+        if (dialogResult)
+        {
+            // Reload the table data
+            table.ReloadServerData();
+        }
+    }
+
+
+
+
+    private async Task DeleteBranch(int projectId)
+    {
+        Project? selectedBranch = data.SingleOrDefault(b => b.Id == projectId);
+
+        if (selectedBranch != null)
+        {
+            var parameters = new DialogParameters() { { "ProjectName", selectedBranch.Name } };
+            var dialog = _DialogService.Show<_ProjectConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+
+            var result = await dialog.Result;
+
+            if (!result.Cancelled && result.Data is bool data && data)
+            {
+                // User confirmed deletion, proceed with deletion
+
+                // Try to delete the branch using the API controller
+                var response = await Http.DeleteAsync($"https://localhost:7210/api/Projects/{projectId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Show a success message
+                    _Snackbar.Add("تم حذف بيانات المشروع بنجاح", Severity.Success);
+
+                    // Reload the table data
+                    table.ReloadServerData();
+                }
+                else
+                {
+                    // Deletion failed
+                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات المشروع!", Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
+
+}
+
+

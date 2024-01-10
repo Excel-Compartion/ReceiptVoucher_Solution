@@ -1,0 +1,181 @@
+﻿@page "/Receipt"
+@rendermode InteractiveAuto
+
+@inject HttpClient Http
+
+@inject IDialogService _DialogService 
+@inject ISnackbar _Snackbar
+
+<br />
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة فرع</MudButton>
+        &nbsp;&nbsp;
+        <MudText Typo="Typo.h6">Receipt</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Name</MudTableSortLabel></MudTh>
+        
+       
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+        <MudTd DataLabel="Actions">
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
+
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+    @code {
+    public IEnumerable<Receipt> pagedData;
+    private MudTable<Receipt> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+
+    public IEnumerable<Receipt> data = new List<Receipt>();
+
+    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    {
+        data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+       
+        data = data.Where(receipt =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{receipt.Id}".Contains(searchString))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                break;
+            case "name_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}
+
+
+
+    @code {
+
+
+
+    //<!--==================     Add / Edit Dialog      =========================================-->
+
+    private void OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+
+        parameters.Add("BtnName", "اضافه");
+
+        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters);
+    }
+
+    private void OpenEditDialog(Receipt receipt)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+        parameters.Add("OriginalReceipt", receipt);
+        parameters.Add("BtnName", "تعديل");
+
+        _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters);
+    }
+
+    private async void RefreshData(bool dialogResult)
+    {
+        if (dialogResult)
+        {
+            // Reload the table data
+            table.ReloadServerData();
+        }
+    }
+
+
+
+
+    private async Task DeleteBranch(int receiptId)
+    {
+        Receipt? selectedBranch = data.SingleOrDefault(b => b.Id == receiptId);
+
+        if (selectedBranch != null)
+        {
+            var parameters = new DialogParameters() { { "ReceiptName", selectedBranch.Id } };
+            var dialog = _DialogService.Show<_ReceiptConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+
+            var result = await dialog.Result;
+
+            if (!result.Cancelled && result.Data is bool data && data)
+            {
+                // User confirmed deletion, proceed with deletion
+
+                // Try to delete the branch using the API controller
+                var response = await Http.DeleteAsync($"https://localhost:7210/api/Receipts/{receiptId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Show a success message
+                    _Snackbar.Add("تم حذف بيانات السند بنجاح", Severity.Success);
+
+                    // Reload the table data
+                    table.ReloadServerData();
+                }
+                else
+                {
+                    // Deletion failed
+                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات السند!", Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
+
+}
+
+

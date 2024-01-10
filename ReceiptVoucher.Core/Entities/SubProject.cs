@@ -8,6 +8,7 @@ public class SubProject
 
     public int ProjectId { get; set; }  // Foreign Key
 
+    [Required(ErrorMessage ="حقل الاسم مطلوب")]
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
@@ -21,6 +22,7 @@ public class SubProject
     //-------- Navigation Properties ---
 
     [ForeignKey("ProjectId")]
+
     public Project Project { get; set; } = null!;
 
     public ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();

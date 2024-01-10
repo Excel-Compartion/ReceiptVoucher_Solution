@@ -3,8 +3,11 @@ using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
 //using ReceiptVoucher.Components;
 using ReceiptVoucher.Core;
+using ReceiptVoucher.Core.Interfaces;
 using ReceiptVoucher.EF;
+using ReceiptVoucher.EF.Repositories;
 using ReceiptVoucher.Server.Components;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +19,13 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
+builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
+
 
 builder.Services.AddMudServices();  // MudBlazor
 builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.
