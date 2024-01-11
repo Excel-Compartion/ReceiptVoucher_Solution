@@ -11,15 +11,23 @@ namespace ReceiptVoucher.Server.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISubProjectRepository _subProjectRepository;
-        protected ReceiptVoucherDbContext _context;
+     
 
         public SubProjectsController(IUnitOfWork unitOfWork, ISubProjectRepository subProjectRepository, ReceiptVoucherDbContext context)
         {
             _unitOfWork = unitOfWork;
 
             _subProjectRepository = subProjectRepository;
-            _context = context;
+           
         }
+
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            return Ok(await _unitOfWork.SubProjects.GetAllAsync());
+        }
+
+        // this include the navg_prop
 
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
@@ -27,9 +35,12 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(await _subProjectRepository.GetAllSubProjectAsync());
         }
 
+
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(SubProject subProject)
         {
+            subProject.CreatedDate = DateTime.Now;
+            subProject.IsActive = true;
             if (!ModelState.IsValid)
                 return BadRequest();
 

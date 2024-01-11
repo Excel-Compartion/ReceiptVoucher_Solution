@@ -25,6 +25,7 @@ builder.Services.AddControllers().AddJsonOptions(option =>
 });
 
 builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
+builder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
 
 
 builder.Services.AddMudServices();  // MudBlazor

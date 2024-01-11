@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Interfaces;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -9,15 +10,17 @@ namespace ReceiptVoucher.Server.Controllers
     public class ReceiptsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ReceiptsController(IUnitOfWork unitOfWork)
+        private readonly IReceiptRepository _receiptRepository;
+        public ReceiptsController(IUnitOfWork unitOfWork, IReceiptRepository receiptRepository)
         {
             _unitOfWork = unitOfWork;
+            _receiptRepository = receiptRepository;
         }
 
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _unitOfWork.Receipts.GetAllAsync());
+            return Ok(await _receiptRepository.GetAllSubProjectAsync());
         }
 
         [HttpPost("AddOneAsync")]

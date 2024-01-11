@@ -11,7 +11,7 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة فرع</MudButton>
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة سند</MudButton>
         &nbsp;&nbsp;
         <MudText Typo="Typo.h6">Receipt</MudText>
         <MudSpacer />
@@ -21,16 +21,31 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">ReceivedFrom</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">ReceivedBy</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">TotalAmount</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Branch</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">SubProject</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">ForPurpose</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Date</MudTableSortLabel></MudTh>
+
         
        
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
-        <MudTd DataLabel="Actions">
+            <MudTd DataLabel="ReceivedBy">@context.ReceivedBy</MudTd>
+            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="ForPurpose">@context.ForPurpose</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+
+
+        <MudTd DataLabel="Actions" >
             <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteReceipt(context.Id))">Delete</MudButton>
 
         </MudTd>
     </RowTemplate>
@@ -54,6 +69,17 @@
 
     private int totalItems;
     private string searchString = null;
+
+
+    public List<Branch> Branches { get; set; }
+    public List<SubProject> SubProjects { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Branches = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+
+        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/Get");
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -112,6 +138,10 @@
 
         parameters.Add("BtnName", "اضافه");
 
+        parameters.Add("Branches", Branches);
+
+        parameters.Add("SubProjects", SubProjects);
+
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters);
     }
 
@@ -121,6 +151,10 @@
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
         parameters.Add("OriginalReceipt", receipt);
         parameters.Add("BtnName", "تعديل");
+
+        parameters.Add("Branches", Branches);
+
+        parameters.Add("SubProjects", SubProjects);
 
         _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters);
     }
@@ -137,13 +171,13 @@
 
 
 
-    private async Task DeleteBranch(int receiptId)
+    private async Task DeleteReceipt(int receiptId)
     {
-        Receipt? selectedBranch = data.SingleOrDefault(b => b.Id == receiptId);
+        Receipt? selectedReceipt = data.SingleOrDefault(b => b.Id == receiptId);
 
-        if (selectedBranch != null)
+        if (selectedReceipt != null)
         {
-            var parameters = new DialogParameters() { { "ReceiptName", selectedBranch.Id } };
+            var parameters = new DialogParameters() { { "ReceiptId", selectedReceipt.Id } };
             var dialog = _DialogService.Show<_ReceiptConfirmDeleteDialog>("الرجاء التأكيد", parameters);
 
             var result = await dialog.Result;

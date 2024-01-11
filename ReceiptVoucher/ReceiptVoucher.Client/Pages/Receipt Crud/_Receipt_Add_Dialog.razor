@@ -5,24 +5,33 @@
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@Receipt" Class="custom-form">
+        <EditForm Model="@Receipt" Class="custom-form"  >
             <DataAnnotationsValidator />
-
-            <MudTextField Immediate="true" @bind-Value="@Receipt.ReceivedFrom"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@Receipt.ReceivedBy"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@Receipt.TotalAmount"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@Receipt.BranchId" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@Receipt.SubProjectId" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-
-
-
-
-
-
            
+
+            <MudTextField Label="ReceivedFrom" For="@(()=>Receipt.ReceivedFrom)" Immediate="true" @bind-Value="@Receipt.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
             
-            
+            <MudTextField Label="ReceivedBy"  For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="TotalAmount" For="@(()=>Receipt.TotalAmount)" Immediate="true" @bind-Value="@Receipt.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+            <MudSelect Label="Branch" For="@(()=>Receipt.BranchId)" @bind-Value="@Receipt.BranchId">
+                @foreach (var branch in Branches)
+                {
+                    <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect Label="SubProject" For="@(()=>Receipt.SubProjectId)" @bind-Value="@Receipt.SubProjectId">
+                @foreach (var subProject in SubProjects)
+                {
+                    <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+
+            <MudTextField Label="ForPurpose" For="@(()=>Receipt.ForPurpose)" Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+     
              </EditForm>
     </DialogContent>
     <DialogActions>
@@ -51,7 +60,14 @@
     string Icon = string.Empty;
 
 
+    [Parameter]
+    public List<Branch> Branches { get; set; }
+
+    [Parameter]
+    public List<SubProject> SubProjects { get; set; }
+
     public Receipt Receipt { get; set; }
+
 
 
 
@@ -65,27 +81,7 @@
         else
         {
 
-            //         [Key]
-            //         public int Id { get; set; }
-
-            //         [StringLength(250)]
-            //         public string ReceivedFrom { get; set; } = null!;
-
-            //         [StringLength(10)]
-            //         public string? ReceivedBy { get; set; }     // Foreign Key From User
-
-            //         [Column(TypeName = "decimal(18, 2)")]
-            //         public decimal TotalAmount { get; set; }
-
-            // public int BranchId { get; set; }   // Foreign Key
-
-            // [Column("Sub_ProjectId")]
-            // public int SubProjectId { get; set; }   // Foreign Key
-
-            // [StringLength(500)]
-            // public string ForPurpose { get; set; } = null!;
-
-            // public DateOnly Date { get; set; }
+           
 
             Receipt = new Receipt
                 {

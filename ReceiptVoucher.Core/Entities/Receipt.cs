@@ -7,7 +7,7 @@ public class Receipt
 
     [StringLength(250)]
     public string ReceivedFrom { get; set; } = null!;
-
+    [Required]
     [StringLength(10)]
     public string? ReceivedBy { get; set; }     // Foreign Key From User
 
@@ -23,6 +23,24 @@ public class Receipt
     public string ForPurpose { get; set; } = null!;
 
     public DateOnly Date { get; set; }
+
+    // Payment Type specif Prop
+    public string PaymentType { get; set; }= null!;
+
+    public int CheckNumber { get; set; }
+
+    public DateOnly CheckDate { get; set; }
+
+    public int AccountNumber { get; set;}
+
+    public string Bank { get; set; }=null!;
+
+
+
+
+
+
+
 
 
     //-------- Navigation Properties ---

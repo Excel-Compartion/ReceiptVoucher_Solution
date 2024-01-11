@@ -7,8 +7,8 @@
         <EditForm Model="@SubProject" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="name" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="Duration" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
             <MudSelect  Label="Project" @bind-Value="@SubProject.ProjectId">
                 @foreach (var project in Projects)

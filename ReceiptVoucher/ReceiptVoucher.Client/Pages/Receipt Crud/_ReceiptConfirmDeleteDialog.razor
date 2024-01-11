@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudText>هل انت متأكد من حذف بيانات الفرع: @BranchName ؟ </MudText>
+        <MudText>هل انت متأكد من حذف بيانات الفرع: @ReceiptId ؟ </MudText>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="@(() => MudDialog.Close(DialogResult.Ok(false)))">No</MudButton>
@@ -13,8 +13,8 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public string? BranchName { get; set; }
-
+    public int? ReceiptId { get; set; }
+    
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
 
