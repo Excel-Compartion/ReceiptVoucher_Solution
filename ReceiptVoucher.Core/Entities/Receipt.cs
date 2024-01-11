@@ -7,6 +7,7 @@ public class Receipt
 
     [StringLength(250)]
     public string ReceivedFrom { get; set; } = null!;
+
     [Required]
     [StringLength(10)]
     public string? ReceivedBy { get; set; }     // Foreign Key From User

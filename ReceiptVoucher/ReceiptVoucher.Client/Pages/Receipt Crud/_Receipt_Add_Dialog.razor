@@ -11,7 +11,48 @@
 
             <MudTextField Label="ReceivedFrom" For="@(()=>Receipt.ReceivedFrom)" Immediate="true" @bind-Value="@Receipt.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
             
-            <MudTextField Label="ReceivedBy"  For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField   Label="ReceivedBy"   For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+            <MudSelect Label="PaymentType" For="@(()=>Receipt.PaymentType)" @bind-Value="@Receipt.PaymentType">
+
+                <MudSelectItem Value="@PaymentType.Cash">@PaymentType.Cash</MudSelectItem>
+                <MudSelectItem Value="@PaymentType.Check" >@PaymentType.Check</MudSelectItem>
+                <MudSelectItem Value="@PaymentType.Account" >@PaymentType.Account</MudSelectItem>
+                <MudSelectItem Value="@PaymentType.Bank">@PaymentType.Bank</MudSelectItem>
+                   
+
+                </MudSelect>
+
+                @{
+
+                // نوع الدفع عبر شيك
+                if (Receipt.PaymentType == PaymentType.Check)
+                {
+                    <MudTextField Label="رقم الشيك" For="@(()=>Receipt.CheckNumber)" Immediate="true" @bind-Value="@Receipt.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+                    <MudDatePicker @bind-Value="@Receipt.CheckDate"  Label="تاريخ الشيك" />
+
+                }
+
+                // نوع الدفع عبر الحساب
+                else if (Receipt.PaymentType == PaymentType.Account)
+                {
+                    <MudTextField Label="رقم الحساب" For="@(()=>Receipt.AccountNumber)" Immediate="true" @bind-Value="@Receipt.AccountNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                }
+
+                //نوع الدفع عبر البنك 
+                else if (Receipt.PaymentType == PaymentType.Bank)
+                {
+                    <MudTextField Label="اسم البنك" For="@(()=>Receipt.Bank)" Immediate="true" @bind-Value="@Receipt.Bank" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                }
+
+                }
+             
+
+           
+            
+
             <MudTextField Label="TotalAmount" For="@(()=>Receipt.TotalAmount)" Immediate="true" @bind-Value="@Receipt.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
             <MudSelect Label="Branch" For="@(()=>Receipt.BranchId)" @bind-Value="@Receipt.BranchId">
@@ -32,6 +73,8 @@
             <MudTextField Label="ForPurpose" For="@(()=>Receipt.ForPurpose)" Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
      
+
+
              </EditForm>
     </DialogContent>
     <DialogActions>
