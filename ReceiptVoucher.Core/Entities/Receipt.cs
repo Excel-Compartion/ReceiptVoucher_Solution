@@ -25,16 +25,19 @@ public class Receipt
 
     public DateOnly Date { get; set; }
 
-    // Payment Type specif Prop
-    public string PaymentType { get; set; }= null!;
+    // Payment Type  Prop Related
 
-    public int CheckNumber { get; set; }
+    public string PaymentType { get; set; } = null!;
 
-    public DateOnly CheckDate { get; set; }
+    [MinLength(9),MaxLength(15)]
+    public int? CheckNumber { get; set; }
 
-    public int AccountNumber { get; set;}
+    public DateOnly? CheckDate { get; set; }
 
-    public string Bank { get; set; }=null!;
+    [MinLength(9), MaxLength(15)]
+    public int? AccountNumber { get; set;}
+
+    public string? Bank { get; set; }
 
 
 

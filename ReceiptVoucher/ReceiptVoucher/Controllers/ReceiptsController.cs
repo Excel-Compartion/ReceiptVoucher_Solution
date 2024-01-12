@@ -26,6 +26,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(Receipt receipt)
         {
+            
             receipt.Date=DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
                 return BadRequest();
