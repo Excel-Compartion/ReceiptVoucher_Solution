@@ -6,6 +6,7 @@ public class SubProject
     [Key]
     public int Id { get; set; }
 
+    [Range(1, int.MaxValue,ErrorMessage ="--- يرجى اختيار اسم المشروع ---")]
     public int ProjectId { get; set; }  // Foreign Key
 
     [Required(ErrorMessage ="حقل الاسم مطلوب")]

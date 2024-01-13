@@ -21,13 +21,15 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">ReceivedFrom</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">ReceivedBy</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">TotalAmount</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Branch</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">SubProject</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">ForPurpose</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">اسم المحاسب</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفردي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الغرض</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+       
 
         
        
@@ -41,6 +43,8 @@
             <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="ForPurpose">@context.ForPurpose</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="PaymentType">@context.PaymentType</MudTd>
+            
 
 
         <MudTd DataLabel="Actions" >

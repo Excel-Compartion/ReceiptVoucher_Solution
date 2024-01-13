@@ -1,19 +1,20 @@
-﻿@inject ISnackbar _Snackbar
+﻿@using System.ComponentModel.DataAnnotations
+@inject ISnackbar _Snackbar
 @rendermode InteractiveAuto
 @inject HttpClient Http
 
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@Receipt" Class="custom-form"  >
+        <EditForm Model="@Receipt" OnValidSubmit="Submit" Class="custom-form"  >
             <DataAnnotationsValidator />
            
 
-            <MudTextField Label="ReceivedFrom" For="@(()=>Receipt.ReceivedFrom)" Immediate="true" @bind-Value="@Receipt.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="اسم المودع" For="@(()=>Receipt.ReceivedFrom)" Immediate="true" @bind-Value="@Receipt.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
             
-            <MudTextField   Label="ReceivedBy"   For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField   Label="اسم المحاسب"   For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="PaymentType" For="@(()=>Receipt.PaymentType)" @bind-Value="@Receipt.PaymentType">
+            <MudSelect Label="نوع الدفع" For="@(()=>Receipt.PaymentType)" @bind-Value="@Receipt.PaymentType">
 
                 <MudSelectItem Value="@PaymentType.Cash">@PaymentType.Cash</MudSelectItem>
                 <MudSelectItem Value="@PaymentType.Check" >@PaymentType.Check</MudSelectItem>
@@ -28,15 +29,17 @@
                 // نوع الدفع عبر شيك
                 if (Receipt.PaymentType == PaymentType.Check)
                 {
-                    <MudTextField Label="رقم الشيك" For="@(()=>Receipt.CheckNumber)" Immediate="true" @bind-Value="@Receipt.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-                    <MudDatePicker @bind-Value="@Receipt.CheckDate"  Label="تاريخ الشيك" />
+                    <MudTextField  Label="رقم الشيك" For="@(()=>Receipt.CheckNumber)" Immediate="true" @bind-Value="@Receipt.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                    <MudDatePicker @bind-Value="@Receipt.CheckDate" Label="تاريخ الشيك" />
 
                 }
 
                 // نوع الدفع عبر الحساب
                 else if (Receipt.PaymentType == PaymentType.Account)
                 {
-                    <MudTextField Label="رقم الحساب" For="@(()=>Receipt.AccountNumber)" Immediate="true" @bind-Value="@Receipt.AccountNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField  Label="رقم الحساب" For="@(()=>Receipt.AccountNumber)" Immediate="true" @bind-Value="@Receipt.AccountNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
 
                 }
 
@@ -53,16 +56,18 @@
            
             
 
-            <MudTextField Label="TotalAmount" For="@(()=>Receipt.TotalAmount)" Immediate="true" @bind-Value="@Receipt.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="اجمالي المبلغ" For="@(()=>Receipt.TotalAmount)" Immediate="true" @bind-Value="@Receipt.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="Branch" For="@(()=>Receipt.BranchId)" @bind-Value="@Receipt.BranchId">
+            <MudSelect Label="الفرع" For="@(()=>Receipt.BranchId)" @bind-Value="@Receipt.BranchId">
+                <MudSelectItem Value="0">--- اختيار اسم الفرع ---</MudSelectItem>
                 @foreach (var branch in Branches)
                 {
                     <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
                 }
             </MudSelect>
 
-            <MudSelect Label="SubProject" For="@(()=>Receipt.SubProjectId)" @bind-Value="@Receipt.SubProjectId">
+            <MudSelect Label="المشروع الفرعي" For="@(()=>Receipt.SubProjectId)" @bind-Value="@Receipt.SubProjectId">
+                <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
                 @foreach (var subProject in SubProjects)
                 {
                     <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
@@ -70,20 +75,18 @@
             </MudSelect>
 
 
-            <MudTextField Label="ForPurpose" For="@(()=>Receipt.ForPurpose)" Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الغرض" For="@(()=>Receipt.ForPurpose)" Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-     
 
+            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
 
              </EditForm>
     </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit" Class="custom-button">@BtnName</MudButton>
-    </DialogActions>
+ 
 </MudDialog>
 
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
 
     @code {
@@ -114,11 +117,17 @@
 
 
 
+
     protected override void OnParametersSet()
     {
         if (OriginalReceipt == null)
         {
             Receipt = new Receipt();
+
+            // Set the default value for PaymentType
+            Receipt.PaymentType = PaymentType.Cash;
+            
+
 
         }
         else
@@ -135,7 +144,8 @@
                     BranchId = OriginalReceipt.BranchId,
                     SubProjectId = OriginalReceipt.SubProjectId,
                     ForPurpose = OriginalReceipt.ForPurpose,
-                    Date = OriginalReceipt.Date
+                    Date = OriginalReceipt.Date,
+                    PaymentType=OriginalReceipt.PaymentType
 
                 
             };
@@ -144,33 +154,33 @@
         }
     }
 
+
+
     async void Submit()
     {
+       
+
         if (!string.IsNullOrWhiteSpace(Receipt.ReceivedFrom))
         {
             if (Receipt.Id == 0)
             {
                 // The branch has no ID, so it's a new branch
-
                 await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", Receipt);
-
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
             }
-
             else
             {
-
                 await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", Receipt);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
 
             MudDialog.Close(DialogResult.Ok(true));
-
             // Trigger the OnClose event
             OnClose.InvokeAsync(true);
         }
     }
+
 
 
     void Cancel() => MudDialog.Cancel();

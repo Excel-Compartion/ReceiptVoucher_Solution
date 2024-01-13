@@ -4,25 +4,29 @@
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@SubProject" Class="custom-form">
+        <EditForm Model="@SubProject" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Label="name" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Label="Duration" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect  Label="Project" @bind-Value="@SubProject.ProjectId">
+            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" For="@(()=>SubProject.ProjectId)">
+                <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>
                 @foreach (var project in Projects)
                 {
                     <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
                 }
             </MudSelect>
 
+            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+
         </EditForm>
     </DialogContent>
-    <DialogActions>
+    @* <DialogActions>
         <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
         <MudButton Color="Color.Primary"  OnClick="Submit" Class="custom-button">@BtnName</MudButton>
-        </DialogActions>
+        </DialogActions> *@
     </MudDialog>
 
     @code {
@@ -44,6 +48,16 @@
         if (OriginalSubProject == null)
         {
             SubProject = new SubProject();
+
+
+
+            // // Set the default value for ProjectId
+            // if (Projects != null && Projects.Count > 0)
+            // {
+            //     SubProject.ProjectId = Projects[0].Id;
+            // }
+
+
         }
         else
         {
