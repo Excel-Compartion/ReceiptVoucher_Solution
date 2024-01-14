@@ -5,21 +5,20 @@
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@Project" OnInvalidSubmit="Submit" Class="custom-form" >
+        <EditForm Model="@Project" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
             <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
 
 
             <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            <MudButton Color="Color.Primary"ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+
+
             
              </EditForm>
     </DialogContent>
-    @* <DialogActions>
-        <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit" Class="custom-button">@BtnName</MudButton>
-    </DialogActions> *@
+ 
 </MudDialog>
 
 
@@ -75,10 +74,10 @@
             {
                 // The branch has no ID, so it's a new branch
 
-                await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
+              var message=   await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
 
                 // Show a success message
-                _Snackbar.Add("Branch added successfully!", Severity.Success);
+                _Snackbar.Add($"Branch added {message} successfully!", Severity.Success);
             }
 
             else

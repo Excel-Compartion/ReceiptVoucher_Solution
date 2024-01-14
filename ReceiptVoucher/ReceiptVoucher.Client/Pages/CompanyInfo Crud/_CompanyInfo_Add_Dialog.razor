@@ -6,17 +6,17 @@
 
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@CompanyInfo" OnInvalidSubmit="Submit" Class="custom-form">
+        <EditForm Model="@CompanyInfo" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Name"  Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.Name)" Label="اسم الشركه" Immediate="false" @bind-Value="@CompanyInfo.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Mobile"  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.LicenseNumber" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Telephone" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Email" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.Web" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Immediate="true" @bind-Value="@CompanyInfo.IVT" Required="true" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.Mobile)" Label="رقم الجوال" Immediate="false" @bind-Value="@CompanyInfo.Mobile" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.LicenseNumber)" Label="رقم الرخصه" Immediate="false" @bind-Value="@CompanyInfo.LicenseNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.Telephone)" Label="رقم الهاتف" Immediate="false" @bind-Value="@CompanyInfo.Telephone" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.Email)" Label="الجيميل" Immediate="false" @bind-Value="@CompanyInfo.Email" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.Web)" Label="موقع الويب" Immediate="false" @bind-Value="@CompanyInfo.Web" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField For="@(()=>CompanyInfo.IVT)" Label="IvT" Immediate="false" @bind-Value="@CompanyInfo.IVT" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
 
             <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
@@ -24,10 +24,7 @@
             
              </EditForm>
     </DialogContent>
-   @*  <DialogActions>
-        <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit" Class="custom-button">@BtnName</MudButton>
-    </DialogActions> *@
+  
 </MudDialog>
 
 

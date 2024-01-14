@@ -6,7 +6,7 @@ public class CompanyInfo
     [Key]
     public int Id { get; set; }
 
-    [Required]
+    [Required(ErrorMessage ="يرجى ادخال اسم الشركه")]
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
@@ -17,6 +17,7 @@ public class CompanyInfo
     public int? Telephone { get; set; }
 
     [StringLength(250)]
+    [EmailAddress(ErrorMessage = "يرجى ادخال بريد الكتروني صحيح")]
     public string? Email { get; set; }
 
     [StringLength(250)]

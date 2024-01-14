@@ -10,7 +10,7 @@ public class Receipt
     public string ReceivedFrom { get; set; } = null!;
 
     [Required(ErrorMessage ="يرجى ادخال اسم المحاسب")]
-    [StringLength(10)]
+    [StringLength(250)]
     public string? ReceivedBy { get; set; }     // Foreign Key From User
 
     [Range(1.0, int.MaxValue, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ ---")]
