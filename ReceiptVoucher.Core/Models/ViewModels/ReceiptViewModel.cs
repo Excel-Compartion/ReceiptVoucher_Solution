@@ -41,16 +41,18 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
         public string PaymentType { get; set; } = null!;
 
-
+        [Required]
         [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
         public int? CheckNumber { get; set; }
 
+        [Required(ErrorMessage = "يرجى ادخال تاريخ الشيك")]
+        public DateTime? CheckDate { get; set; } 
 
-        public DateOnly? CheckDate { get; set; }
-
+        [Required]
         [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الحساب بين 6 - 16 عدد")]
         public int? AccountNumber { get; set; }
 
+        [Required]
         [MinLength(2)]
         public string? Bank { get; set; }
     }

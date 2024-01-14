@@ -1,21 +1,21 @@
-﻿@using System.ComponentModel.DataAnnotations
-@inject ISnackbar _Snackbar
+﻿@inject ISnackbar _Snackbar
 @rendermode InteractiveAuto
 @inject HttpClient Http
 
 
+
+
 <MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
     <DialogContent>
-        <EditForm Model="@Receipt" OnValidSubmit="Submit" Class="custom-form"  >
+        <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form"  >
             <DataAnnotationsValidator />
            
 
-            <MudTextField Label="اسم المودع" For="@(()=>Receipt.ReceivedFrom)" Immediate="true" @bind-Value="@Receipt.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
             
-            <MudTextField   Label="اسم المحاسب"   For="@(()=>Receipt.ReceivedBy)" Immediate="true" @bind-Value="@Receipt.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField   Label="اسم المحاسب"   For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="نوع الدفع" For="@(()=>Receipt.PaymentType)" @bind-Value="@Receipt.PaymentType">
-
+            <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType">
                 <MudSelectItem Value="@PaymentType.Cash">@PaymentType.Cash</MudSelectItem>
                 <MudSelectItem Value="@PaymentType.Check" >@PaymentType.Check</MudSelectItem>
                 <MudSelectItem Value="@PaymentType.Account" >@PaymentType.Account</MudSelectItem>
@@ -26,27 +26,87 @@
 
                 @{
 
-                // نوع الدفع عبر شيك
-                if (Receipt.PaymentType == PaymentType.Check)
+                if (ReceiptViewModel.PaymentType == PaymentType.Cash)
                 {
-                    <MudTextField  Label="رقم الشيك" For="@(()=>Receipt.CheckNumber)" Immediate="true" @bind-Value="@Receipt.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-                    <MudDatePicker @bind-Value="@Receipt.CheckDate" Label="تاريخ الشيك" />
+                    ReceiptViewModel.CheckNumber = 10000000;
+
+                    ReceiptViewModel.AccountNumber = 10000000;
+                    ReceiptViewModel.Bank = "--";
+
+
+
+
+                }
+
+                // نوع الدفع عبر شيك
+                if (ReceiptViewModel.PaymentType == PaymentType.Check)
+                {
+
+
+
+                    if (!isCheckNumberCleared || ReceiptViewModel.CheckNumber == 10000000)
+                    {
+                        ReceiptViewModel.CheckNumber = null;
+                        ReceiptViewModel.CheckDate = null;
+
+                        isCheckNumberCleared = true;
+                        isCheckDateCleared = true;
+                    }
+
+
+
+                    ReceiptViewModel.AccountNumber = 10000000;
+                    ReceiptViewModel.Bank = "--";
+                    
+
+                    <MudTextField Label="رقم الشيك" Immediate="true" For="@(()=>ReceiptViewModel.CheckNumber)" @bind-Value="@ReceiptViewModel.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                    <MudDatePicker For="@(()=>ReceiptViewModel.CheckDate)" @bind-Date="ReceiptViewModel.CheckDate" Label="تاريخ الشيك" />
+
+
+
 
                 }
 
                 // نوع الدفع عبر الحساب
-                else if (Receipt.PaymentType == PaymentType.Account)
+                else if (ReceiptViewModel.PaymentType == PaymentType.Account)
                 {
-                    <MudTextField  Label="رقم الحساب" For="@(()=>Receipt.AccountNumber)" Immediate="true" @bind-Value="@Receipt.AccountNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                    if (!isAccountNumberCleared || ReceiptViewModel.AccountNumber == 10000000)
+                    {
+                        ReceiptViewModel.AccountNumber = null;
+                        isAccountNumberCleared = true;
+                    }
+
+                    ReceiptViewModel.CheckNumber = 10000000;
+
+                    ReceiptViewModel.CheckDate = DateTime.Now;
+
+                    ReceiptViewModel.Bank = "--";
+
+
+                    <MudTextField Label="رقم الحساب" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
 
                 }
 
                 //نوع الدفع عبر البنك 
-                else if (Receipt.PaymentType == PaymentType.Bank)
+                else if (ReceiptViewModel.PaymentType == PaymentType.Bank)
                 {
-                    <MudTextField Label="اسم البنك" For="@(()=>Receipt.Bank)" Immediate="true" @bind-Value="@Receipt.Bank" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+                    if (!isBankNameCleared || ReceiptViewModel.Bank=="--")
+                    {
+                        ReceiptViewModel.Bank = null;
+                        isBankNameCleared = true;
+                    }
+                    ReceiptViewModel.CheckNumber = 10000000;
+                    
+                    ReceiptViewModel.AccountNumber = 10000000;
+                   
+
+
+                    <MudTextField Label="اسم البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
                 }
 
@@ -56,9 +116,9 @@
            
             
 
-            <MudTextField Label="اجمالي المبلغ" For="@(()=>Receipt.TotalAmount)" Immediate="true" @bind-Value="@Receipt.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="الفرع" For="@(()=>Receipt.BranchId)" @bind-Value="@Receipt.BranchId">
+            <MudSelect Label="الفرع" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId">
                 <MudSelectItem Value="0">--- اختيار اسم الفرع ---</MudSelectItem>
                 @foreach (var branch in Branches)
                 {
@@ -66,7 +126,7 @@
                 }
             </MudSelect>
 
-            <MudSelect Label="المشروع الفرعي" For="@(()=>Receipt.SubProjectId)" @bind-Value="@Receipt.SubProjectId">
+            <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId">
                 <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
                 @foreach (var subProject in SubProjects)
                 {
@@ -75,7 +135,7 @@
             </MudSelect>
 
 
-            <MudTextField Label="الغرض" For="@(()=>Receipt.ForPurpose)" Immediate="true" @bind-Value="@Receipt.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الغرض" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
 
             <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
@@ -97,7 +157,7 @@
     public EventCallback<bool> OnClose {get; set; }
 
     [Parameter]
-    public Receipt OriginalReceipt { get; set; }
+    public ReceiptViewModel OriginalReceiptViewModel { get; set; }
 
 
     [Parameter]
@@ -112,66 +172,116 @@
     [Parameter]
     public List<SubProject> SubProjects { get; set; }
 
-    public Receipt Receipt { get; set; }
+    public ReceiptViewModel ReceiptViewModel { get; set; }
 
 
+    bool isCheckNumberCleared = false;
+
+    bool isCheckDateCleared = false;
+
+    bool isAccountNumberCleared = false;
+
+    bool isBankNameCleared = false;
 
 
 
     protected override void OnParametersSet()
     {
-        if (OriginalReceipt == null)
+        if (OriginalReceiptViewModel == null)
         {
-            Receipt = new Receipt();
+            ReceiptViewModel = new ReceiptViewModel();
+
 
             // Set the default value for PaymentType
-            Receipt.PaymentType = PaymentType.Cash;
+            ReceiptViewModel.PaymentType = PaymentType.Cash;
+
             
 
-
         }
+
+
+
         else
         {
 
-           
 
-            Receipt = new Receipt
+
+            ReceiptViewModel = new ReceiptViewModel
                 {
-                    Id = OriginalReceipt.Id,
-                    ReceivedFrom = OriginalReceipt.ReceivedFrom,
-                    ReceivedBy = OriginalReceipt.ReceivedBy,
-                    TotalAmount = OriginalReceipt.TotalAmount,
-                    BranchId = OriginalReceipt.BranchId,
-                    SubProjectId = OriginalReceipt.SubProjectId,
-                    ForPurpose = OriginalReceipt.ForPurpose,
-                    Date = OriginalReceipt.Date,
-                    PaymentType=OriginalReceipt.PaymentType
+                    Id = OriginalReceiptViewModel.Id,
+                    ReceivedFrom = OriginalReceiptViewModel.ReceivedFrom,
+                    ReceivedBy = OriginalReceiptViewModel.ReceivedBy,
+                    TotalAmount = OriginalReceiptViewModel.TotalAmount,
+                    BranchId = OriginalReceiptViewModel.BranchId,
+                    SubProjectId = OriginalReceiptViewModel.SubProjectId,
+                    ForPurpose = OriginalReceiptViewModel.ForPurpose,
+                    Date = OriginalReceiptViewModel.Date,
+                    PaymentType=OriginalReceiptViewModel.PaymentType,
 
-                
+                    
+
+
             };
 
 
         }
     }
 
+    
 
 
     async void Submit()
     {
-       
 
-        if (!string.IsNullOrWhiteSpace(Receipt.ReceivedFrom))
+
+        if (!string.IsNullOrWhiteSpace(ReceiptViewModel.ReceivedFrom))
         {
-            if (Receipt.Id == 0)
+            if (ReceiptViewModel.Id == 0)
             {
+
+                Receipt receipt = new Receipt();
+
+
+                receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
+                receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+                receipt.TotalAmount = ReceiptViewModel.TotalAmount;
+                receipt.BranchId = ReceiptViewModel.BranchId;
+                receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+                receipt.ForPurpose = ReceiptViewModel.ForPurpose;
+                receipt.Date = ReceiptViewModel.Date;
+                receipt.PaymentType = ReceiptViewModel.PaymentType;
+
+
+                switch (ReceiptViewModel.PaymentType)
+                {
+                    case PaymentType.Check:
+                        receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+
+                        // receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+                        // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
+                        // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
+                        receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+
+                        break;
+                    case PaymentType.Account:
+                        receipt.AccountNumber = ReceiptViewModel.AccountNumber;
+                        break;
+                    case PaymentType.Bank:
+                        receipt.Bank = ReceiptViewModel.Bank;
+                        break;
+
+                }
+
                 // The branch has no ID, so it's a new branch
-                await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", Receipt);
+                await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", receipt);
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
             }
             else
             {
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", Receipt);
+                await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", ReceiptViewModel);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
 
