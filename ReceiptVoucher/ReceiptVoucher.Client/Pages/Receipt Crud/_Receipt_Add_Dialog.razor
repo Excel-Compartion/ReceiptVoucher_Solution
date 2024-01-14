@@ -5,7 +5,7 @@
 
 
 
-<MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
+<MudDialog Class="custom-modal" Style="width: 100vw; height: auto "  >
     <DialogContent>
         <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form"  >
             <DataAnnotationsValidator />
@@ -45,7 +45,7 @@
 
 
 
-                    if (!isCheckNumberCleared || ReceiptViewModel.CheckNumber == 10000000)
+                    if ( ReceiptViewModel.CheckNumber == 10000000)
                     {
                         ReceiptViewModel.CheckNumber = null;
                         ReceiptViewModel.CheckDate = null;
@@ -73,7 +73,7 @@
                 else if (ReceiptViewModel.PaymentType == PaymentType.Account)
                 {
 
-                    if (!isAccountNumberCleared || ReceiptViewModel.AccountNumber == 10000000)
+                    if ( ReceiptViewModel.AccountNumber == 10000000)
                     {
                         ReceiptViewModel.AccountNumber = null;
                         isAccountNumberCleared = true;
@@ -95,7 +95,7 @@
                 else if (ReceiptViewModel.PaymentType == PaymentType.Bank)
                 {
 
-                    if (!isBankNameCleared || ReceiptViewModel.Bank=="--")
+                    if ( ReceiptViewModel.Bank=="--")
                     {
                         ReceiptViewModel.Bank = null;
                         isBankNameCleared = true;
@@ -137,9 +137,13 @@
 
             <MudTextField Label="الغرض" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
+            @if (BtnName != ButtonTypes.Details)
+            {
+                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            }
 
-            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+           <br />
 
              </EditForm>
     </DialogContent>
@@ -195,7 +199,7 @@
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentType.Cash;
 
-            
+
 
         }
 
@@ -218,7 +222,12 @@
                     Date = OriginalReceiptViewModel.Date,
                     PaymentType=OriginalReceiptViewModel.PaymentType,
 
-                    
+                    //PaymentType Related prop
+                    CheckNumber = OriginalReceiptViewModel.CheckNumber,
+                    CheckDate = OriginalReceiptViewModel.CheckDate,
+                    AccountNumber = OriginalReceiptViewModel.AccountNumber,
+                    Bank = OriginalReceiptViewModel.Bank,
+
 
 
             };
@@ -227,7 +236,7 @@
         }
     }
 
-    
+
 
 
     async void Submit()
@@ -236,43 +245,47 @@
 
         if (!string.IsNullOrWhiteSpace(ReceiptViewModel.ReceivedFrom))
         {
+
+
+            Receipt receipt = new Receipt();
+
+
+            receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
+            receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+            receipt.TotalAmount = ReceiptViewModel.TotalAmount;
+            receipt.BranchId = ReceiptViewModel.BranchId;
+            receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+            receipt.ForPurpose = ReceiptViewModel.ForPurpose;
+            receipt.Date = ReceiptViewModel.Date;
+            receipt.PaymentType = ReceiptViewModel.PaymentType;
+
+
+            switch (ReceiptViewModel.PaymentType)
+            {
+                case PaymentType.Check:
+                    receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+
+                    // receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+                    // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
+                    // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
+                    receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+
+                    break;
+                case PaymentType.Account:
+                    receipt.AccountNumber = ReceiptViewModel.AccountNumber;
+                    break;
+                case PaymentType.Bank:
+                    receipt.Bank = ReceiptViewModel.Bank;
+                    break;
+
+            }
+
+
             if (ReceiptViewModel.Id == 0)
             {
 
-                Receipt receipt = new Receipt();
-
-
-                receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
-                receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
-                receipt.TotalAmount = ReceiptViewModel.TotalAmount;
-                receipt.BranchId = ReceiptViewModel.BranchId;
-                receipt.SubProjectId = ReceiptViewModel.SubProjectId;
-                receipt.ForPurpose = ReceiptViewModel.ForPurpose;
-                receipt.Date = ReceiptViewModel.Date;
-                receipt.PaymentType = ReceiptViewModel.PaymentType;
-
-
-                switch (ReceiptViewModel.PaymentType)
-                {
-                    case PaymentType.Check:
-                        receipt.CheckNumber = ReceiptViewModel.CheckNumber;
-
-                        // receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
-
-                        // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
-                        // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
-                        receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
-
-
-                        break;
-                    case PaymentType.Account:
-                        receipt.AccountNumber = ReceiptViewModel.AccountNumber;
-                        break;
-                    case PaymentType.Bank:
-                        receipt.Bank = ReceiptViewModel.Bank;
-                        break;
-
-                }
 
                 // The branch has no ID, so it's a new branch
                 await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", receipt);
@@ -281,7 +294,8 @@
             }
             else
             {
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", ReceiptViewModel);
+                receipt.Id = ReceiptViewModel.Id;
+                await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", receipt);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
 

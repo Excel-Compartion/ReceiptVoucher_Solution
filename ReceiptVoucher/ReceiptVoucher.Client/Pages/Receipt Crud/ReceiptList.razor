@@ -29,6 +29,7 @@
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الغرض</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
        
 
         
@@ -45,11 +46,24 @@
             <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="PaymentType">@context.PaymentType</MudTd>
             
+            
 
 
         <MudTd DataLabel="Actions" >
-            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteReceipt(context.Id))">Delete</MudButton>
+                @* <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton> *@
+
+
+                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
+                </MudButtonGroup>
+
+
+
+               
 
         </MudTd>
     </RowTemplate>
@@ -146,22 +160,71 @@
 
         parameters.Add("SubProjects", SubProjects);
 
-        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters);
+        var options = new DialogOptions() { CloseButton = true };
+        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters,options);
     }
 
-    private void OpenEditDialog(Receipt receipt)
+    private void OpenEditDialog(Receipt receipt, string optionalParameter = "")
     {
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
-        parameters.Add("OriginalReceipt", receipt);
-        parameters.Add("BtnName", "تعديل");
+
+        ReceiptViewModel receiptViewModel = new ReceiptViewModel();
+
+        receiptViewModel.Id = receipt.Id;
+        receiptViewModel.ReceivedFrom = receipt.ReceivedFrom;
+        receiptViewModel.ReceivedBy = receipt.ReceivedBy;
+        receiptViewModel.TotalAmount = receipt.TotalAmount;
+        receiptViewModel.BranchId = receipt.BranchId;
+        receiptViewModel.SubProjectId = receipt.SubProjectId;
+        receiptViewModel.ForPurpose = receipt.ForPurpose;
+        receiptViewModel.Date = receipt.Date;
+        receiptViewModel.PaymentType = receipt.PaymentType;
+        receiptViewModel.CheckNumber = receipt.CheckNumber;
+
+
+        // التحقق من القيمة قبل التحويل
+        DateTime? dateTime = receipt.CheckDate.HasValue ? receipt.CheckDate.Value.ToDateTime(TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay)) : (DateTime?)null;
+
+        // تعيين القيمة في ViewModel
+        receiptViewModel.CheckDate = dateTime;
+
+
+
+        receiptViewModel.AccountNumber = receipt.AccountNumber;
+        receiptViewModel.Bank = receipt.Bank;
+
+
+
+        parameters.Add("OriginalReceiptViewModel", receiptViewModel);
+
 
         parameters.Add("Branches", Branches);
 
         parameters.Add("SubProjects", SubProjects);
 
-        _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters);
+        if (optionalParameter == ButtonTypes.Details)
+        {
+            var options = new DialogOptions() { CloseButton = true};
+            parameters.Add("BtnName", ButtonTypes.Details);
+            _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
+        }
+
+        else
+        {
+            parameters.Add("BtnName", "تعديل");
+            _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters);
+        }
+
+       
     }
+
+
+
+
+
+
+
 
     private async void RefreshData(bool dialogResult)
     {
