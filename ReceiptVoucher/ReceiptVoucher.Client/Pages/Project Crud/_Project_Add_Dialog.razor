@@ -11,8 +11,20 @@
             <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
 
 
-            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-            <MudButton Color="Color.Primary"ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            <br />
+            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>Project.Note)" @bind-Value="@Project.Note" Lines="3" />
+
+
+            <br />
+            <MudCheckBox Label="حاله التفعيل" @bind-Value="@Project.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+
+            <br />
+
+            @if (BtnName != ButtonTypes.Details)
+            {
+                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            }
 
 
             
@@ -58,7 +70,9 @@
             Project = new Project
             {
                     Id = OriginalProject.Id,
-                    Name = OriginalProject.Name
+                    Name = OriginalProject.Name,
+                    Note = OriginalProject.Note,
+                    IsActive = OriginalProject.IsActive
                 
             };
 
@@ -74,17 +88,35 @@
             {
                 // The branch has no ID, so it's a new branch
 
-              var message=   await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
+             
 
-                // Show a success message
-                _Snackbar.Add($"Branch added {message} successfully!", Severity.Success);
+
+                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("Project add successfully!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"Failed to add project. Error: {response.StatusCode}", Severity.Error);
+                }
+
+               
             }
 
             else
             {
 
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Projects", Project);
-                _Snackbar.Add("Branch updated successfully!", Severity.Success);
+                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/Projects", Project);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("project updated successfully!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"Failed to update project. Error: {response.StatusCode}", Severity.Error);
+                }
+
             }
 
             MudDialog.Close(DialogResult.Ok(true));

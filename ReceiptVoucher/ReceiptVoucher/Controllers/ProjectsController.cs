@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReceiptVoucher.Core.Interfaces;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -7,11 +8,13 @@ namespace ReceiptVoucher.Server.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        
+        private readonly IProjectRepository _projectRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public ProjectsController(IUnitOfWork unitOfWork)
+        public ProjectsController(IUnitOfWork unitOfWork, IProjectRepository projectRepository)
         {
             _unitOfWork = unitOfWork;
+
+            _projectRepository = projectRepository;
         }
 
         [HttpGet("GetAllAsync")]
@@ -35,23 +38,22 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPut]
-        //[AutoValidateAntiforgeryToken]
-        public IActionResult Update(Project project /*, int id*/)
+        public async Task<IActionResult> Update(Project project)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            // Edit Entity in Database using Service Or UnitOfWork : var entity = _service.Edit(model)
+            // استخدم الدالة UpdateProjectAsync لتحديث المشروع
+            bool isUpdated = await _projectRepository.UpdateProjectAsync(project);
 
-            Project? editedProject = _unitOfWork.Projects.Update(project);
-
-            // check if entity null , means that BadRequest , this happen during edting
-            if (editedProject is null)
+            // إذا حدث خطأ أثناء التحديث، قم بإرجاع BadRequest
+            if (!isUpdated)
                 return BadRequest();
 
-            _unitOfWork.Complete();
-            return Ok(editedProject);
+            // إذا تم التحديث بنجاح، قم بإرجاع Ok
+            return Ok();
         }
+
 
 
         [HttpDelete("{id}")]

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ReceiptVoucher.Core.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace ReceiptVoucher.Core.Models.ViewModels
 {
@@ -55,5 +57,20 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Required(ErrorMessage = "يرجى ادخال اسم البنك")]
         [MinLength(2)]
         public string? Bank { get; set; }
+
+
+       
+        //public GrantDest GrantDestinations { get; set; } 
+
+        public int? Mobile { get; set; }
+
+        [StringLength(250)]
+        public string? Gender { get; set; }
+
+
+
+        public int? Age { get; set; }
+
+
     }
 }

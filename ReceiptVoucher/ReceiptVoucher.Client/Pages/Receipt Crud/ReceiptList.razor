@@ -3,7 +3,7 @@
 
 @inject HttpClient Http
 
-@inject IDialogService _DialogService 
+@inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 
 <br />
@@ -11,8 +11,11 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة سند</MudButton>
+
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة سند</MudButton>
+
         &nbsp;&nbsp;
+
         <MudText Typo="Typo.h6">Receipt</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
@@ -22,6 +25,9 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الجوال</MudTableSortLabel></MudTh>
+
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">اسم المحاسب</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
@@ -30,14 +36,16 @@
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
-       
 
-        
-       
+
+
+
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+           @*  <MudTd DataLabel="Name">@context.GrantDestinations</MudTd> *@
+            <MudTd DataLabel="Name">@context.Mobile</MudTd>
             <MudTd DataLabel="ReceivedBy">@context.ReceivedBy</MudTd>
             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
             <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
@@ -45,14 +53,11 @@
             <MudTd DataLabel="ForPurpose">@context.ForPurpose</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="PaymentType">@context.PaymentType</MudTd>
-            
-            
 
 
-        <MudTd DataLabel="Actions" >
-                @* <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
-                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton> *@
+
+
+            <MudTd DataLabel="Actions">
 
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
@@ -63,20 +68,20 @@
 
 
 
-               
 
-        </MudTd>
-    </RowTemplate>
-    <NoRecordsContent>
-        <MudText>No matching records found</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>Loading...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 
 
 
@@ -108,7 +113,7 @@
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
         data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
-       
+
         data = data.Where(receipt =>
         {
             if (string.IsNullOrWhiteSpace(searchString))
@@ -161,7 +166,7 @@
         parameters.Add("SubProjects", SubProjects);
 
         var options = new DialogOptions() { CloseButton = true };
-        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters,options);
+        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
     }
 
     private void OpenEditDialog(Receipt receipt, string optionalParameter = "")
@@ -181,6 +186,12 @@
         receiptViewModel.Date = receipt.Date;
         receiptViewModel.PaymentType = receipt.PaymentType;
         receiptViewModel.CheckNumber = receipt.CheckNumber;
+
+        // receiptViewModel.GrantDestinations = receipt.GrantDestinations;
+        receiptViewModel.Gender = receipt.Gender;
+        receiptViewModel.Age = receipt.Age;
+        receiptViewModel.Mobile = receipt.Mobile;
+
 
 
         // التحقق من القيمة قبل التحويل
@@ -203,9 +214,11 @@
 
         parameters.Add("SubProjects", SubProjects);
 
+        var options = new DialogOptions() { CloseButton = true };
+
         if (optionalParameter == ButtonTypes.Details)
         {
-            var options = new DialogOptions() { CloseButton = true};
+
             parameters.Add("BtnName", ButtonTypes.Details);
             _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
         }
@@ -213,10 +226,10 @@
         else
         {
             parameters.Add("BtnName", "تعديل");
-            _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters);
+            _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters, options);
         }
 
-       
+
     }
 
 

@@ -9,7 +9,9 @@ public class Project
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
-    public bool? IsActive { get; set; }
+    public string? Note {  get; set; }
+
+    public bool IsActive { get; set; } = true;
 
     //-------- Navigation Properties ---
     public ICollection<SubProject> SubProjects { get; set; } = new List<SubProject>();

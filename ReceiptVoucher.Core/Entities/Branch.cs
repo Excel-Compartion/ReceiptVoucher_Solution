@@ -9,6 +9,19 @@ public class Branch
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
+    [Required(ErrorMessage = "يرجى ادخال اسم المنطقة ")]
+    [StringLength(250)]
+    public string Area { get; set; } = null!;
+
+    public int? Mobile { get; set; }
+
+    [StringLength(250)]
+    [EmailAddress(ErrorMessage = "يرجى ادخال بريد الكتروني صحيح")]
+    public string? Email { get; set; }
+
+
+    public string? ResponsiblePerson { get; set; }
+
     public bool IsActive { get; set; } = true;
 
     

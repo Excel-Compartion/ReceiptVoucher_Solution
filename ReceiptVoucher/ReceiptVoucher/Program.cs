@@ -1,3 +1,5 @@
+
+
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
@@ -8,6 +10,7 @@ using ReceiptVoucher.EF;
 using ReceiptVoucher.EF.Repositories;
 using ReceiptVoucher.Server.Components;
 using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,7 @@ builder.Services.AddControllers().AddJsonOptions(option =>
 builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
 builder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
 
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 
 builder.Services.AddMudServices();  // MudBlazor
 builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.

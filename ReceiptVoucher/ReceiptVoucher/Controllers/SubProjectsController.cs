@@ -40,7 +40,7 @@ namespace ReceiptVoucher.Server.Controllers
         public async Task<IActionResult> AddOne(SubProject subProject)
         {
             subProject.CreatedDate = DateTime.Now;
-            subProject.IsActive = true;
+            
            
             if (!ModelState.IsValid)
                 return BadRequest();

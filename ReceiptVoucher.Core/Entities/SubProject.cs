@@ -18,7 +18,9 @@ public class SubProject
     [Column(TypeName = "datetime")]
     public DateTime CreatedDate { get; set; }
 
-    public bool? IsActive { get; set; }
+    public string? Note { get; set; }
+
+    public bool IsActive { get; set; } = true;
 
     //-------- Navigation Properties ---
 

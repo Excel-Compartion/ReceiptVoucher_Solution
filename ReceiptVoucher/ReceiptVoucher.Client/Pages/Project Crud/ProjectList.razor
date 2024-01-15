@@ -11,8 +11,10 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success">اضافة مشروع</MudButton>
+
+        <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة مشروع</MudButton>
         &nbsp;&nbsp;
+
         <MudText Typo="Typo.h6">Project</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
@@ -20,19 +22,36 @@
 
     </ToolBarContent>
     <HeaderContent>
+
+
+
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Project">Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
+
+
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">الاجراءت</MudTableSortLabel></MudTh>
         
        
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Actions">
-            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="@(() => OpenEditDialog(context))">Edit</MudButton>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="@(() => DeleteBranch(context.Id))">Delete</MudButton>
 
-        </MudTd>
+         <MudTd DataLabel="Id">@context.Id</MudTd>
+           <MudTd DataLabel="Name">@context.Name</MudTd>
+
+            
+            <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+
+
+            <MudTd DataLabel="Actions">
+
+                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))">حدف</MudButton>
+                </MudButtonGroup>
+
+            </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
@@ -115,14 +134,25 @@
         _DialogService.Show<_Project_Add_Dialog>("اضافة مشروع جديد", parameters);
     }
 
-    private void OpenEditDialog(Project project)
+    private void OpenEditDialog(Project project, string optionalParameter = "")
     {
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
         parameters.Add("OriginalProject", project);
-        parameters.Add("BtnName", "تعديل");
 
-        _DialogService.Show<_Project_Add_Dialog>("تعديل مشروع", parameters);
+        var options = new DialogOptions() { CloseButton = true };
+
+        if (optionalParameter == ButtonTypes.Details)
+        {
+            parameters.Add("BtnName", ButtonTypes.Details);
+            _DialogService.Show<_Project_Add_Dialog>("تفاصيل المشروع", parameters, options);
+        }
+        else
+        {
+            parameters.Add("BtnName", "تعديل");
+            _DialogService.Show<_Project_Add_Dialog>("تعديل مشروع", parameters, options);
+        }
+
     }
 
     private async void RefreshData(bool dialogResult)

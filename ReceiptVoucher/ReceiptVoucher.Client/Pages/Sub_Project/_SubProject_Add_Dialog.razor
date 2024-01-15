@@ -7,26 +7,77 @@
         <EditForm Model="@SubProject" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" For="@(()=>SubProject.ProjectId)">
+            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" >
                 <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>
+
                 @foreach (var project in Projects)
                 {
                     <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
+
+
                 }
             </MudSelect>
 
-            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+
+            @{
+                if (SubProject.ProjectId != 0)
+                {
+                    var project = Projects.Where(x => x.Id == SubProject.ProjectId).FirstOrDefault();
+
+                    if (project != null)
+                    {
+
+                        isActive = project.IsActive;
+
+                        if (project.IsActive == false)
+                        {
+                            SubProject.IsActive = project.IsActive;
+                        }
+
+                    }
+
+                }
+            }
+
+
+            <br />
+            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>SubProject.Note)" @bind-Value="@SubProject.Note" Lines="2" />
+
+
+             
+
+            @if (isActive)
+            {
+                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+
+            }
+            else
+            {
+                <MudCheckBox Disabled  Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+
+            }
+
+            
+           
+
+
+            @if(BtnName != ButtonTypes.Details)
+            {
+                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            }
+           
+            <br />
 
         </EditForm>
     </DialogContent>
   
     </MudDialog>
 
-    @code {
+@code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public SubProject OriginalSubProject { get; set; }
@@ -36,6 +87,27 @@
     [Parameter] 
     public List<Project> Projects { get; set; }
 
+   
+
+    bool isActive = true;
+
+
+
+    // async Task UpdateIsActive(int projectId)
+    // {
+    //     var selectedProject = Projects.FirstOrDefault(p => p.Id == projectId);
+    //     if (selectedProject != null)
+    //     {
+    //         isActive = selectedProject.IsActive;
+
+    //         SubProject.IsActive = selectedProject.IsActive;
+
+           
+    //     }
+    //     }
+    
+
+    
 
 
 
@@ -48,12 +120,6 @@
 
 
 
-            // // Set the default value for ProjectId
-            // if (Projects != null && Projects.Count > 0)
-            // {
-            //     SubProject.ProjectId = Projects[0].Id;
-            // }
-
 
         }
         else
@@ -65,7 +131,9 @@
                     ProjectId = OriginalSubProject.ProjectId, // Add this line
                     Duration = OriginalSubProject.Duration,
                     CreatedDate = OriginalSubProject.CreatedDate,
-                    IsActive = OriginalSubProject.IsActive
+                    IsActive = OriginalSubProject.IsActive,
+                    Note = OriginalSubProject.Note
+
 
                 };
         }
@@ -79,15 +147,35 @@
             if (SubProject.Id == 0)
             {
 
-                // The SubProject has no ID, so it's a new SubProject
-                var message= await Http.PostAsJsonAsync("https://localhost:7210/api/SubProjects/AddOneAsync", SubProject);
-                // Show a success message
-                _Snackbar.Add($"SubProject {message} added successfully!", Severity.Success);
+                
+                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/SubProjects/AddOneAsync", SubProject);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تمت اضافه المشروع الفرعي بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"فشل في اضافه المشروع الفرعي: {response.StatusCode}", Severity.Error);
+                }
+
+
+               
             }
             else
             {
-                await Http.PutAsJsonAsync("https://localhost:7210/api/SubProjects", SubProject);
-                _Snackbar.Add("SubProject updated successfully!", Severity.Success);
+
+
+                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/SubProjects", SubProject);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم تعديل المشروع الفرعي بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"فشل في تعديل المشروع الفرعي: {response.StatusCode}", Severity.Error);
+                }
+
+               
             }
 
             MudDialog.Close(DialogResult.Ok(true));

@@ -18,10 +18,12 @@
             <MudTextField For="@(()=>CompanyInfo.Web)" Label="موقع الويب" Immediate="false" @bind-Value="@CompanyInfo.Web" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
             <MudTextField For="@(()=>CompanyInfo.IVT)" Label="IvT" Immediate="false" @bind-Value="@CompanyInfo.IVT" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
+            <br />
 
             <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
             <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
             
+            <br />
              </EditForm>
     </DialogContent>
   

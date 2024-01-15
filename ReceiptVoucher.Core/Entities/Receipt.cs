@@ -1,4 +1,11 @@
-﻿namespace ReceiptVoucher.Core.Entities;
+﻿
+
+
+
+using ReceiptVoucher.Core.Enum;
+
+
+namespace ReceiptVoucher.Core.Entities;
 
 public class Receipt
 {
@@ -29,6 +36,23 @@ public class Receipt
     public string ForPurpose { get; set; } = null!;
 
     public DateOnly Date { get; set; }
+
+
+
+
+    public string GrantDestinations { get; set; } = string.Empty;
+    //public GrantDest GrantDestinations { get; set; }
+
+
+
+    public int? Mobile { get; set; }
+
+    [StringLength(250)]
+    public string? Gender { get; set; }
+
+
+    
+    public int? Age { get; set; }
 
     // Payment Type  Prop Related
 
