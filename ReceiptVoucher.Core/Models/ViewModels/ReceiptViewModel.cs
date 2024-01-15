@@ -1,4 +1,4 @@
-﻿using ReceiptVoucher.Core.Enum;
+﻿using ReceiptVoucher.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,8 +59,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string? Bank { get; set; }
 
 
-       
-        //public GrantDest GrantDestinations { get; set; } 
+        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار الجهه المانحه  ---")]
+        public GrantDest GrantDestinations { get; set; }
 
         public int? Mobile { get; set; }
 

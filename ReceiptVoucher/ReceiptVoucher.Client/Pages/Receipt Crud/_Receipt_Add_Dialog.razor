@@ -5,22 +5,50 @@
 
 
 
-<MudDialog Class="custom-modal" Style="width: 100vw; height: auto "  >
+<MudDialog Class="custom-modal" Style="width: 100vw; height: auto ">
     <DialogContent>
-        <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form"  >
+        <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
-           
+
 
             <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
-            
-            <MudTextField   Label="اسم المحاسب"   For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+            <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
+
+
+
+
+
+            <MudSelect Label="وجهة المنحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations">
+                <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
+                    <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
+                    <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
+                    <MudSelectItem Value="@GrantDest.Association">@GrantDest.Association.GetDisplayName()</MudSelectItem>
+                </MudSelect>
+
+
+            @*     @if (ReceiptViewModel.GrantDestinations == GrantDest.Individual)
+            {
+                <MudRadioGroup @bind-Value="ReceiptViewModel.Gender">
+
+                        <MudRadio Value="Gender.Male">@Gender.Male.GetDisplayName()</MudRadio>
+
+                        <MudRadio Value="Gender.Female">@Gender.Female.GetDisplayName()</MudRadio>
+
+                    </MudRadioGroup>
+
+            } *@
+
+
+            <MudTextField Label="اسم المحاسب" For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
             <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType">
                 <MudSelectItem Value="@PaymentType.Cash">@PaymentType.Cash</MudSelectItem>
-                <MudSelectItem Value="@PaymentType.Check" >@PaymentType.Check</MudSelectItem>
-                <MudSelectItem Value="@PaymentType.Account" >@PaymentType.Account</MudSelectItem>
-                <MudSelectItem Value="@PaymentType.Bank">@PaymentType.Bank</MudSelectItem>
-                   
+                    <MudSelectItem Value="@PaymentType.Check">@PaymentType.Check</MudSelectItem>
+                    <MudSelectItem Value="@PaymentType.Account">@PaymentType.Account</MudSelectItem>
+                    <MudSelectItem Value="@PaymentType.Bank">@PaymentType.Bank</MudSelectItem>
+
 
                 </MudSelect>
 
@@ -46,7 +74,7 @@
 
 
 
-                    if ( ReceiptViewModel.CheckNumber == 10000000)
+                    if (ReceiptViewModel.CheckNumber == 10000000)
                     {
                         ReceiptViewModel.CheckNumber = null;
                         ReceiptViewModel.CheckDate = null;
@@ -59,7 +87,7 @@
 
                     ReceiptViewModel.AccountNumber = 10000000;
                     ReceiptViewModel.Bank = "--";
-                    
+
 
                     <MudTextField Label="رقم الشيك" Immediate="true" For="@(()=>ReceiptViewModel.CheckNumber)" @bind-Value="@ReceiptViewModel.CheckNumber" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
@@ -74,7 +102,7 @@
                 else if (ReceiptViewModel.PaymentType == PaymentType.Account)
                 {
 
-                    if ( ReceiptViewModel.AccountNumber == 10000000)
+                    if (ReceiptViewModel.AccountNumber == 10000000)
                     {
                         ReceiptViewModel.AccountNumber = null;
                         isAccountNumberCleared = true;
@@ -92,30 +120,30 @@
 
                 }
 
-                //نوع الدفع عبر البنك 
+                //نوع الدفع عبر البنك
                 else if (ReceiptViewModel.PaymentType == PaymentType.Bank)
                 {
 
-                    if ( ReceiptViewModel.Bank=="--")
+                    if (ReceiptViewModel.Bank == "--")
                     {
                         ReceiptViewModel.Bank = null;
                         isBankNameCleared = true;
                     }
                     ReceiptViewModel.CheckNumber = 10000000;
-                    
+
                     ReceiptViewModel.AccountNumber = 10000000;
-                   
+
 
 
                     <MudTextField Label="اسم البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
                 }
 
-                }
-             
+            }
 
-           
-            
+
+
+
 
             <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
@@ -144,22 +172,22 @@
                 <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
             }
 
-           <br />
+            <br />
 
-             </EditForm>
+        </EditForm>
     </DialogContent>
- 
+
 </MudDialog>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
 
-    @code {
+
+@code {
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public EventCallback<bool> OnClose {get; set; }
+    public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
     public ReceiptViewModel OriginalReceiptViewModel { get; set; }
@@ -190,6 +218,10 @@
 
 
 
+
+
+
+
     protected override void OnParametersSet()
     {
         if (OriginalReceiptViewModel == null)
@@ -199,6 +231,8 @@
 
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentType.Cash;
+
+
 
 
 
@@ -221,9 +255,16 @@
                     SubProjectId = OriginalReceiptViewModel.SubProjectId,
                     ForPurpose = OriginalReceiptViewModel.ForPurpose,
                     Date = OriginalReceiptViewModel.Date,
-                    PaymentType=OriginalReceiptViewModel.PaymentType,
+                    GrantDestinations = OriginalReceiptViewModel.GrantDestinations,
+                    Mobile = OriginalReceiptViewModel.Mobile,
+                    Age = OriginalReceiptViewModel.Age,
+                    Gender = OriginalReceiptViewModel.Gender,
+
+
+
 
                     //PaymentType Related prop
+                    PaymentType = OriginalReceiptViewModel.PaymentType,
                     CheckNumber = OriginalReceiptViewModel.CheckNumber,
                     CheckDate = OriginalReceiptViewModel.CheckDate,
                     AccountNumber = OriginalReceiptViewModel.AccountNumber,
@@ -231,7 +272,7 @@
 
 
 
-            };
+                };
 
 
         }
@@ -260,6 +301,11 @@
             receipt.Date = ReceiptViewModel.Date;
             receipt.PaymentType = ReceiptViewModel.PaymentType;
 
+            receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
+            receipt.Mobile = ReceiptViewModel.Mobile;
+            receipt.Age = ReceiptViewModel.Age;
+            receipt.Gender = ReceiptViewModel.Gender;
+
 
             switch (ReceiptViewModel.PaymentType)
             {
@@ -286,18 +332,34 @@
 
             if (ReceiptViewModel.Id == 0)
             {
+                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", receipt);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"فشل في اضافه السند : {response.StatusCode}", Severity.Error);
+                }
 
 
-                // The branch has no ID, so it's a new branch
-                await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", receipt);
-                // Show a success message
-                _Snackbar.Add("Branch added successfully!", Severity.Success);
             }
             else
             {
                 receipt.Id = ReceiptViewModel.Id;
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", receipt);
-                _Snackbar.Add("Branch updated successfully!", Severity.Success);
+
+                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", receipt);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
+                }
+
+
+
             }
 
             MudDialog.Close(DialogResult.Ok(true));
@@ -310,7 +372,7 @@
 
     void Cancel() => MudDialog.Cancel();
 
-    
+
 }
 
 

@@ -2,7 +2,7 @@
 
 
 
-using ReceiptVoucher.Core.Enum;
+using ReceiptVoucher.Core.Enums;
 
 
 namespace ReceiptVoucher.Core.Entities;
@@ -40,8 +40,8 @@ public class Receipt
 
 
 
-    public string GrantDestinations { get; set; } = string.Empty;
-    //public GrantDest GrantDestinations { get; set; }
+    //public string GrantDestinations { get; set; } = string.Empty;
+    public GrantDest GrantDestinations { get; set; }
 
 
 

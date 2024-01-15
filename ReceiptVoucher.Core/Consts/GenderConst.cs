@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReceiptVoucher.Core.Consts
 {
-    public class Gender
+    public class GenderConst
     {
         public const string Male = "ذكر";
         public const string Female = "انثى";
