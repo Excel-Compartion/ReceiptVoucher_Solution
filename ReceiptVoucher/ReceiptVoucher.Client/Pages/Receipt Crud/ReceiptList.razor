@@ -26,13 +26,10 @@
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الجوال</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">اسم المحاسب</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفردي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الغرض</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
@@ -45,14 +42,11 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
-            <MudTd DataLabel="Name">@context.Mobile</MudTd>
-            <MudTd DataLabel="ReceivedBy">@context.ReceivedBy</MudTd>
             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
             <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
             <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
-            <MudTd DataLabel="ForPurpose">@context.ForPurpose</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="PaymentType">@context.PaymentType</MudTd>
+            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
 
 
 
@@ -63,6 +57,7 @@
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined">طباعه</MudButton>
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
                 </MudButtonGroup>
 

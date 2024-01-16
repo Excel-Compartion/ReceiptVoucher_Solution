@@ -24,7 +24,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet("Get")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _unitOfWork.SubProjects.GetAllAsync());
+            return Ok(await _subProjectRepository.GetAllSubProjectAsync());
         }
 
         // this include the navg_prop

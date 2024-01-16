@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReceiptVoucher.EF;
 
@@ -11,9 +12,11 @@ using ReceiptVoucher.EF;
 namespace ReceiptVoucher.EF.Migrations
 {
     [DbContext(typeof(ReceiptVoucherDbContext))]
-    partial class ReceiptVoucherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240115223527_AddGenderEnum")]
+    partial class AddGenderEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,7 +138,7 @@ namespace ReceiptVoucher.EF.Migrations
                     b.Property<int?>("AccountNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
+                    b.Property<int?>("Age")
                         .HasColumnType("int");
 
                     b.Property<string>("Bank")
@@ -167,8 +170,9 @@ namespace ReceiptVoucher.EF.Migrations
                     b.Property<int?>("Mobile")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentType")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceivedBy")
                         .IsRequired()

@@ -40,23 +40,25 @@ public class Receipt
 
 
 
-    //public string GrantDestinations { get; set; } = string.Empty;
+  
     public GrantDest GrantDestinations { get; set; }
 
+    
+    public Gender Gender { get; set; }
 
+    public Age Age { get; set; }
 
     public int? Mobile { get; set; }
 
-    [StringLength(250)]
-    public string? Gender { get; set; }
+    
 
 
     
-    public int? Age { get; set; }
+
 
     // Payment Type  Prop Related
 
-    public string PaymentType { get; set; } = null!;
+    public PaymentTypes PaymentType { get; set; }
 
 
     

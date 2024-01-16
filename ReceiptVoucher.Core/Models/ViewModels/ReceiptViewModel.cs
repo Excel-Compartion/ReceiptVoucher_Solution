@@ -41,7 +41,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
         // Payment Type  Prop Related
 
-        public string PaymentType { get; set; } = null!;
+        public PaymentTypes PaymentType { get; set; }
 
         [Required(ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
         [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
@@ -62,14 +62,19 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار الجهه المانحه  ---")]
         public GrantDest GrantDestinations { get; set; }
 
+        
+        public Gender Gender { get; set; }
+
+        
+        [Range(1, int.MaxValue, ErrorMessage = "يرجى تحديد العمر")]
+        public Age Age { get; set; }
+
+        
         public int? Mobile { get; set; }
 
-        [StringLength(250)]
-        public string? Gender { get; set; }
+       
 
-
-
-        public int? Age { get; set; }
+       
 
 
     }
