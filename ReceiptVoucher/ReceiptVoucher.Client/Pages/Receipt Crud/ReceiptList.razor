@@ -1,12 +1,25 @@
 ﻿@page "/Receipt"
 @rendermode InteractiveAuto
 
+
+@using System.Net.Http.Json
+@inject IJSRuntime JSRuntime
+
 @inject HttpClient Http
 
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 
+
+ @inject NavigationManager NavigationManager
+
 <br />
+
+<div style="position:absolute;margin-top:-1000000px;">
+    <div id="printReceipt">
+        <_PrintReceiptPage RecId="RecId" />
+    </div>
+</div>
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
@@ -57,7 +70,7 @@
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined">طباعه</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)">طباعه</MudButton>
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
                 </MudButtonGroup>
 
@@ -78,6 +91,17 @@
         </PagerContent>
     </MudTable>
 
+  
+
+    <br />
+
+
+   
+   
+
+
+ 
+
 
 
 
@@ -91,6 +115,27 @@
 
     public List<Branch> Branches { get; set; }
     public List<SubProject> SubProjects { get; set; }
+
+
+    public int RecId;
+
+    public bool PrintActive = false;
+
+   
+
+
+    private async Task PrintReceipt(int ReceiptId)
+    {
+        RecId = ReceiptId;
+        PrintActive = true;
+
+        await Task.Delay(500);
+
+        await JSRuntime.InvokeVoidAsync("printJS", "printReceipt", "html");
+
+        PrintActive = false;
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -226,8 +271,6 @@
 
 
     }
-
-
 
 
 

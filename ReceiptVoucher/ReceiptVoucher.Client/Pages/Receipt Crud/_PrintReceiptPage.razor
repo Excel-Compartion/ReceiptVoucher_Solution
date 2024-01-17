@@ -1,0 +1,30 @@
+﻿
+
+
+
+@inject IJSRuntime JSRuntime
+
+<h3>_PrintReceiptPage @RecId</h3>
+<h3>_PrintReceiptPage @RecId</h3>
+<h3>_PrintReceiptPage @RecId</h3>
+<h3>_PrintReceiptPage @RecId</h3>
+<h3>_PrintReceiptPage @RecId</h3> 
+
+
+
+
+@code {
+
+    [Parameter]
+    public int? RecId { get; set; }
+
+    public async Task PrintPreview()
+    {
+        await JSRuntime.InvokeVoidAsync("print");
+    }
+
+}
+
+
+
+
