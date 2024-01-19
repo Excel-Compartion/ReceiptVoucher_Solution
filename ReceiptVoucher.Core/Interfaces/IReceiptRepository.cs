@@ -1,4 +1,5 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,10 @@ namespace ReceiptVoucher.Core.Interfaces
     public interface IReceiptRepository: IBaseRepository<Receipt>
     {
         Task<IEnumerable<Receipt>> GetAllSubProjectAsync();
+
+        //  GetReceiptRdcl
+
+       Task<Receipt>  GetReceiptRdclById(int id);
+
     }
 }

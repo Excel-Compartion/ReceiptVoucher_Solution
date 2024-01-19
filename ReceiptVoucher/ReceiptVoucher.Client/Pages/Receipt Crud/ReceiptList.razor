@@ -65,7 +65,7 @@
 
 
             <MudTd DataLabel="Actions">
-
+                @* GetReceiptRdcl *@
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
@@ -74,11 +74,9 @@
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
                 </MudButtonGroup>
 
-
-
-
-
+                <a class="btn btn-primary btn-sm" href="@($"https://localhost:7210/api/Receipts/GetReceiptRdcl/{context.Id}")" target="_blank">Print</a>
             </MudTd>
+
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No matching records found</MudText>

@@ -1,4 +1,6 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Enums;
+using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +21,15 @@ namespace ReceiptVoucher.EF.Repositories
         {
             return await _context.Receipts.Include(p => p.Branch).Include(p=>p.SubProject).ToListAsync();
         }
+        public async Task<Receipt>   GetReceiptRdclById(int id)
+        {
+            var Receipt = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Where(x => x.Id == id).FirstOrDefaultAsync();
+
+           
+
+            return Receipt;
+        }
+
+      
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Interfaces;
 
@@ -10,12 +11,56 @@ namespace ReceiptVoucher.Server.Controllers
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public ProjectsController(IUnitOfWork unitOfWork, IProjectRepository projectRepository)
+
+        IWebHostEnvironment webHostEnvironment;
+
+        public ProjectsController(IUnitOfWork unitOfWork, IProjectRepository projectRepository, IWebHostEnvironment WebHostEnvi)
         {
             _unitOfWork = unitOfWork;
 
             _projectRepository = projectRepository;
+
+            webHostEnvironment = WebHostEnvi;
         }
+
+
+        [HttpGet("GetReport1")]
+        public async Task<IActionResult> GetReport1()
+        {
+            string path = webHostEnvironment.WebRootPath + @"\_Reports\Report1.rdlc";
+
+            LocalReport localReport = new LocalReport(path);
+
+            var data = await _unitOfWork.Projects.GetAllAsync();
+
+            localReport.AddDataSource("DataSet1", data);
+
+            var report = localReport.Execute(RenderType.Pdf, 1);
+
+
+            return File(report.MainStream, "application/pdf");
+        }
+
+
+        //[HttpGet("GetReport1")]
+        //public async Task<IActionResult> GetReport1()
+        //{
+        //    string path = webHostEnvironment.WebRootPath + @"\_Reports\Report1.rdlc";
+
+        //    LocalReport localReport = new LocalReport(path);
+
+        //    var data = await _unitOfWork.Projects.GetAllAsync();
+
+        //    localReport.AddDataSource("DataSet1", data);
+
+        //    var report = localReport.Execute(RenderType.Html, 1);
+
+        //    var reportString = System.Text.Encoding.UTF8.GetString(report.MainStream);
+
+        //    return Content(reportString, "text/html");
+        //}
+
+
 
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()

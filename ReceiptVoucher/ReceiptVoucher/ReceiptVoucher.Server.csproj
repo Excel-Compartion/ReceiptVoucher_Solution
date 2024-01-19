@@ -7,6 +7,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\_Reports\DataSet1.Designer.cs" />
+    <Content Remove="wwwroot\_Reports\DataSet1.xsc" />
+    <Content Remove="wwwroot\_Reports\DataSet1.xsd" />
+    <Content Remove="wwwroot\_Reports\DataSet1.xss" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.cs" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.Designer.cs" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsc" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsd" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xss" />
+    <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc" />
+    <Content Remove="wwwroot\_Reports\Report1.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="wwwroot\_Reports\DataSet1.Designer.cs">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.cs" />
+    <Compile Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.Designer.cs">
+      <DependentUpon>ReceiptDataSet.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
 	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
@@ -19,6 +51,25 @@
 	  <ProjectReference Include="..\..\ReceiptVoucher.EF\ReceiptVoucher.EF.csproj" />
     <ProjectReference Include="..\ReceiptVoucher.Client\ReceiptVoucher.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\_Reports\DataSet1.xsc" />
+    <None Include="wwwroot\_Reports\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="wwwroot\_Reports\DataSet1.xss" />
+    <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsc" />
+    <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>ReceiptDataSet.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xss" />
+    <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc" />
+    <None Include="wwwroot\_Reports\Report1.rdlc" />
   </ItemGroup>
 
 </Project>
