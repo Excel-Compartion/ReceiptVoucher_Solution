@@ -1,8 +1,744 @@
-﻿@page "/MinReports"
+﻿@* @page "/MinReports"
+@rendermode InteractiveAuto
+
+@using System.Net.Http.Json
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject IDialogService _DialogService
+@inject ISnackbar _Snackbar
+@inject NavigationManager NavigationManager
 
 <br />
-<h3>صفحه التقارير</h3>
 
-@code {
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Receipt</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
+            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))">تفاصيل</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 
+    @code {
+    private MudTable<Receipt> table;
+    private string searchString = null;
+
+    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    {
+        var data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+
+        if (!string.IsNullOrWhiteSpace(searchString))
+        {
+            data = data.Where(r => r.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                   r.Id.ToString().Contains(searchString)).ToList();
+        }
+
+        int totalItems = data.Count();
+
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
+                break;
+            case "name_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
+                break;
+        }
+
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    private void OpenDetailsDialog(Receipt receipt)
+    {
+        // Implement your logic for opening the details dialog here
+    }
+}
+
+ *@
+
+
+
+
+<!------------------------------------S---------------------------------------------->
+
+
+
+
+
+@* @page "/MinReports"
+@rendermode InteractiveAuto
+
+@using System.Net.Http.Json
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject IDialogService _DialogService
+@inject ISnackbar _Snackbar
+@inject NavigationManager NavigationManager
+
+<br />
+
+
+<MudRadioGroup @bind-Value="RadioDateType">
+    <MudRadio Value="Day" Color="Color.Primary" Size="Size.Small">تقرير يومي</MudRadio>
+        <MudRadio Value="Month" Color="Color.Secondary" Size="Size.Small">تقرير شهري</MudRadio>
+    </MudRadioGroup>
+
+    @if (RadioDateType == Day)
+{
+    <MudDatePicker @bind-Date="selectedDate" Label="تاريخ السند" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" />
+}
+
+else
+{
+    <MudDatePicker @bind-Date="selectedMonth1" Label="تاريخ السند1" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" />
+    <MudDatePicker @bind-Date="selectedMonth2" Label="تاريخ السند2" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" />
+}
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Receipt</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
+            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))">تفاصيل</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+</MudTable>
+
+    @code {
+    private MudTable<Receipt> table;
+    private string searchString = null;
+
+    private DateTime? _selectedDate = DateTime.Now;
+
+  
+
+    private string Day = "Day";
+
+    private string Month = "Month";
+
+    private string RadioDateType;
+
+
+    private DateTime? selectedDate
+    {
+        get => _selectedDate;
+        set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                table.ReloadServerData();
+            }
+        }
+    }
+
+    private DateTime? selectedMonth1
+    {
+        get => _selectedDate;
+        set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                table.ReloadServerData();
+            }
+        }
+    }
+
+    private DateTime? selectedMonth2
+    {
+        get => _selectedDate;
+        set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                table.ReloadServerData();
+            }
+        }
+    }
+
+
+    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    {
+        var data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+
+        if (!string.IsNullOrWhiteSpace(searchString))
+        {
+            data = data.Where(r => r.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                   r.Id.ToString().Contains(searchString)).ToList();
+        }
+
+        // فلترة البيانات بناءً على التاريخ المحدد
+        if (selectedDate.HasValue && RadioDateType==Day)
+        {
+            data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) ).ToList();
+        }
+        else if (selectedMonth1.HasValue && selectedMonth2.HasValue && RadioDateType == Day)
+        {
+            data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) || (r.Date == DateOnly.FromDateTime(selectedMonth1.Value) && r.Date == DateOnly.FromDateTime(selectedMonth2.Value))).ToList();
+        }
+
+        int totalItems = data.Count();
+
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
+                break;
+            case "name_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
+                break;
+        }
+
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    private void OpenDetailsDialog(Receipt receipt)
+    {
+        // Implement your logic for opening the details dialog here
+    }
+} *@
+
+<!-------------------------------------E-------------------------------------------->
+        @page "/MinReports"
+@rendermode InteractiveAuto
+
+@using System.Net.Http.Json
+@using ReceiptVoucher.Client.Pages.Receipt_Crud
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject IDialogService _DialogService
+@inject ISnackbar _Snackbar
+@inject NavigationManager NavigationManager
+
+<br />
+
+<MudRadioGroup @bind-Value="RadioDateType">
+    <MudRadio Value="Day" Color="Color.Primary" Size="Size.Small">تقرير يومي</MudRadio>
+    <MudRadio Value="Month" Color="Color.Secondary" Size="Size.Small">تقرير عام</MudRadio>
+</MudRadioGroup>
+
+<MudGrid>
+    <MudItem xs="6">
+
+<!--Project Select-->
+        <MudSelect Style="width:100%" T="string" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" @onchange="UpdateTable">
+
+    @if (Projects != null)
+    {
+        @foreach (var project in Projects)
+        {
+            <MudSelectItem T="string" Value="@project.Name">@project.Name</MudSelectItem>
+        }
+    }
+
+</MudSelect>
+</MudItem>
+
+ <MudItem xs="6">
+
+        <MudSelect Style="width:100%" Label="الفرع" @bind-Value="@SelectBranchId" @onchange="UpdateTable">
+    <MudSelectItem Value="0">--- كل المراكز ---</MudSelectItem>
+
+    @if (Branches != null)
+    {
+        @foreach (var branch in Branches)
+        {
+            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+        }
+    }
+
+   
+</MudSelect>
+
+</MudItem>
+</MudGrid>
+
+  
+
+
+<!--SubProject Select-->
+<MudSelect  T="string" Label="المشاريع الفرعية"  MultiSelection="true" @bind-SelectedValues="SelectSubProject" @onchange="UpdateTable">
+
+    @if (SubProjects != null)
+    {
+        @foreach (var subProjects in SubProjects)
+        {
+            if (SelectProject.Count() != 0)
+            {
+                if (SelectProject.Contains(subProjects.Project.Name))
+                {
+                    <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>
+                }
+            }
+
+           else if(SelectProject.Count()==0 && SelectSubProject.Count()!=0)
+            {
+                // تهيئة القائمة المتعددة التي تم اختيارها
+                SelectSubProject = new List<string>();
+                StateHasChanged(); // إعادة تقديم العنصر
+
+                @*   <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>  *@
+            } 
+
+        }
+    }
+
+</MudSelect>
+
+
+
+
+
+@if (RadioDateType == Day)
+{
+    <MudDatePicker @bind-Date="selectedDate" Label="تاريخ السند" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange=" UpdateTable" />
+
+   UpdateTable();
+}
+else
+{
+
+    <MudGrid>
+        <MudItem xs="6">
+            <MudDatePicker Style="width: 100%;" @bind-Date="selectedMonth1" Label="من التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+        </MudItem>
+        <MudItem xs="6">
+            <MudDatePicker Style="width: 100%;" @bind-Date="selectedMonth2" Label="الى التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+        </MudItem>
+    </MudGrid>
+
+
+
+    UpdateTable();
+    
+}
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Receipt</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
+            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))">تفاصيل</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+
+
+
+
+
+
+    @code {
+    private MudTable<Receipt> table;
+    private string searchString = null;
+    private DateTime? selectedDate = DateTime.Now;
+    private DateTime? selectedMonth1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+    private DateTime? selectedMonth2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+
+    private string RadioDateType;
+    private string Day = "Day";
+    private string Month = "Month";
+
+
+    public int SelectBranchId;
+    public List<Branch> Branches { get; set; }
+
+    // SubProject Select
+    private List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+
+    private IEnumerable<string> SelectSubProject { get; set; } = new List<string>();
+
+
+    private List<Project> Projects { get; set; } = new List<Project>();
+
+    private IEnumerable<string> SelectProject { get; set; } = new List<string>();
+
+    private bool subProjectClose = false;
+
+    private int SelectProjectCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RadioDateType = Day;
+
+        Branches = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+
+        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/Get");
+
+        Projects = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+
+
+    }
+
+
+    // private void UpdateSubProjectSelect()
+    // {
+    //     List<string> subProjectNames = new List<string>();
+
+    //     foreach (var sub in SelectSubProject)
+    //     {
+    //         var subProject = SubProjects.Where(x =>x.Name==sub  ).FirstOrDefault();
+
+    //         if (subProject != null)
+    //         {
+    //             if (SelectProject.Contains(subProject.Project.Name) == true)
+    //             {
+    //                 subProjectNames.Add(subProject.Name);
+    //             }
+    //         }
+    //     }
+
+   
+
+    //     SelectSubProject = subProjectNames;
+    //     StateHasChanged();
+
+    //     UpdateTable();
+
+    // }
+
+    private void UpdateTable()
+    {
+        if (table != null)
+        {
+            table.ReloadServerData();
+        }
+    }
+
+    private bool CheckProjectSelect(int ProjectId)
+    {
+        bool _bool = false;
+        var project=   Projects.Where(x => x.Id == ProjectId).FirstOrDefault();
+
+        if (project != null)
+        {
+            if (SelectProject.Contains(project.Name))
+            {
+                _bool = true;
+            }
+        }
+
+
+        return _bool;
+    }
+
+    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    {
+        var data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+
+        if (!string.IsNullOrWhiteSpace(searchString))
+        {
+            data = data.Where(r => r.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                   r.Id.ToString().Contains(searchString)).ToList();
+        }
+
+
+        if (SelectProject.Count() != 0)
+        {
+            subProjectClose = false;
+        }
+        else{ subProjectClose = true; }
+
+
+        // فلترة البيانات بناءً على تاريخ اليوم المحدد
+        if (selectedDate.HasValue && RadioDateType == Day)
+        {
+            if (SelectBranchId != 0 && SelectSubProject.Count() != 0)
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId && SelectSubProject.Contains(r.SubProject.Name)).ToList();
+            }
+
+           else if (SelectBranchId != 0 )
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId ).ToList();
+            }
+
+            else if (SelectBranchId != 0 && SelectProject.Count()!=0 && SelectSubProject.Count()==0)
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
+            }
+
+            else if (SelectBranchId == 0 && SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
+            }
+
+            else if ( SelectSubProject.Count() != 0)
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value)  && SelectSubProject.Contains(r.SubProject.Name)).ToList();
+            }
+
+            else
+            {
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value)).ToList();
+            }
+
+        }
+
+        // فلتره اليوم بناء على تاريخ الشهرين المحددين
+        else if ( RadioDateType == Month)
+        {
+            var startDate = DateOnly.FromDateTime(selectedMonth1.Value);
+            var endDate = DateOnly.FromDateTime(selectedMonth2.Value);
+
+            if (SelectBranchId != 0 && SelectSubProject.Count()!=0)
+            {
+                //فلتره بناء على تاريخ الشهرين كامل
+               
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId && SelectSubProject.Contains(r.SubProject.Name)).ToList();
+
+                // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
+
+            }
+
+            if (SelectBranchId != 0 )
+            {
+                //فلتره بناء على تاريخ الشهرين كامل
+
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId ).ToList();
+
+                // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
+
+            }
+
+            if (SelectBranchId != 0 && SelectProject.Count()!=0 && SelectSubProject.Count()==0)
+            {
+                //فلتره بناء على تاريخ الشهرين كامل
+
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId && CheckProjectSelect(r.SubProject.ProjectId) ).ToList();
+
+                // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
+
+            }
+
+            if ( SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
+            {
+                //فلتره بناء على تاريخ الشهرين كامل
+
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
+
+                // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
+
+            }
+
+            if ( SelectSubProject.Count() != 0)
+            {
+                //فلتره بناء على تاريخ الشهرين كامل
+
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectSubProject.Contains(r.SubProject.Name)).ToList();
+
+                // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
+
+            }
+
+            else
+            {
+                // //فلتره بناء على تاريخ الشهرين كامل
+
+                data = data.Where(r => r.Date >= startDate && r.Date <= endDate).ToList();
+            }
+           
+
+            //فلتره بناء على تاريخ الشهرين فقط
+            // var startDate = DateOnly.FromDateTime(selectedMonth1.Value);
+            // var endDate = DateOnly.FromDateTime(selectedMonth2.Value).AddMonths(1).AddDays(-1);
+            // data = data.Where(r => r.Date >= startDate && r.Date <= endDate).ToList();
+        }
+
+        int totalItems = data.Count();
+
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
+                break;
+            case "name_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
+                break;
+        }
+
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    private void OpenDetailsDialog(Receipt receipt)
+    {
+        var parameters = new DialogParameters();
+       
+
+        ReceiptViewModel receiptViewModel = new ReceiptViewModel();
+
+        receiptViewModel.Id = receipt.Id;
+        receiptViewModel.ReceivedFrom = receipt.ReceivedFrom;
+        receiptViewModel.ReceivedBy = receipt.ReceivedBy;
+        receiptViewModel.TotalAmount = receipt.TotalAmount;
+        receiptViewModel.BranchId = receipt.BranchId;
+        receiptViewModel.SubProjectId = receipt.SubProjectId;
+        receiptViewModel.ForPurpose = receipt.ForPurpose;
+        receiptViewModel.Date = receipt.Date;
+        receiptViewModel.PaymentType = receipt.PaymentType;
+        receiptViewModel.CheckNumber = receipt.CheckNumber;
+
+        receiptViewModel.GrantDestinations = receipt.GrantDestinations;
+        receiptViewModel.Gender = receipt.Gender;
+        receiptViewModel.Age = receipt.Age;
+        receiptViewModel.Mobile = receipt.Mobile;
+
+
+
+        // التحقق من القيمة قبل التحويل
+        DateTime? dateTime = receipt.CheckDate.HasValue ? receipt.CheckDate.Value.ToDateTime(TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay)) : (DateTime?)null;
+
+        // تعيين القيمة في ViewModel
+        receiptViewModel.CheckDate = dateTime;
+
+
+
+        receiptViewModel.AccountNumber = receipt.AccountNumber;
+        receiptViewModel.Bank = receipt.Bank;
+
+
+
+        parameters.Add("OriginalReceiptViewModel", receiptViewModel);
+
+
+        parameters.Add("Branches", Branches);
+
+        parameters.Add("SubProjects", SubProjects);
+
+        var options = new DialogOptions() { CloseButton = true };
+
+
+            parameters.Add("BtnName", ButtonTypes.Details);
+            _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
+        
+
+       
+        
+    }
 }
