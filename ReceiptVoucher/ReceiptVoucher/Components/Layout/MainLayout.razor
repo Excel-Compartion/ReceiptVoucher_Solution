@@ -7,9 +7,9 @@
 
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Color="Color.Info">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        My Application
+            <h4>جمعية اكرام عابري السبيل</h4>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <MyNavMenu/>

@@ -1,19 +1,68 @@
-﻿<MudNavMenu Color="Color.Success" Bordered="true">
-    <MudNavLink Href="#" Match="NavLinkMatch.All"></MudNavLink>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">الصفحه الرئيسية</MudNavLink>
+﻿
+<MudNavMenu Color="Color.Info" Bordered="true">
+    <MudImage Src="images\logo.svg" Style="margin-top:-2%;margin-right:10px" Width="200" Height="100" Alt="Icon" />
+    <hr style="color:deepskyblue ;margin-top:0%" />
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.Home" />
+        الصفحة الرئيسية
+    </MudNavLink>
+    <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.Apartment" />
+        المراكز الاعلامية
+    </MudNavLink>
+    <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.FileCopy" />
+        المشاريع
+    </MudNavLink>
+    <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" />
+        المشاريع الفرعية
+    </MudNavLink>
+    <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" />
+        السندات
+    </MudNavLink>
+    <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Filled.Assessment" />
+        التقارير
+    </MudNavLink>
+    <MudNavLink Href="/CompanyInfo" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right icon-color">
+        <MudIcon Icon="@Icons.Material.Outlined.Info" />
+        معلومات الشركة
+    </MudNavLink>
+</MudNavMenu>
 
-    <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix">المراكز الاعلامية</MudNavLink>
-    <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix">المشاريع</MudNavLink>
-    <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix">المشاريع الفرعيه</MudNavLink>
-    <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix">السندات</MudNavLink>
-    <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix">التقارير</MudNavLink>
-    <MudNavLink Href="/CompanyInfo" Match="NavLinkMatch.Prefix">معلومات الشركه</MudNavLink>
-   
+<style>
+    .custom-nav-menu {
+        padding: 2px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-    <MudNavGroup Title="Settings" Expanded="true">
+    .mud-nav-link-right {
+        direction: rtl;
+        padding: 8px 16px;
+        margin: 3px 0;
+        font-size: 1rem;
+    }
+
+    .icon-color {
+        color: #5C4033; 
+    }
+</style>
+
+
+
+
+
+
+
+
+    <!--اكواد ربما احتاج لها-->
+   @*  <MudNavGroup Title="Settings" Expanded="true">
         <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
         <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
     </MudNavGroup>
     <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
 </MudNavMenu>
+ *@
 

@@ -8,14 +8,15 @@
 
 <br />
 
+<br />
+<h5 style="margin-right:2%; margin-bottom:2%;">المشاريع الفرعية</h5>
+
 <MudTable ServerData="@(new Func<TableState, Task<TableData<SubProject>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة مشروع فرعي</MudButton>
-        &nbsp;&nbsp;
-
-        <MudText Typo="Typo.h6">SubProject</MudText>
+        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" Label="اضافة مشروع فرعي" Size="Size.Small" />
+  
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -50,7 +51,7 @@
         <MudTd DataLabel="Actions">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))">حدف</MudButton>
                 </MudButtonGroup>
