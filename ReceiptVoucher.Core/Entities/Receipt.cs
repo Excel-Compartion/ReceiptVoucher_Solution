@@ -14,9 +14,9 @@ public class Receipt
     [StringLength(250)]
     public string ReceivedFrom { get; set; } = null!;
 
-    [Required(ErrorMessage ="يرجى ادخال اسم المحاسب")]
+
     [StringLength(250)]
-    public string? ReceivedBy { get; set; }     // Foreign Key From User
+    public string? ReceivedBy { get; set; } = "default";    // Foreign Key From User
 
     [Range(1.0, int.MaxValue, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ ---")]
     [Column(TypeName = "decimal(18, 2)")]

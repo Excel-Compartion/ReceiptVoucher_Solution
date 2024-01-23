@@ -6,16 +6,39 @@
 @inject IDialogService _DialogService 
 @inject ISnackbar _Snackbar
 
-<br />
+<style>
+    :root {
+        --color-custom: #3090C7;
+    }
+
+
+</style>
+
 
 <br />
-<h5 style="margin-right:2%; margin-bottom:2%;">المشاريع الفرعية</h5>
+
+<!--اسم الصفحه-->
+<p style=" margin-bottom:2% ;">
+
+
+    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+
+        <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
+
+        المشاريع الفرعية
+
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+
+
+    </span>
+
+</p>
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<SubProject>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
-        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" Label="اضافة مشروع فرعي" Size="Size.Small" />
+        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Class="My-Add-Btn" Label="اضافة مشروع فرعي" Size="Size.Small" Style=" background-color:var(--color-teal);color:white;" />
   
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"

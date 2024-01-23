@@ -8,14 +8,32 @@
 
 <br />
 
+
+<!--اسم الصفحه-->
+<p style=" margin-bottom:2% ;">
+
+
+    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+
+        <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
+
+        معلومات الشركة
+
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+
+
+    </span>
+
+</p>
+
 <MudTable ServerData="@(new Func<TableState, Task<TableData<CompanyInfo>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة معلومات الشركه</MudButton>
-        &nbsp;&nbsp;
+        @* <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة معلومات الشركه</MudButton> *@
+     
 
-        <MudText Typo="Typo.h6">CompanyInfo</MudText>
+  
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -47,8 +65,8 @@
 
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
-                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteCompanyInfo(context.Id))">حدف</MudButton>
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+               @*  <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteCompanyInfo(context.Id))">حدف</MudButton> *@
             </MudButtonGroup>
 
 

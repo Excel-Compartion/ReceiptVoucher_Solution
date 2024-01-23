@@ -1,55 +1,72 @@
 ﻿@page "/Receipt"
 @rendermode InteractiveAuto
 
-
 @using System.Net.Http.Json
 @inject IJSRuntime JSRuntime
-
 @inject HttpClient Http
-
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
+@inject NavigationManager NavigationManager
 
+<style>
+    :root {
+        --color-custom: #3090C7;
+    }
 
- @inject NavigationManager NavigationManager
+.ReceiptTable {
+    width: 100%;
+    height: auto;
+    margin-right: auto;
+    margin-left: auto;
+    overflow-x: auto;
+}
+
+</style>
 
 <br />
-
-<div style="position:absolute;margin-top:-1000000px;">
+<!-- كود خاص بالطباعه في نفس الصفحه-->
+@* <div style="position:absolute;margin-top:-1000000px;">
     <div id="printReceipt">
         <_PrintReceiptPage RecId="RecId" />
     </div>
-</div>
+</div> *@
 
-<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+
+<!--اسم الصفحه-->
+<p style=" margin-bottom:2% ;">
+
+
+    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+
+        <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
+
+        السندات
+
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+
+
+    </span>
+
+</p>
+
+<MudTable  Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-
-        <MudButton OnClick="OpenAddDialog" Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">اضافة سند</MudButton>
-
-        &nbsp;&nbsp;
-
-        <MudText Typo="Typo.h6">Receipt</MudText>
+        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه سند" />
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
-
-
-
-
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -60,23 +77,22 @@
             <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
-
-
-
-
             <MudTd DataLabel="Actions">
                 @* GetReceiptRdcl *@
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
+                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)">طباعه</MudButton>
+         
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)">طباعة</MudButton>
+
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
                 </MudButtonGroup>
 
-                <a class="btn btn-primary btn-sm" href="@($"https://localhost:7210/api/Receipts/GetReceiptRdcl/{context.Id}")" target="_blank">Print</a>
-            </MudTd>
 
+        
+
+            </MudTd>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No matching records found</MudText>
@@ -90,7 +106,6 @@
     </MudTable>
 
   
-
     <br />
 
 
@@ -120,20 +135,25 @@
     public bool PrintActive = false;
 
    
-
-
-    private async Task PrintReceipt(int ReceiptId)
+    void PrintReceipt(int id)
     {
-        RecId = ReceiptId;
-        PrintActive = true;
-
-        await Task.Delay(500);
-
-        await JSRuntime.InvokeVoidAsync("printJS", "printReceipt", "html");
-
-        PrintActive = false;
-
+        var url = $"https://localhost:7210/api/Receipts/GetReceiptRdcl/{id}";
+        JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
+
+
+    // private async Task PrintReceipt(int ReceiptId)
+    // {
+    //     RecId = ReceiptId;
+    //     PrintActive = true;
+
+    //     await Task.Delay(500);
+
+    //     await JSRuntime.InvokeVoidAsync("printJS", "printReceipt", "html");
+
+    //     PrintActive = false;
+
+    // }
 
     protected override async Task OnInitializedAsync()
     {
