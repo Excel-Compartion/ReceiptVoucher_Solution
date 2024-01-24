@@ -52,7 +52,7 @@
 
 
 
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Project">Id</MudTableSortLabel></MudTh>
+
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
 
 
@@ -63,19 +63,36 @@
     </HeaderContent>
     <RowTemplate>
 
-         <MudTd DataLabel="Id">@context.Id</MudTd>
+        
            <MudTd DataLabel="Name">@context.Name</MudTd>
 
             
-            <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+            <MudTd DataLabel="IsActive">
+                
+                @{
+                var isActive = @context.IsActive;
+
+                if (isActive)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Color="Color.Success" Class="icon-color" />
+                }
+
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.HighlightOff" Color="Color.Error" Class="icon-color" />
+                }
+
+                }
+
+            </MudTd>
 
 
             <MudTd DataLabel="Actions">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
-                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
-                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))">حدف</MudButton>
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
                 </MudButtonGroup>
 
             </MudTd>
@@ -124,9 +141,9 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            case "id_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Id);
-                break;
+            // case "id_field":
+            //     data = data.OrderByDirection(state.SortDirection, o => o.Id);
+            //     break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;

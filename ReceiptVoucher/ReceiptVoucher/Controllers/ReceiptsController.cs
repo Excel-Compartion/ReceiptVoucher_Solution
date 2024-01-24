@@ -70,7 +70,7 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
             receiptRdclViewModel.Mobile = Receipt.Mobile + "";
 
-            receiptRdclViewModel.TotalAmountWord = Convert.ToInt32(Receipt.TotalAmount).ToWords();
+            receiptRdclViewModel.TotalAmountWord = Convert.ToInt32(Receipt.TotalAmount).ToWords() +"     ريال";
 
 
 

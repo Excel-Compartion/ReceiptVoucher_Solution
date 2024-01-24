@@ -15,7 +15,7 @@
 
             <MudGrid>
                 <MudItem xs="4">
-                    <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End"  AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End"  AdornmentColor="Color.Success" ></MudTextField>
                 </MudItem>
                 <MudItem xs="4">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType">
@@ -320,6 +320,8 @@
 
     string ProjectName = "";
 
+    bool ReadOnlyStatus = false;
+
 
 
 
@@ -334,7 +336,7 @@
             ReceiptViewModel.PaymentType = PaymentTypes.Cash;
 
 
-           
+
 
 
         }
@@ -374,6 +376,9 @@
 
 
                 };
+
+
+           
 
 
         }

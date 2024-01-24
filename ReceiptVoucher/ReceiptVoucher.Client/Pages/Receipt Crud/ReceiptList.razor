@@ -58,7 +58,7 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
@@ -81,12 +81,12 @@
                 @* GetReceiptRdcl *@
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
-                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))">تفاصيل</MudButton>
-         
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)">طباعة</MudButton>
+                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
-                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))">حدف</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
                 </MudButtonGroup>
 
 

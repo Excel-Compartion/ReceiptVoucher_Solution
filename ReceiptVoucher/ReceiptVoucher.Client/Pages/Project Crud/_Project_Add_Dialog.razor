@@ -8,7 +8,7 @@
         <EditForm Model="@Project" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End" AdornmentIcon="@((BtnName == "اضافه") ? Icons.Material.Filled.Add : Icons.Material.Filled.Edit)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End"  AdornmentColor="Color.Success"></MudTextField>
 
 
             <br />

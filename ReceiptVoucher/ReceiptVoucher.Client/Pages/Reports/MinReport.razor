@@ -173,8 +173,8 @@ else
             <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="Actions">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))">تفاصيل</MudButton>
-                <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)">طباعة</MudButton>
+                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
                 </MudButtonGroup>
             </MudTd>
         </RowTemplate>

@@ -80,6 +80,7 @@ namespace ReceiptVoucher.Core.Enums
     }
 
 
+
     public static class EnumExtensions
     {
         public static string GetDisplayName(this Enum value)

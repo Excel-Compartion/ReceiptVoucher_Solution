@@ -47,6 +47,8 @@
 @* <br />
 <h5 style="margin-right:2%; margin-bottom:1%;" >المراكز الاعلامية</h5> *@
 
+
+
 <MudTable Style="width:100%;height:auto;" ServerData="@(new Func<TableState, Task<TableData<Branch>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
@@ -62,8 +64,8 @@
 
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Branch">Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">اسم الفرع</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">اسم المركز</MudTableSortLabel></MudTh>
 
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Branch">المنطقة</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">الشخص المسؤول</MudTableSortLabel></MudTh>
@@ -77,30 +79,19 @@
        
     </HeaderContent>
     <RowTemplate>
-           <MudTd DataLabel="Id">@context.Id</MudTd>
-           <MudTd DataLabel="Name">@context.Name</MudTd>
-
+        
+        <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Id">@context.Area</MudTd>
             <MudTd DataLabel="Name">@context.ResponsiblePerson</MudTd>
-
             <MudTd DataLabel="Id">@context.Mobile</MudTd>
             <MudTd DataLabel="Name">@context.Email</MudTd>
-
-            
-
-
-
-        <MudTd DataLabel="Actions">
-
-        
+            <MudTd DataLabel="Actions">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))">تعديل</MudButton>
-                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))">حدف</MudButton>
+                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
                 </MudButtonGroup>
-
-
-        </MudTd>
-    </RowTemplate>
+            </MudTd>
+        </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
     </NoRecordsContent>
@@ -121,6 +112,7 @@
 
     private int totalItems;
     private string searchString = null;
+
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -145,9 +137,9 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            case "id_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Id);
-                break;
+            // case "id_field":
+            //     data = data.OrderByDirection(state.SortDirection, o => o.Id);
+            //     break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;
