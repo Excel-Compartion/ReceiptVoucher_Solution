@@ -69,15 +69,15 @@
         <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
-            <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
-            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
-            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
-            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
-            <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
-            <MudTd DataLabel="Actions">
+        <MudTd DataLabel="رقم السند">@context.Id</MudTd>
+            <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
+            <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="الفرع">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="التاريخ">@context.Date</MudTd>
+            <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
+            <MudTd DataLabel="الاجراءت">
                 @* GetReceiptRdcl *@
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">

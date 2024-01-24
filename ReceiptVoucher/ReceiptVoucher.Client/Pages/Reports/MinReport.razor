@@ -164,14 +164,14 @@ else
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.ReceivedFrom</MudTd>
-            <MudTd DataLabel="Name">@context.GrantDestinations.GetDisplayName()</MudTd>
-            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
-            <MudTd DataLabel="BranchId">@context.Branch.Name</MudTd>
-            <MudTd DataLabel="SubProjectId">@context.SubProject.Name</MudTd>
-            <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="PaymentType">@context.PaymentType.GetDisplayName()</MudTd>
-            <MudTd DataLabel="Actions">
+            <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
+            <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="الفرع">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+            <MudTd DataLabel="التاريخ">@context.Date</MudTd>
+            <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
+            <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
                     <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>

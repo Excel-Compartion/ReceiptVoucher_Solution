@@ -40,7 +40,7 @@
 
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="CompanyInfo">Id</MudTableSortLabel></MudTh>
+        
         <MudTh><MudTableSortLabel SortLabel="name_field" T="CompanyInfo">اسم الشركه</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="CompanyInfo">رقم الجوال</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="CompanyInfo">رقم الرخصه</MudTableSortLabel></MudTh>
@@ -54,13 +54,13 @@
        
     </HeaderContent>
     <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Mobile">@context.Mobile</MudTd>
-            <MudTd DataLabel="LicenseNumber">@context.LicenseNumber</MudTd>
-            <MudTd DataLabel="Telephone">@context.Telephone</MudTd>
-            <MudTd DataLabel="Email">@context.Email</MudTd>
-            <MudTd DataLabel="Web">@context.Web</MudTd>
+           
+            <MudTd DataLabel="اسم الشركه">@context.Name</MudTd>
+            <MudTd DataLabel="الجوال">@context.Mobile</MudTd>
+            <MudTd DataLabel="رقم لارخصه">@context.LicenseNumber</MudTd>
+            <MudTd DataLabel="الهاتف">@context.Telephone</MudTd>
+            <MudTd DataLabel="الجيميل">@context.Email</MudTd>
+            <MudTd DataLabel="الموقع الالكتروني">@context.Web</MudTd>
             <MudTd DataLabel="IVT">@context.IVT</MudTd>
 
 

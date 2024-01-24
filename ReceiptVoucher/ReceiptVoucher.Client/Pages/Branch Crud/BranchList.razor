@@ -80,12 +80,12 @@
     </HeaderContent>
     <RowTemplate>
         
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Area">@context.Area</MudTd>
-            <MudTd DataLabel="ResponsiblePerson">@context.ResponsiblePerson</MudTd>
-            <MudTd DataLabel="Mobile">@context.Mobile</MudTd>
-            <MudTd DataLabel="Name">@context.Email</MudTd>
-            <MudTd DataLabel="Actions">
+        <MudTd DataLabel="اسم المركز">@context.Name</MudTd>
+            <MudTd DataLabel="المنطقة">@context.Area</MudTd>
+            <MudTd DataLabel="الشخص المسؤول">@context.ResponsiblePerson</MudTd>
+            <MudTd DataLabel="الجوال">@context.Mobile</MudTd>
+            <MudTd DataLabel="الجيميل">@context.Email</MudTd>
+            <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>

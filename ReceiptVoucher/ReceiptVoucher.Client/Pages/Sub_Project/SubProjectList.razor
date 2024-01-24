@@ -60,12 +60,12 @@
     </HeaderContent>
     <RowTemplate>
 
-            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="المشروع الفرعي">@context.Name</MudTd>
 
-            <MudTd DataLabel="Project">@context.Project.Name</MudTd>
-            <MudTd DataLabel="Duration">@context.Duration</MudTd>
+            <MudTd DataLabel="المشروع الرئيسي">@context.Project.Name</MudTd>
+            <MudTd DataLabel="المدة">@context.Duration</MudTd>
 
-            <MudTd DataLabel="IsActive">
+            <MudTd DataLabel="حاله التفعيل">
 
                 @{
                 var isActive = @context.IsActive;
@@ -86,7 +86,7 @@
 
 
 
-        <MudTd DataLabel="Actions">
+        <MudTd DataLabel="الاجراءت">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                 <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>

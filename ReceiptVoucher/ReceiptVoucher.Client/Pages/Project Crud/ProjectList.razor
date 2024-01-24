@@ -48,26 +48,20 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
+
     <HeaderContent>
-
-
-
-
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
-
-
         <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
-        
-       
     </HeaderContent>
+
     <RowTemplate>
 
         
-           <MudTd DataLabel="Name">@context.Name</MudTd>
+           <MudTd DataLabel="اسم المشروع">@context.Name</MudTd>
 
             
-            <MudTd DataLabel="IsActive">
+            <MudTd DataLabel="حاله التفعيل">
                 
                 @{
                 var isActive = @context.IsActive;
@@ -87,7 +81,7 @@
             </MudTd>
 
 
-            <MudTd DataLabel="Actions">
+            <MudTd DataLabel="الاجراءت">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                 <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
