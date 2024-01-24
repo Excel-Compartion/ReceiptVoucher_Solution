@@ -59,14 +59,14 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -185,11 +185,40 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
+       
             case "id_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Id);
                 break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
+                break;
+
+            case "receivedFrom_field":
+            data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
+            break;
+
+            case "grantDestinations_field":
+            data = data.OrderByDirection(state.SortDirection, o => o.GrantDestinations.GetDisplayName());
+            break;
+
+            case "totalAmount_field":
+            data = data.OrderByDirection(state.SortDirection, o => o.TotalAmount);
+            break;
+
+            case "Branch_field":
+            data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
+            break;
+
+            case "SubProject_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.SubProject.Name);
+                break;
+
+            case "Date_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Date);
+                break;
+
+            case "PaymentType_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.PaymentType.GetDisplayName());
                 break;
         }
 

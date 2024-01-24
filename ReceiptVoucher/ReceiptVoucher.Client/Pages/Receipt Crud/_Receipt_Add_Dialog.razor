@@ -7,6 +7,7 @@
 
 <MudDialog Class="custom-modal" Style=" max-width: unset; width: 90%; ">
     <DialogContent >
+
         <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
@@ -15,10 +16,10 @@
 
             <MudGrid>
                 <MudItem xs="4">
-                    <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End"  AdornmentColor="Color.Success" ></MudTextField>
+                    <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                 </MudItem>
                 <MudItem xs="4">
-                    <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType">
+                    <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
@@ -27,7 +28,7 @@
                         </MudSelect>
                     </MudItem>
                     <MudItem xs="4">
-                        <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End"  AdornmentColor="Color.Success"></MudTextField>
+                        <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                     </MudItem>
             </MudGrid>
 
@@ -75,10 +76,10 @@
 
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudDatePicker Color="Color.Info" For="@(()=>ReceiptViewModel.CheckDate)" @bind-Date="ReceiptViewModel.CheckDate" Label="تاريخ الشيك" />
+                            <MudDatePicker Color="Color.Info" For="@(()=>ReceiptViewModel.CheckDate)" @bind-Date="ReceiptViewModel.CheckDate" Label="تاريخ الشيك" ReadOnly="@ReadOnlyStatus" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudTextField Label="رقم الشيك" Immediate="true" For="@(()=>ReceiptViewModel.CheckNumber)" @bind-Value="@ReceiptViewModel.CheckNumber" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+                            <MudTextField Label="رقم الشيك" Immediate="true" For="@(()=>ReceiptViewModel.CheckNumber)" @bind-Value="@ReceiptViewModel.CheckNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                         </MudItem>
                     </MudGrid>
 
@@ -106,7 +107,7 @@
                     ReceiptViewModel.Bank = "--";
 
 
-                    <MudTextField Label="رقم الحساب" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField Label="رقم الحساب" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
                 }
@@ -128,7 +129,7 @@
 
 
 
-                    <MudTextField Label="اسم البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField Label="اسم البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
                 }
 
@@ -140,7 +141,7 @@
 
             <MudGrid>
                     <MudItem xs="6">
-                        <MudSelect Label="وجهة المنحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations">
+                    <MudSelect Label="وجهة المنحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
                             <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
@@ -149,7 +150,7 @@
                         </MudSelect>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+                        <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                     </MudItem>
                 </MudGrid>
 
@@ -164,7 +165,7 @@
 
                 <MudGrid>
                     <MudItem xs="6">
-                        <MudSelect Label="العمر" For="@(()=>ReceiptViewModel.Age)" @bind-Value="@ReceiptViewModel.Age">
+                        <MudSelect Label="العمر" For="@(()=>ReceiptViewModel.Age)" @bind-Value="@ReceiptViewModel.Age" ReadOnly="@ReadOnlyStatus">
                             <MudSelectItem Value="@Age.Message">@Age.Message.GetDisplayName()</MudSelectItem>
 
                                 <MudSelectItem Value="@Age.TwentyYounger">@Age.TwentyYounger.GetDisplayName()</MudSelectItem>
@@ -177,8 +178,8 @@
                         </MudItem>
                     <MudItem xs="6">
                         <div>الجنس</div>
-                        
-                                <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%">
+
+                            <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
                                     <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
                                     <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
                                 </MudRadioGroup>
@@ -235,7 +236,7 @@
 
             <MudGrid>
                 <MudItem xs="4">
-                    <MudSelect Label="الفرع" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId">
+                    <MudSelect Label="الفرع" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار اسم الفرع ---</MudSelectItem>
                         @foreach (var branch in Branches)
                         {
@@ -244,10 +245,10 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="4">
-                    <MudTextField ReadOnly Label="اسم المشروع الرئيسي" Value="@ProjectName" Immediate="true" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField ReadOnly Label="اسم المشروع الرئيسي" Value="@ProjectName" Immediate="true" Adornment="Adornment.End" AdornmentColor="Color.Success" ></MudTextField>
                  </MudItem>
                  <MudItem xs="4">
-                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId">
+                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
                          <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
                          @foreach (var subProject in SubProjects)
                         {
@@ -265,7 +266,7 @@
             
 
            
-            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose"  AdornmentColor="Color.Success" Lines="2" />
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
 
             @if (BtnName != ButtonTypes.Details)
             {
@@ -378,7 +379,10 @@
                 };
 
 
-           
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
 
 
         }

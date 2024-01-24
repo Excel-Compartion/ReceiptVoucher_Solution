@@ -67,23 +67,23 @@
 
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">اسم المركز</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Branch">المنطقة</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">الشخص المسؤول</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="area_field" T="Branch">المنطقة</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="responsiblePerson_field" T="Branch">الشخص المسؤول</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Branch">رقم الجوال</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">البريد الالكتروني</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="mobile_field" T="Branch">رقم الجوال</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="email_field" T="Branch">البريد الالكتروني</MudTableSortLabel></MudTh>
 
         
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Branch">الاجراءت</MudTableSortLabel></MudTh>
         
        
     </HeaderContent>
     <RowTemplate>
         
         <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Id">@context.Area</MudTd>
-            <MudTd DataLabel="Name">@context.ResponsiblePerson</MudTd>
-            <MudTd DataLabel="Id">@context.Mobile</MudTd>
+            <MudTd DataLabel="Area">@context.Area</MudTd>
+            <MudTd DataLabel="ResponsiblePerson">@context.ResponsiblePerson</MudTd>
+            <MudTd DataLabel="Mobile">@context.Mobile</MudTd>
             <MudTd DataLabel="Name">@context.Email</MudTd>
             <MudTd DataLabel="Actions">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
@@ -137,12 +137,28 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            // case "id_field":
-            //     data = data.OrderByDirection(state.SortDirection, o => o.Id);
-            //     break;
+          
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;
+
+            case "area_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Area);
+                break;
+
+            case "responsiblePerson_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.ResponsiblePerson);
+                break;
+
+            case "mobile_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Mobile);
+                break;
+
+            case "email_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Email);
+                break;
+
+           
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();

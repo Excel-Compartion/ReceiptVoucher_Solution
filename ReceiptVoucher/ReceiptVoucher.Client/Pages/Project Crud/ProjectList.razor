@@ -56,8 +56,8 @@
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
 
 
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
         
        
     </HeaderContent>
@@ -141,9 +141,7 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            // case "id_field":
-            //     data = data.OrderByDirection(state.SortDirection, o => o.Id);
-            //     break;
+            
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;

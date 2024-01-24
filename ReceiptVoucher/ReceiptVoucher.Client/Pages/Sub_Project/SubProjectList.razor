@@ -49,11 +49,11 @@
 
         <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">المشروع الفرعي</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="SubProject">المشروع الرئيسي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">المدة</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="project_field" T="SubProject">المشروع الرئيسي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="duration_field" T="SubProject">المدة</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="SubProject">الاجراءت</MudTableSortLabel></MudTh>
       
         
        
@@ -150,11 +150,17 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            // case "id_field":
-            //     data = data.OrderByDirection(state.SortDirection, o => o.Id);
-            //     break;
+           
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+
+            case "project_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Project.Name);
+                break;
+
+            case "duration_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Duration);
                 break;
         }
 

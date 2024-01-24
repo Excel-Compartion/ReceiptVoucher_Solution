@@ -152,15 +152,15 @@ else
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -425,9 +425,35 @@ else
             case "id_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
                 break;
-            case "name_field":
+            case "receivedFrom_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
                 break;
+
+            case "Date_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Date).ToList() : data.OrderByDescending(r => r.Date).ToList();
+                break;
+
+            case "grantDestinations_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.GrantDestinations.GetDisplayName()).ToList() : data.OrderByDescending(r => r.GrantDestinations.GetDisplayName()).ToList();
+                break;
+            case "totalAmount_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.TotalAmount).ToList() : data.OrderByDescending(r => r.TotalAmount).ToList();
+                break;
+
+            case "Branch_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Branch.Name).ToList() : data.OrderByDescending(r => r.Branch.Name).ToList();
+                break;
+
+            case "SubProject_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.SubProject.Name).ToList() : data.OrderByDescending(r => r.SubProject.Name).ToList();
+                break;
+
+            
+
+            case "PaymentType_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.PaymentType.GetDisplayName()).ToList() : data.OrderByDescending(r => r.PaymentType.GetDisplayName()).ToList();
+                break;
+
         }
 
         var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
