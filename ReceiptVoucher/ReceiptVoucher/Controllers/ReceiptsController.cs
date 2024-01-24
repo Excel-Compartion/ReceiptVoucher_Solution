@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using Humanizer;
 using System.Globalization;
+using SU.StudentServices.Data.Helpers;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -70,10 +71,12 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
             receiptRdclViewModel.Mobile = Receipt.Mobile + "";
 
-            receiptRdclViewModel.TotalAmountWord = Convert.ToInt32(Receipt.TotalAmount).ToWords() +"     ريال";
 
+            NumberToWord numberToWord=new (Convert.ToDecimal(Receipt.TotalAmount) ,new CurrencyInfo(CurrencyInfo.Currencies.SaudiArabia));
 
+            receiptRdclViewModel.TotalAmountWord = numberToWord.ConvertToArabic();
 
+            //تحويل تاريخ السند الى تاريخ هجري
             DateOnly gregDate = Receipt.Date; 
             CultureInfo ci = new CultureInfo("ar-SA");
           var D=   gregDate.ToString("dd/MM/yyyy", ci);

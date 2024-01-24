@@ -244,9 +244,6 @@
                         }
                     </MudSelect>
                 </MudItem>
-                <MudItem xs="4">
-                    <MudTextField ReadOnly Label="اسم المشروع الرئيسي" Value="@ProjectName" Immediate="true" Adornment="Adornment.End" AdornmentColor="Color.Success" ></MudTextField>
-                 </MudItem>
                  <MudItem xs="4">
                      <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
                          <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
@@ -256,6 +253,9 @@
                         }
                     </MudSelect>
                 </MudItem>
+                <MudItem xs="4">
+                    <MudTextField ReadOnly Label="اسم المشروع الرئيسي" Value="@ProjectName" Immediate="true" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                 </MudItem>
             </MudGrid>
 
           
