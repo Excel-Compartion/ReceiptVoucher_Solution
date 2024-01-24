@@ -5,7 +5,10 @@ using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Enums;
 using ReceiptVoucher.Core.Interfaces;
 using System.Data;
+using System.Net.NetworkInformation;
 using System.Reflection;
+using Humanizer;
+using System.Globalization;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -66,6 +69,24 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Gender = Receipt.Gender.GetDisplayName();
             receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
             receiptRdclViewModel.Mobile = Receipt.Mobile + "";
+
+            receiptRdclViewModel.TotalAmountWord = Convert.ToInt32(Receipt.TotalAmount).ToWords();
+
+
+
+            DateOnly gregDate = Receipt.Date; 
+            CultureInfo ci = new CultureInfo("ar-SA");
+          var D=   gregDate.ToString("dd/MM/yyyy", ci);
+
+
+            receiptRdclViewModel.DateArabic = D;
+
+
+
+
+          
+
+
 
 
             string path = webHostEnvironment.WebRootPath + @"\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc";

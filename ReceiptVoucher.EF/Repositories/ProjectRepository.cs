@@ -35,6 +35,15 @@ namespace ReceiptVoucher.EF.Repositories
                         _context.SubProjects.Update(subProject);
                     }
                 }
+                else if (project.IsActive)
+                {
+                    var subProjects = _context.SubProjects.Where(sp => sp.ProjectId == project.Id);
+                    foreach (var subProject in subProjects)
+                    {
+                        subProject.IsActive = true;
+                        _context.SubProjects.Update(subProject);
+                    }
+                }
 
                 // تحديث البيانات الأساسية للمشروع
                 _context.Projects.Update(project);

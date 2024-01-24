@@ -63,5 +63,10 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
 
         public string? Mobile { get; set; }
+
+        public string? DateArabic { get; set; }
+
+        public string? TotalAmountWord { get; set; }
+
     }
 }

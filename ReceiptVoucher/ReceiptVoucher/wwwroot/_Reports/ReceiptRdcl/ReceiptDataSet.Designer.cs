@@ -313,6 +313,10 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             private global::System.Data.DataColumn columnMobile;
             
+            private global::System.Data.DataColumn columnDateArabic;
+            
+            private global::System.Data.DataColumn columnTotalAmountWord;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public ReceiptRdclViewModelDataTable() {
@@ -484,6 +488,22 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn DateArabicColumn {
+                get {
+                    return this.columnDateArabic;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn TotalAmountWordColumn {
+                get {
+                    return this.columnTotalAmountWord;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -536,7 +556,9 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         string GrantDestinations, 
                         string Gender, 
                         string Age, 
-                        string Mobile) {
+                        string Mobile, 
+                        string DateArabic, 
+                        string TotalAmountWord) {
                 ReceiptRdclViewModelRow rowReceiptRdclViewModelRow = ((ReceiptRdclViewModelRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
@@ -555,7 +577,9 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         GrantDestinations,
                         Gender,
                         Age,
-                        Mobile};
+                        Mobile,
+                        DateArabic,
+                        TotalAmountWord};
                 rowReceiptRdclViewModelRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowReceiptRdclViewModelRow);
                 return rowReceiptRdclViewModelRow;
@@ -595,6 +619,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 this.columnGender = base.Columns["Gender"];
                 this.columnAge = base.Columns["Age"];
                 this.columnMobile = base.Columns["Mobile"];
+                this.columnDateArabic = base.Columns["DateArabic"];
+                this.columnTotalAmountWord = base.Columns["TotalAmountWord"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -634,6 +660,10 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 base.Columns.Add(this.columnAge);
                 this.columnMobile = new global::System.Data.DataColumn("Mobile", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMobile);
+                this.columnDateArabic = new global::System.Data.DataColumn("DateArabic", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDateArabic);
+                this.columnTotalAmountWord = new global::System.Data.DataColumn("TotalAmountWord", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalAmountWord);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1049,6 +1079,39 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string DateArabic {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptRdclViewModel.DateArabicColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DateArabic\' in table \'ReceiptRdclViewModel\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptRdclViewModel.DateArabicColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string TotalAmountWord {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptRdclViewModel.TotalAmountWordColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmountWord\' in table \'ReceiptRdclViewModel\' is DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptRdclViewModel.TotalAmountWordColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsIdNull() {
                 return this.IsNull(this.tableReceiptRdclViewModel.IdColumn);
             }
@@ -1249,6 +1312,30 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetMobileNull() {
                 this[this.tableReceiptRdclViewModel.MobileColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsDateArabicNull() {
+                return this.IsNull(this.tableReceiptRdclViewModel.DateArabicColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetDateArabicNull() {
+                this[this.tableReceiptRdclViewModel.DateArabicColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsTotalAmountWordNull() {
+                return this.IsNull(this.tableReceiptRdclViewModel.TotalAmountWordColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetTotalAmountWordNull() {
+                this[this.tableReceiptRdclViewModel.TotalAmountWordColumn] = global::System.Convert.DBNull;
             }
         }
         

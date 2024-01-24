@@ -9,7 +9,7 @@
         <Top>0cm</Top>
         <Left>0cm</Left>
         <Height>15.27528cm</Height>
-        <Width>20.90049cm</Width>
+        <Width>20.56535cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -25,6 +25,7 @@
               <TextRun>
                 <Value>=Fields!Date.Value</Value>
                 <Style>
+                  <FontFamily />
                   <FontSize>8pt</FontSize>
                 </Style>
               </TextRun>
@@ -35,9 +36,9 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Date</rd:DefaultName>
-        <Top>1.59833in</Top>
+        <Top>1.54833in</Top>
         <Left>0.46292in</Left>
-        <Height>0.13889in</Height>
+        <Height>0.18889in</Height>
         <Width>0.83333in</Width>
         <ZIndex>1</ZIndex>
         <Style>
@@ -70,75 +71,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>1.69555in</Top>
-        <Left>3.5393in</Left>
-        <Height>0.14584in</Height>
-        <Width>0.95833in</Width>
+        <Top>1.62333in</Top>
+        <Left>3.4143in</Left>
+        <Height>0.24306in</Height>
+        <Width>1.17361in</Width>
         <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="ReceivedFrom4">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Fields!ReceivedFrom.Value</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>ReceivedFrom</rd:DefaultName>
-        <Top>2.09832in</Top>
-        <Left>1.36427in</Left>
-        <Height>0.13889in</Height>
-        <Width>1in</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox21">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Fields!TotalAmount.Value</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>2.4386in</Top>
-        <Left>1.26705in</Left>
-        <Height>0.12501in</Height>
-        <Width>1in</Width>
-        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -156,8 +93,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!Date.Value</Value>
-                <Style />
+                <Value>=Fields!DateArabic.Value</Value>
+                <Style>
+                  <FontFamily />
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -166,43 +105,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>3.07528in</Top>
+        <Top>3.08778in</Top>
         <Left>1.00583in</Left>
-        <Height>0.15973in</Height>
+        <Height>0.24306in</Height>
         <Width>1in</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox22">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Fields!Bank.Value</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>3.51973in</Top>
-        <Left>0.87389in</Left>
-        <Height>0.25222in</Height>
-        <Width>1in</Width>
-        <ZIndex>6</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -221,20 +128,22 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!ReceivedBy.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>Right</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>4.14in</Top>
-        <Left>6.33097in</Left>
+        <Top>4.0275in</Top>
+        <Left>6.06569in</Left>
         <Height>0.24306in</Height>
-        <Width>0.74306in</Width>
-        <ZIndex>7</ZIndex>
+        <Width>0.95834in</Width>
+        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -253,7 +162,9 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!AccountNumber.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -262,11 +173,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>3.79278in</Top>
-        <Left>5.85181in</Left>
+        <Top>3.71778in</Top>
+        <Left>2.95598in</Left>
         <Height>0.27778in</Height>
-        <Width>1in</Width>
-        <ZIndex>8</ZIndex>
+        <Width>3.89583in</Width>
+        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -285,7 +196,9 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!Bank.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -294,11 +207,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>3.485in</Top>
-        <Left>6.48375in</Left>
+        <Top>3.4225in</Top>
+        <Left>2.95598in</Left>
         <Height>0.25222in</Height>
-        <Width>0.69444in</Width>
-        <ZIndex>9</ZIndex>
+        <Width>4.22221in</Width>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -317,7 +230,9 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!SubProject.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -326,11 +241,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>2.67472in</Top>
-        <Left>5.44903in</Left>
-        <Height>0.17362in</Height>
-        <Width>1.40278in</Width>
-        <ZIndex>10</ZIndex>
+        <Top>2.68722in</Top>
+        <Left>1.33654in</Left>
+        <Height>0.21112in</Height>
+        <Width>5.46527in</Width>
+        <ZIndex>7</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -348,8 +263,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!TotalAmount.Value</Value>
-                <Style />
+                <Value>=Fields!TotalAmountWord.Value</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -359,10 +276,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>2.39694in</Top>
-        <Left>5.85181in</Left>
+        <Left>1.36154in</Left>
         <Height>0.20834in</Height>
-        <Width>1in</Width>
-        <ZIndex>11</ZIndex>
+        <Width>5.46527in</Width>
+        <ZIndex>8</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -381,7 +298,9 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!ReceivedFrom.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -391,42 +310,10 @@
         </Paragraphs>
         <rd:DefaultName>ReceivedFrom</rd:DefaultName>
         <Top>2.09832in</Top>
-        <Left>5.85181in</Left>
+        <Left>3.69903in</Left>
         <Height>0.24306in</Height>
-        <Width>1in</Width>
-        <ZIndex>12</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox23">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Fields!AccountNumber.Value</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>3.8275in</Top>
-        <Left>1.26705in</Left>
-        <Height>0.27778in</Height>
-        <Width>1.09722in</Width>
-        <ZIndex>13</ZIndex>
+        <Width>3.15278in</Width>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -445,7 +332,10 @@
             <TextRuns>
               <TextRun>
                 <Value>=Fields!TotalAmount.Value</Value>
-                <Style />
+                <Style>
+                  <FontFamily />
+                  <FontSize>8pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style>
@@ -454,11 +344,81 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>1.69555in</Top>
-        <Left>6.48375in</Left>
-        <Height>0.14584in</Height>
-        <Width>0.84722in</Width>
-        <ZIndex>14</ZIndex>
+        <Top>1.63583in</Top>
+        <Left>6.23236in</Left>
+        <Height>0.24306in</Height>
+        <Width>1.24305in</Width>
+        <ZIndex>10</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Date3">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Fields!DateArabic.Value</Value>
+                <Style>
+                  <FontFamily />
+                  <FontSize>8pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Date</rd:DefaultName>
+        <Top>1.36916in</Top>
+        <Left>0.46292in</Left>
+        <Height>0.14722in</Height>
+        <Width>0.83333in</Width>
+        <ZIndex>11</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox20">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Fields!CheckNumber.Value</Value>
+                <Style>
+                  <FontFamily />
+                  <FontSize>8pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox8</rd:DefaultName>
+        <Top>3.16555in</Top>
+        <Left>6.52403in</Left>
+        <Height>0.16667in</Height>
+        <Width>0.79861in</Width>
+        <ZIndex>12</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -477,7 +437,7 @@
       </Border>
     </Style>
   </Body>
-  <Width>20.90049cm</Width>
+  <Width>20.56535cm</Width>
   <Page>
     <PageHeight>29.7cm</PageHeight>
     <PageWidth>21cm</PageWidth>
@@ -571,6 +531,14 @@
         </Field>
         <Field Name="Mobile">
           <DataField>Mobile</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DateArabic">
+          <DataField>DateArabic</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalAmountWord">
+          <DataField>TotalAmountWord</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
