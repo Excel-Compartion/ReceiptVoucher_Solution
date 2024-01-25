@@ -8,7 +8,7 @@
         <EditForm Model="@Branch" OnValidSubmit="Submit" Class="custom-form" >
             <DataAnnotationsValidator />
 
-            <MudTextField  Label="اسم الفرع" For="@(()=>Branch.Name)" @bind-Value="@Branch.Name"  AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField  Label="اسم المركز" For="@(()=>Branch.Name)" @bind-Value="@Branch.Name"  AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
             <MudTextField  Label="المنطقة" For="@(()=>Branch.Area)" @bind-Value="@Branch.Area" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
          
@@ -86,7 +86,7 @@
             {
                 // The branch has no ID, so it's a new branch
 
-                await Http.PostAsJsonAsync("https://localhost:7210/api/Branches/AddOneAsync", Branch);
+                await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
 
                 // Show a success message
                 _Snackbar.Add("Branch added successfully!", Severity.Success);
@@ -95,7 +95,7 @@
             else
             {
 
-                await Http.PutAsJsonAsync("https://localhost:7210/api/Branches", Branch);
+                await Http.PutAsJsonAsync("api/Branches", Branch);
                 _Snackbar.Add("Branch updated successfully!", Severity.Success);
             }
 

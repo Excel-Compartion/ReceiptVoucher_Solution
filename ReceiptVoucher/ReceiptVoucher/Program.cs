@@ -23,6 +23,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
+
+
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

@@ -226,7 +226,7 @@ else
 
     void PrintReceipt(int id)
     {
-        var url = $"https://localhost:7210/api/Receipts/GetReceiptRdcl/{id}";
+        var url = $"api/Receipts/GetReceiptRdcl/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
@@ -234,11 +234,11 @@ else
     {
         RadioDateType = Day;
 
-        Branches = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+        Branches = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
-        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/Get");
+        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
 
-        Projects = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+        Projects = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
 
 
     }
@@ -297,7 +297,7 @@ else
 
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
-        var data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+        var data = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
 
         if (!string.IsNullOrWhiteSpace(searchString))
         {

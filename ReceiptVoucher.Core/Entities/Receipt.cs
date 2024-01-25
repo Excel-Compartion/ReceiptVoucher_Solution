@@ -31,7 +31,7 @@ public class Receipt
     public int SubProjectId { get; set; }   // Foreign Key
 
     [StringLength(500)]
-    public string ForPurpose { get; set; } = null!;
+    public string? ForPurpose { get; set; }
 
     public DateOnly Date { get; set; }
 
@@ -46,7 +46,7 @@ public class Receipt
 
     public Age Age { get; set; }
 
-    public int? Mobile { get; set; }
+    public string? Mobile { get; set; }
 
     
 
@@ -60,13 +60,13 @@ public class Receipt
 
 
     
-    [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
+ 
     public int? CheckNumber { get; set; }
 
 
     public DateOnly? CheckDate { get; set; }
 
-    [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الحساب بين 6 - 16 عدد")]
+
     public int? AccountNumber { get; set;}
 
     [MinLength(2)]

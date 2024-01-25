@@ -13,7 +13,7 @@ public class Branch
     [StringLength(250)]
     public string Area { get; set; } = null!;
 
-    public int? Mobile { get; set; }
+    public string? Mobile { get; set; }
 
     [StringLength(250)]
     [EmailAddress(ErrorMessage = "يرجى ادخال بريد الكتروني صحيح")]

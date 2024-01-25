@@ -93,7 +93,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!DateArabic.Value</Value>
+                <Value>=Fields!CheckDate.Value</Value>
                 <Style>
                   <FontFamily />
                 </Style>
@@ -229,6 +229,12 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value xml:space="preserve">  </Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
+              </TextRun>
+              <TextRun>
                 <Value>=Fields!SubProject.Value</Value>
                 <Style>
                   <FontFamily>Tahoma</FontFamily>
@@ -242,9 +248,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>2.68722in</Top>
-        <Left>1.33654in</Left>
+        <Left>5.16555in</Left>
         <Height>0.21112in</Height>
-        <Width>5.46527in</Width>
+        <Width>1.63626in</Width>
         <ZIndex>7</ZIndex>
         <Style>
           <Border>
@@ -419,6 +425,40 @@
         <Height>0.16667in</Height>
         <Width>0.79861in</Width>
         <ZIndex>12</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox21">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Fields!ForPurpose.Value</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>2.68722in</Top>
+        <Left>1.00583in</Left>
+        <Height>0.21112in</Height>
+        <Width>4.10417in</Width>
+        <ZIndex>13</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>

@@ -35,7 +35,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public int SubProjectId { get; set; }   // Foreign Key
 
         [StringLength(500)]
-        public string ForPurpose { get; set; } = null!;
+        public string? ForPurpose { get; set; }
 
         public DateOnly Date { get; set; }
 
@@ -70,7 +70,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public Age Age { get; set; }
 
         
-        public int? Mobile { get; set; }
+        public string? Mobile { get; set; }
 
        
 

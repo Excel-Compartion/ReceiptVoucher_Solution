@@ -10,11 +10,11 @@ public class CompanyInfo
     [StringLength(250)]
     public string Name { get; set; } = null!;
 
-    public int? Mobile { get; set; }
+    public string? Mobile { get; set; }
 
-    public int? LicenseNumber { get; set; }
+    public string? LicenseNumber { get; set; }
 
-    public int? Telephone { get; set; }
+    public string? Telephone { get; set; }
 
     [StringLength(250)]
     [EmailAddress(ErrorMessage = "يرجى ادخال بريد الكتروني صحيح")]

@@ -122,7 +122,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Projects = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+        Projects = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
     }
 
 
@@ -135,7 +135,7 @@
 
     private async Task<TableData<SubProject>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/GetAllAsync");
        
         data = data.Where(subProject =>
         {

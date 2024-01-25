@@ -100,7 +100,7 @@
 
     private async Task<TableData<CompanyInfo>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<CompanyInfo>>("https://localhost:7210/api/CompanyInfos/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<CompanyInfo>>("api/CompanyInfos/GetAllAsync");
        
         data = data.Where(companyInfo =>
         {
@@ -195,7 +195,7 @@
                     // User confirmed deletion, proceed with deletion
 
                     // Try to delete the CompanyInfo using the API controller
-                    var response = await Http.DeleteAsync($"https://localhost:7210/api/CompanyInfos/{CompanyInfoId}");
+                    var response = await Http.DeleteAsync($"api/CompanyInfos/{CompanyInfoId}");
 
                     if (response.IsSuccessStatusCode)
                     {

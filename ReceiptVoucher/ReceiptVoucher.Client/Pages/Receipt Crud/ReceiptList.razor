@@ -137,7 +137,7 @@
    
     void PrintReceipt(int id)
     {
-        var url = $"https://localhost:7210/api/Receipts/GetReceiptRdcl/{id}";
+        var url = $"api/Receipts/GetReceiptRdcl/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
@@ -157,9 +157,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Branches = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+        Branches = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
-        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("https://localhost:7210/api/SubProjects/Get");
+        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
     }
 
     /// <summary>
@@ -170,7 +170,7 @@
 
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<Receipt>>("https://localhost:7210/api/Receipts/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
 
         data = data.Where(receipt =>
         {
@@ -352,7 +352,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"https://localhost:7210/api/Receipts/{receiptId}");
+                var response = await Http.DeleteAsync($"api/Receipts/{receiptId}");
 
                 if (response.IsSuccessStatusCode)
                 {

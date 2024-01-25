@@ -120,7 +120,7 @@
 
     private async Task<TableData<Project>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<Project>>("https://localhost:7210/api/Projects/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
        
         data = data.Where(project =>
         {

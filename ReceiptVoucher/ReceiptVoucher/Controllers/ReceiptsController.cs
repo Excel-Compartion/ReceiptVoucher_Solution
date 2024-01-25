@@ -64,11 +64,28 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Date = Receipt.Date + "";
             receiptRdclViewModel.PaymentType = Receipt.PaymentType.GetDisplayName();
             receiptRdclViewModel.CheckNumber = Receipt.CheckNumber + "";
+
+          
+                //تحويل تاريخ الشيك الى تاريخ هجري
+                DateOnly? gregDate2 = Receipt.CheckDate;
+                CultureInfo ci2 = new CultureInfo("ar-SA");
+                var checkDate = gregDate2?.ToString("dd/MM/yyyy", ci2);
+
+
+                receiptRdclViewModel.CheckDate = checkDate;
+          
+
             receiptRdclViewModel.AccountNumber = Receipt.AccountNumber + "";
             receiptRdclViewModel.Bank = Receipt.Bank;
+
             receiptRdclViewModel.GrantDestinations = Receipt.GrantDestinations.GetDisplayName();
-            receiptRdclViewModel.Gender = Receipt.Gender.GetDisplayName();
-            receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
+
+            if (Receipt.GrantDestinations.GetDisplayName() == GrantDest.Individual.GetDisplayName())
+            {
+                receiptRdclViewModel.Gender = Receipt.Gender.GetDisplayName();
+                receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
+            }
+
             receiptRdclViewModel.Mobile = Receipt.Mobile + "";
 
 

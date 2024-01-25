@@ -122,7 +122,7 @@
 
     private async Task<TableData<Branch>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<Branch>>("https://localhost:7210/api/Branches/GetAllAsync");
+        data = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
        
         data = data.Where(branch =>
         {
@@ -187,7 +187,7 @@
 
         parameters.Add("BtnName", "اضافه");
 
-        _DialogService.Show<_Branch_Add_Dialog>("اضافة فرع جديد", parameters);
+        _DialogService.Show<_Branch_Add_Dialog>("اضافة مركز جديد", parameters);
     }
 
     private void OpenEditDialog(Branch branch)
@@ -197,7 +197,7 @@
         parameters.Add("OriginalBranch", branch);
         parameters.Add("BtnName", "تعديل");
 
-        _DialogService.Show<_Branch_Add_Dialog>("تعديل الفرع", parameters);
+        _DialogService.Show<_Branch_Add_Dialog>("تعديل المركز", parameters);
     }
 
     private async void RefreshData(bool dialogResult)
@@ -228,12 +228,12 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"https://localhost:7210/api/Branches/{branchId}");
+                var response = await Http.DeleteAsync($"api/Branches/{branchId}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     // Show a success message
-                    _Snackbar.Add("تم حذف بيانات الفرع بنجاح", Severity.Success);
+                    _Snackbar.Add("تم حذف بيانات المركز بنجاح", Severity.Success);
 
                     // Reload the table data
                     table.ReloadServerData();
@@ -241,7 +241,7 @@
                 else
                 {
                     // Deletion failed
-                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات الفرع!", Severity.Error);
+                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات المركز!", Severity.Error);
                 }
 
                 StateHasChanged();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReceiptVoucher.EF;
 
@@ -11,9 +12,11 @@ using ReceiptVoucher.EF;
 namespace ReceiptVoucher.EF.Migrations
 {
     [DbContext(typeof(ReceiptVoucherDbContext))]
-    partial class ReceiptVoucherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240125141735_ForPurposeUpdate")]
+    partial class ForPurposeUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +48,8 @@ namespace ReceiptVoucher.EF.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Mobile")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Mobile")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -77,19 +80,19 @@ namespace ReceiptVoucher.EF.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<string>("LicenseNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("LicenseNumber")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Mobile")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Mobile")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<string>("Telephone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Telephone")
+                        .HasColumnType("int");
 
                     b.Property<string>("Web")
                         .HasMaxLength(250)
@@ -163,8 +166,8 @@ namespace ReceiptVoucher.EF.Migrations
                     b.Property<int>("GrantDestinations")
                         .HasColumnType("int");
 
-                    b.Property<string>("Mobile")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Mobile")
+                        .HasColumnType("int");
 
                     b.Property<int>("PaymentType")
                         .HasColumnType("int");
