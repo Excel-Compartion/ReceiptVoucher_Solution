@@ -18,13 +18,17 @@ public class Receipt
     [StringLength(250)]
     public string? ReceivedBy { get; set; } = "default";    // Foreign Key From User
 
-    [Range(1.0, int.MaxValue, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ ---")]
+  
     [Column(TypeName = "decimal(18, 2)")]
     public decimal TotalAmount { get; set; }
 
 
     [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم الفرع  ---")]
     public int BranchId { get; set; }   // Foreign Key
+
+    [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]
+    [Column("ProjectId")]
+    public int ProjectId { get; set; }   // Foreign Key
 
     [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الفرعي ---")]
     [Column("Sub_ProjectId")]
@@ -77,6 +81,9 @@ public class Receipt
     //-------- Navigation Properties ---
     [ForeignKey("BranchId")]
     public Branch? Branch { get; set; } = null!;
+
+    [ForeignKey("ProjectId")]
+    public Project? Project { get; set; } = null!;
 
     [ForeignKey("SubProjectId")]
     public SubProject? SubProject { get; set; } = null!;

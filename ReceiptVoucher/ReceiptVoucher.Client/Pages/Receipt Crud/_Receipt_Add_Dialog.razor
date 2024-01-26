@@ -6,7 +6,7 @@
 
 
 <MudDialog Class="custom-modal" Style=" max-width: unset; width: 90%; ">
-    <DialogContent >
+    <DialogContent>
 
         <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
@@ -30,13 +30,13 @@
                     <MudItem xs="4">
                         <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                     </MudItem>
-            </MudGrid>
+                </MudGrid>
 
 
 
 
-                
-          
+
+
 
                 @{
 
@@ -140,9 +140,9 @@
 
 
             <MudGrid>
-                    <MudItem xs="6">
+                <MudItem xs="6">
                     <MudSelect Label="وجهة المنحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
-                            <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Association">@GrantDest.Association.GetDisplayName()</MudSelectItem>
@@ -156,10 +156,10 @@
 
                 @if (ReceiptViewModel.GrantDestinations == GrantDest.Individual)
             {
-               
+
                 <br />
 
-               
+
 
 
 
@@ -176,18 +176,18 @@
 
                             </MudSelect>
                         </MudItem>
-                    <MudItem xs="6">
-                        <div>الجنس</div>
+                        <MudItem xs="6">
+                            <div>الجنس</div>
 
                             <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
-                                    <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
-                                    <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
-                                </MudRadioGroup>
-                        
-                        </MudItem>
-                </MudGrid>
+                                <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
+                                <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
+                            </MudRadioGroup>
 
-               
+                        </MudItem>
+                    </MudGrid>
+
+
 
             }
             ///تعيين قيم افتراضيه ل كل من Age ,Gender لتجنب المطالبه
@@ -199,37 +199,15 @@
             }
 
 
-@*             <MudTextField Label="اسم المحاسب" For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
- *@
-
-       
+            @*             <MudTextField Label="اسم المحاسب" For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+            *@
 
 
 
 
-            @if (ReceiptViewModel.SubProjectId != 0)
-            {
-                var subProject = SubProjects.Where(x => x.Id == ReceiptViewModel.SubProjectId).FirstOrDefault();
 
-                if (subProject != null)
-                {
-                   
 
-                   
-                    try
-                    {
-                        ProjectName = subProject.Project.Name;
-                    }
-
-                    catch
-                    {
-                        ProjectName = "";
-
-                    }
-
-                }
-
-            }
+      
             <br />
 
 
@@ -244,28 +222,48 @@
                         }
                     </MudSelect>
                 </MudItem>
-                 <MudItem xs="4">
-                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
-                         <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
-                         @foreach (var subProject in SubProjects)
+
+                <MudItem xs="4">
+                    <MudSelect Label="المشروع الرئيسي" For="@(()=>ReceiptViewModel.ProjectId)" @bind-Value="@ReceiptViewModel.ProjectId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار اسم المشروع الرئيسي ---</MudSelectItem>
+                        @foreach (var project in Projects)
                         {
-                            <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+                            <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>
+
+                @if (ReceiptViewModel.ProjectId == 0 )
+                {
+                    ReceiptViewModel.SubProjectId = 0;
+                }
+
                 <MudItem xs="4">
-                    <MudTextField ReadOnly Label="اسم المشروع الرئيسي" Value="@ProjectName" Immediate="true" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
-                 </MudItem>
+                    <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
+                        @foreach (var subProject in SubProjects)
+                        {
+                            @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)
+
+
+                            {
+                                <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+                            }
+
+
+                        }
+                    </MudSelect>
+                </MudItem>
             </MudGrid>
 
-          
-
-          
 
 
-            
 
-           
+
+
+
+
+
             <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
 
             @if (BtnName != ButtonTypes.Details)
@@ -303,6 +301,9 @@
 
     [Parameter]
     public List<Branch> Branches { get; set; }
+
+    [Parameter]
+    public List<Project> Projects { get; set; }
 
     [Parameter]
     public List<SubProject> SubProjects { get; set; }
@@ -363,6 +364,7 @@
                     Mobile = OriginalReceiptViewModel.Mobile,
                     Age = OriginalReceiptViewModel.Age,
                     Gender = OriginalReceiptViewModel.Gender,
+                    ProjectId = OriginalReceiptViewModel.ProjectId,
 
 
 
@@ -395,8 +397,6 @@
     {
 
 
-        if (!string.IsNullOrWhiteSpace(ReceiptViewModel.ReceivedFrom))
-        {
 
 
             Receipt receipt = new Receipt();
@@ -410,15 +410,16 @@
             receipt.ForPurpose = ReceiptViewModel.ForPurpose;
             receipt.Date = ReceiptViewModel.Date;
             receipt.PaymentType = ReceiptViewModel.PaymentType;
-
             receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
             receipt.Mobile = ReceiptViewModel.Mobile;
-            
+            receipt.ProjectId = ReceiptViewModel.ProjectId;
+
+
 
             if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
 
-           
-            
+
+
 
 
             switch (ReceiptViewModel.PaymentType)
@@ -426,7 +427,7 @@
                 case PaymentTypes.Check:
                     receipt.CheckNumber = ReceiptViewModel.CheckNumber;
 
-                  
+
 
                     // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
                     // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
@@ -447,7 +448,7 @@
             if (ReceiptViewModel.Id == 0)
             {
 
-                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/Receipts/AddOneAsync", receipt);
+                var response = await Http.PostAsJsonAsync("api/Receipts/AddOneAsync", receipt);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
@@ -463,7 +464,7 @@
             {
                 receipt.Id = ReceiptViewModel.Id;
 
-                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/Receipts", receipt);
+                var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
@@ -480,7 +481,7 @@
             MudDialog.Close(DialogResult.Ok(true));
             // Trigger the OnClose event
             OnClose.InvokeAsync(true);
-        }
+        
     }
 
 

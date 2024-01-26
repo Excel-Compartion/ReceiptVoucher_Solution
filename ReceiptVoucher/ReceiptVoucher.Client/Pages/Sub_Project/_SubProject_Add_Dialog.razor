@@ -7,8 +7,8 @@
         <EditForm Model="@SubProject" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Add" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"  For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End"  For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
             <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" >
                 <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>

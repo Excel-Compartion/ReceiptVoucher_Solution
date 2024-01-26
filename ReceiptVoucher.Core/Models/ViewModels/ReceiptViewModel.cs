@@ -22,13 +22,17 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string? ReceivedBy { get; set; } = "default";     // Foreign Key From User
 
 
-        [Range(1.0, int.MaxValue, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ ---")]
+        [Range(1.0, 9999999999999999.0, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ بشكل صحيح ---")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
 
 
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم الفرع  ---")]
         public int BranchId { get; set; }   // Foreign Key
+
+        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]
+        [Column("ProjectId")]
+        public int ProjectId { get; set; }   // Foreign Key
 
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الفرعي ---")]
         [Column("Sub_ProjectId")]
@@ -43,15 +47,15 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
         public PaymentTypes PaymentType { get; set; }
 
-        [Required(ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
-        [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
+        [Required(ErrorMessage = "يرجى ادخال رقم الشيك بشكل صحيح ")]
+
         public int? CheckNumber { get; set; }
 
-        [Required(ErrorMessage = "يرجى ادخال تاريخ الشيك")]
-        public DateTime? CheckDate { get; set; } 
+        [Required(ErrorMessage = "يرجى ادخال تاريخ ")]
+        public DateTime? CheckDate { get; set; }
 
-        [Required (ErrorMessage = "يرجى ادخال رقم الشيك بين 6 - 16 عدد")]
-        [Range(100000, 9999999999999999, ErrorMessage = "يرجى ادخال رقم الحساب بين 6 - 16 عدد")]
+        [Required(ErrorMessage = "يرجى ادخال رقم الحساب بشكل صحيح ")]
+       
         public int? AccountNumber { get; set; }
 
         [Required(ErrorMessage = "يرجى ادخال اسم البنك")]

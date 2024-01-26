@@ -127,6 +127,8 @@
 
 
     public List<Branch> Branches { get; set; }
+    public List<Project> Projects { get; set; }
+
     public List<SubProject> SubProjects { get; set; }
 
 
@@ -158,6 +160,9 @@
     protected override async Task OnInitializedAsync()
     {
         Branches = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+
+        Projects = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+
 
         SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
     }
@@ -250,6 +255,8 @@
 
         parameters.Add("Branches", Branches);
 
+        parameters.Add("Projects", Projects);
+
         parameters.Add("SubProjects", SubProjects);
 
         var options = new DialogOptions() { CloseButton = true };
@@ -268,6 +275,7 @@
         receiptViewModel.ReceivedBy = receipt.ReceivedBy;
         receiptViewModel.TotalAmount = receipt.TotalAmount;
         receiptViewModel.BranchId = receipt.BranchId;
+        receiptViewModel.ProjectId = receipt.ProjectId;
         receiptViewModel.SubProjectId = receipt.SubProjectId;
         receiptViewModel.ForPurpose = receipt.ForPurpose;
         receiptViewModel.Date = receipt.Date;
@@ -278,6 +286,7 @@
         receiptViewModel.Gender = receipt.Gender;
         receiptViewModel.Age = receipt.Age;
         receiptViewModel.Mobile = receipt.Mobile;
+        receiptViewModel.ProjectId = receipt.ProjectId;
 
 
 
@@ -298,6 +307,8 @@
 
 
         parameters.Add("Branches", Branches);
+
+        parameters.Add("Projects", Projects);
 
         parameters.Add("SubProjects", SubProjects);
 
