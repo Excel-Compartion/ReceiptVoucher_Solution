@@ -1,10 +1,13 @@
 
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
 //using ReceiptVoucher.Components;
 using ReceiptVoucher.Core;
+using ReceiptVoucher.Core.Helper;
+using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Interfaces;
 using ReceiptVoucher.EF;
 using ReceiptVoucher.EF.Repositories;
@@ -44,9 +47,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefualtConnect
             ?? throw new InvalidOperationException("No Connection String Was Found");
 
 builder.Services.AddDbContext<ReceiptVoucherDbContext>(options =>
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly(typeof(ReceiptVoucherDbContext).Assembly.FullName))); // Register DbContext 
+        options.UseSqlServer(connectionString, b => b.MigrationsAssembly(typeof(ReceiptVoucherDbContext).Assembly.FullName))); // Register DbContext _ Update To Uses Identity
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ReceiptVoucherDbContext>();
+
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();    // Register IUnitOfWork
+
+//--- JWT Configurations
+builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+
+
 
 
 var app = builder.Build();
