@@ -1,5 +1,4 @@
-﻿
-        @page "/MinReports"
+﻿        @page "/MinReports"
 @rendermode InteractiveAuto
 
 @using System.Net.Http.Json
@@ -13,16 +12,15 @@
 
 <style>
 
-  
+
     :root {
         --color-custom: #3090C7;
     }
 
 
 
-    .date-picker-color{
+    .date-picker-color {
         background-color: #DBE9FA;
-      
     }
 
 </style>
@@ -31,124 +29,121 @@
 <!--اسم الصفحه-->
 <p style=" margin-bottom:2% ;">
 
-   
+
     <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
 
         <MudIcon Icon="@Icons.Material.Filled.Assessment" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
-        
+
         التقارير
-        
-    <b style="color:dodgerblue;font-size:xx-large">|</b>
-    
+
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+
 
     </span>
 
- </p>
+</p>
 
 <div style="border: 1px solid gainsboro;border-radius:3px;padding:1%">
 
 
 
-<MudRadioGroup @bind-Value="RadioDateType">
-    <MudRadio Value="Day" Color="Color.Info" Size="Size.Small">تقرير يومي</MudRadio>
-    <MudRadio Value="Month" Color="Color.Warning" Size="Size.Small">تقرير عام</MudRadio>
-</MudRadioGroup>
-
-<MudGrid>
-    <MudItem xs="6">
-
-<!--Project Select-->
-        <MudSelect Style="width:100%" T="string" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" @onchange="UpdateTable">
-
-    @if (Projects != null)
-    {
-        @foreach (var project in Projects)
-        {
-            <MudSelectItem T="string" Value="@project.Name">@project.Name</MudSelectItem>
-        }
-    }
-
-</MudSelect>
-</MudItem>
-
- <MudItem xs="6">
-
-        <MudSelect Style="width:100%" Label="الفرع" @bind-Value="@SelectBranchId" @onchange="UpdateTable">
-    <MudSelectItem Value="0">--- كل المراكز ---</MudSelectItem>
-
-    @if (Branches != null)
-    {
-        @foreach (var branch in Branches)
-        {
-            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
-        }
-    }
-
-   
-</MudSelect>
-
-</MudItem>
-</MudGrid>
-
-  
-
-
-<!--SubProject Select-->
-<MudSelect  T="string" Label="المشاريع الفرعية"  MultiSelection="true" @bind-SelectedValues="SelectSubProject" @onchange="UpdateTable">
-
-    @if (SubProjects != null)
-    {
-        @foreach (var subProjects in SubProjects)
-        {
-            if (SelectProject.Count() != 0)
-            {
-                if (SelectProject.Contains(subProjects.Project.Name))
-                {
-                    <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>
-                }
-            }
-
-           else if(SelectProject.Count()==0 && SelectSubProject.Count()!=0)
-            {
-                // تهيئة القائمة المتعددة التي تم اختيارها
-                SelectSubProject = new List<string>();
-                StateHasChanged(); // إعادة تقديم العنصر
-
-                @*   <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>  *@
-            } 
-
-        }
-    }
-
-</MudSelect>
-
-
-
-<br />
-
-@if (RadioDateType == Day)
-{
-    <MudDatePicker Class="date-picker-color" Color="Color.Info"  @bind-Date="selectedDate" Label="تاريخ السند" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange=" UpdateTable" />
-
-    UpdateTable();
-}
-else
-{
+    <MudRadioGroup @bind-Value="RadioDateType">
+        <MudRadio Value="Day" Color="Color.Info" Size="Size.Small">تقرير يومي</MudRadio>
+        <MudRadio Value="Month" Color="Color.Warning" Size="Size.Small">تقرير عام</MudRadio>
+    </MudRadioGroup>
 
     <MudGrid>
         <MudItem xs="6">
-            <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth1" Label="من التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+
+            <!--Project Select-->
+            <MudSelect Style="width:100%" T="string" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" @onchange="UpdateTable">
+
+                @if (Projects != null)
+                {
+                    @foreach (var project in Projects)
+                    {
+                        <MudSelectItem T="string" Value="@project.Name">@project.Name</MudSelectItem>
+                    }
+                }
+
+            </MudSelect>
         </MudItem>
+
         <MudItem xs="6">
-            <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth2" Label="الى التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+
+            <!--SubProject Select-->
+            <MudSelect T="string" Label="المشاريع الفرعية" MultiSelection="true" @bind-SelectedValues="SelectSubProject" @onchange="UpdateTable">
+
+                @if (SubProjects != null)
+                {
+                    @foreach (var subProjects in SubProjects)
+                    {
+                        if (SelectProject.Count() != 0)
+                        {
+                            if (SelectProject.Contains(subProjects.Project.Name))
+                            {
+                                <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>
+                            }
+                        }
+
+                        else if (SelectProject.Count() == 0 && SelectSubProject.Count() != 0)
+                        {
+                            // تهيئة القائمة المتعددة التي تم اختيارها
+                            SelectSubProject = new List<string>();
+                            StateHasChanged(); // إعادة تقديم العنصر
+
+                            @*   <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>  *@
+                        }
+
+                    }
+                }
+
+            </MudSelect>
+
         </MudItem>
     </MudGrid>
 
 
-     UpdateTable();
- 
-    
-}
+
+    <MudSelect Style="width:100%" Label="المركز" @bind-Value="@SelectBranchId" @onchange="UpdateTable">
+        <MudSelectItem Value="0">--- كل المراكز ---</MudSelectItem>
+
+        @if (Branches != null)
+        {
+            @foreach (var branch in Branches)
+            {
+                <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+            }
+        }
+
+
+    </MudSelect>
+
+    <br />
+
+    @if (RadioDateType == Day)
+    {
+        <MudDatePicker Class="date-picker-color" Color="Color.Info" @bind-Date="selectedDate" Label="تاريخ السند" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange=" UpdateTable" />
+
+        UpdateTable();
+    }
+    else
+    {
+
+        <MudGrid>
+            <MudItem xs="6">
+                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth1" Label="من التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth2" Label="الى التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" @onchange="UpdateTable" />
+            </MudItem>
+        </MudGrid>
+
+
+        UpdateTable();
+
+
+    }
     <br />
     <MudFab Size="Size.Medium" StartIcon="@Icons.Material.Filled.EventNote" Style="background-color: var(--color-custom); color: white;" Label="عرض التقرير" />
 
@@ -158,7 +153,7 @@ else
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-    
+
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -172,7 +167,7 @@ else
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -273,7 +268,7 @@ else
     //         }
     //     }
 
-   
+
 
     //     SelectSubProject = subProjectNames;
     //     StateHasChanged();
@@ -293,7 +288,7 @@ else
     private bool CheckProjectSelect(int ProjectId)
     {
         bool _bool = false;
-        var project=   Projects.Where(x => x.Id == ProjectId).FirstOrDefault();
+        var project = Projects.Where(x => x.Id == ProjectId).FirstOrDefault();
 
         if (project != null)
         {
@@ -322,7 +317,7 @@ else
         {
             subProjectClose = false;
         }
-        else{ subProjectClose = true; }
+        else { subProjectClose = true; }
 
 
         // فلترة البيانات بناءً على تاريخ اليوم المحدد
@@ -333,12 +328,12 @@ else
                 data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId && SelectSubProject.Contains(r.SubProject.Name)).ToList();
             }
 
-           else if (SelectBranchId != 0 )
+            else if (SelectBranchId != 0)
             {
-                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId ).ToList();
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId).ToList();
             }
 
-            else if (SelectBranchId != 0 && SelectProject.Count()!=0 && SelectSubProject.Count()==0)
+            else if (SelectBranchId != 0 && SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
             {
                 data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && r.BranchId == SelectBranchId && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
             }
@@ -348,9 +343,9 @@ else
                 data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
             }
 
-            else if ( SelectSubProject.Count() != 0)
+            else if (SelectSubProject.Count() != 0)
             {
-                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value)  && SelectSubProject.Contains(r.SubProject.Name)).ToList();
+                data = data.Where(r => r.Date == DateOnly.FromDateTime(selectedDate.Value) && SelectSubProject.Contains(r.SubProject.Name)).ToList();
             }
 
             else
@@ -361,42 +356,42 @@ else
         }
 
         // فلتره اليوم بناء على تاريخ الشهرين المحددين
-        else if ( RadioDateType == Month)
+        else if (RadioDateType == Month)
         {
             var startDate = DateOnly.FromDateTime(selectedMonth1.Value);
             var endDate = DateOnly.FromDateTime(selectedMonth2.Value);
 
-            if (SelectBranchId != 0 && SelectSubProject.Count()!=0)
+            if (SelectBranchId != 0 && SelectSubProject.Count() != 0)
             {
                 //فلتره بناء على تاريخ الشهرين كامل
-               
+
                 data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId && SelectSubProject.Contains(r.SubProject.Name)).ToList();
 
                 // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
 
             }
 
-            if (SelectBranchId != 0 )
+            if (SelectBranchId != 0)
             {
                 //فلتره بناء على تاريخ الشهرين كامل
 
-                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId ).ToList();
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId).ToList();
 
                 // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
 
             }
 
-            if (SelectBranchId != 0 && SelectProject.Count()!=0 && SelectSubProject.Count()==0)
+            if (SelectBranchId != 0 && SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
             {
                 //فلتره بناء على تاريخ الشهرين كامل
 
-                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId && CheckProjectSelect(r.SubProject.ProjectId) ).ToList();
+                data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && r.BranchId == SelectBranchId && CheckProjectSelect(r.SubProject.ProjectId)).ToList();
 
                 // data = data.Where(r => (r.Date >= startDate && r.Date <= endDate) && SelectedSubProjects.Contains(r.SubProjectId)).ToList();
 
             }
 
-            if ( SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
+            if (SelectProject.Count() != 0 && SelectSubProject.Count() == 0)
             {
                 //فلتره بناء على تاريخ الشهرين كامل
 
@@ -406,7 +401,7 @@ else
 
             }
 
-            if ( SelectSubProject.Count() != 0)
+            if (SelectSubProject.Count() != 0)
             {
                 //فلتره بناء على تاريخ الشهرين كامل
 
@@ -422,7 +417,7 @@ else
 
                 data = data.Where(r => r.Date >= startDate && r.Date <= endDate).ToList();
             }
-           
+
 
             //فلتره بناء على تاريخ الشهرين فقط
             // var startDate = DateOnly.FromDateTime(selectedMonth1.Value);
@@ -460,7 +455,7 @@ else
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.SubProject.Name).ToList() : data.OrderByDescending(r => r.SubProject.Name).ToList();
                 break;
 
-            
+
 
             case "PaymentType_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.PaymentType.GetDisplayName()).ToList() : data.OrderByDescending(r => r.PaymentType.GetDisplayName()).ToList();
@@ -482,7 +477,7 @@ else
     private void OpenDetailsDialog(Receipt receipt)
     {
         var parameters = new DialogParameters();
-       
+
 
         ReceiptViewModel receiptViewModel = new ReceiptViewModel();
 
@@ -530,11 +525,11 @@ else
         var options = new DialogOptions() { CloseButton = true };
 
 
-            parameters.Add("BtnName", ButtonTypes.Details);
-            _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
-        
+        parameters.Add("BtnName", ButtonTypes.Details);
+        _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
 
-       
-        
+
+
+
     }
 }
