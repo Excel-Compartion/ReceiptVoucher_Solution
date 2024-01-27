@@ -12,9 +12,11 @@ namespace ReceiptVoucher.Core.Interfaces
     {
         Task<IEnumerable<Receipt>> GetAllReceiptAsync();
 
+        Task<IEnumerable<Receipt>> GetFilteredData( FilterData filterData);
+
         //  GetReceiptRdcl
 
-       Task<Receipt>  GetReceiptRdclById(int id);
+        Task<Receipt>  GetReceiptRdclById(int id);
 
     }
 }

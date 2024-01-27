@@ -129,6 +129,9 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(await _receiptRepository.GetAllReceiptAsync());
         }
 
+
+
+
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(Receipt receipt)
         {
@@ -143,6 +146,22 @@ namespace ReceiptVoucher.Server.Controllers
             
 
             return Ok("receipt Created Succesfully.");
+        }
+
+        [HttpPost("GetFilteredData")]
+        public async Task<IActionResult> GetFilteredData(FilterData filterData)
+        {
+
+           
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+           
+
+         var receipt =  await _receiptRepository.GetFilteredData(filterData);
+
+
+            return Ok(receipt);
         }
 
 

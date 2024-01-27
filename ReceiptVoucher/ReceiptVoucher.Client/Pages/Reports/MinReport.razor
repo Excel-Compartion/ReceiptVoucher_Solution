@@ -3,7 +3,6 @@
 
 @using System.Net.Http.Json
 @using ReceiptVoucher.Client.Pages.Receipt_Crud
-@using System.ComponentModel.DataAnnotations
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
@@ -56,8 +55,7 @@
 
    
 
-    <EditForm  OnValidSubmit="Submit" Class="custom-form">
-        <DataAnnotationsValidator />
+    
 
     <MudGrid>
         <MudItem xs="6">
@@ -163,10 +161,10 @@
 
     }
     <br />
-    <MudFab Size="Size.Medium" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.EventNote" Style="background-color: var(--color-custom); color: white;" Label="عرض التقرير" />
+    <MudFab Size="Size.Medium" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.EventNote" OnClick="Submit" Style="background-color: var(--color-custom);  color: white;" Label="عرض التقرير" />
 
 
-    </EditForm>
+
 </div>
 <br />
 
@@ -233,7 +231,7 @@
     private string Month = "Month";
 
 
-   
+
     public List<Branch> Branches { get; set; }
 
     // SubProject Select
@@ -255,28 +253,6 @@
     private bool isUnChecked = false;
 
     private List<string> SelectSubProjectList = new List<string>();
-
-
-    public class RegisterAccountForm
-    {
-        [Required]
-        [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
-        public string Username { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
-        public string Password { get; set; }
-
-        [Required]
-        [Compare(nameof(Password))]
-        public string Password2 { get; set; }
-
-    }
-
 
 
 
@@ -319,7 +295,7 @@
 
     }
 
-    void Submit(){}
+
 
     void PrintReceipt(int id)
     {
@@ -341,31 +317,7 @@
     }
 
 
-    // private void UpdateSubProjectSelect()
-    // {
-    //     List<string> subProjectNames = new List<string>();
 
-    //     foreach (var sub in SelectSubProject)
-    //     {
-    //         var subProject = SubProjects.Where(x =>x.Name==sub  ).FirstOrDefault();
-
-    //         if (subProject != null)
-    //         {
-    //             if (SelectProject.Contains(subProject.Project.Name) == true)
-    //             {
-    //                 subProjectNames.Add(subProject.Name);
-    //             }
-    //         }
-    //     }
-
-
-
-    //     SelectSubProject = subProjectNames;
-    //     StateHasChanged();
-
-    //     UpdateTable();
-
-    // }
 
     private void UpdateTable()
     {
@@ -392,9 +344,45 @@
         return _bool;
     }
 
+
+
+    private FilterData filterData = new FilterData();
+
+    private List<Receipt> data = new List<Receipt>();
+
+    private async Task Submit()
+    {
+        // جمع بيانات الفلترة
+        filterData.RadioDateType = RadioDateType;
+
+
+
+        filterData.SelectedDate = DateOnly.FromDateTime(selectedDate.Value);
+        filterData.SelectedMonth1 = DateOnly.FromDateTime(selectedMonth1.Value);
+        filterData.SelectedMonth2 = DateOnly.FromDateTime(selectedMonth2.Value);
+        filterData.SelectProject = SelectProject.ToList();
+        filterData.SelectSubProject = SelectSubProject.ToList();
+        filterData.SelectBranchId = SelectBranchId.ToList();
+
+        // إرسال البيانات إلى واجهة برمجة التطبيقات
+        var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
+
+        // التحقق من الاستجابة
+        if (response.IsSuccessStatusCode)
+        {
+            // تحويل البيانات المرتجعة إلى قائمة الإيصالات
+            var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
+
+            data = receipts;
+
+            table.ReloadServerData();
+
+        }
+    }
+
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
-        var data = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
+       
 
         if (!string.IsNullOrWhiteSpace(searchString))
         {

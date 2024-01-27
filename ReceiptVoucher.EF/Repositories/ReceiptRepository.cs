@@ -1,4 +1,5 @@
-﻿using ReceiptVoucher.Core.Entities;
+﻿using ReceiptVoucher.Core.Consts;
+using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Enums;
 using ReceiptVoucher.Core.Models.ViewModels;
 using System;
@@ -21,6 +22,22 @@ namespace ReceiptVoucher.EF.Repositories
         {
             return await _context.Receipts.Include(p => p.Branch).Include(p=>p.SubProject).ToListAsync();
         }
+
+        public async Task<IEnumerable<Receipt>> GetFilteredData(FilterData filterData)
+        {
+            if (filterData.RadioDateType == "Day")
+            {
+                return await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project).Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name) && filterData.SelectBranchId.Contains(x.Branch.Name) && x.Date==filterData.SelectedDate).ToListAsync();
+
+            }
+
+            else
+            {
+                return await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project).Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name) && filterData.SelectBranchId.Contains(x.Branch.Name) && (x.Date >= filterData.SelectedMonth1 && x.Date <= filterData.SelectedMonth2)).ToListAsync();
+
+            }
+        }
+
         public async Task<Receipt>   GetReceiptRdclById(int id)
         {
             var Receipt = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Where(x => x.Id == id).FirstOrDefaultAsync();
