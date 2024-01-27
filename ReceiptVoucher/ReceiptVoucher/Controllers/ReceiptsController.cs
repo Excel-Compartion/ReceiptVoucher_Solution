@@ -126,7 +126,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _receiptRepository.GetAllSubProjectAsync());
+            return Ok(await _receiptRepository.GetAllReceiptAsync());
         }
 
         [HttpPost("AddOneAsync")]

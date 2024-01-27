@@ -10,7 +10,14 @@ html, body {
    /* font-family: 'tajawal-bold', Helvetica, Arial, sans-serif;*/
 }
 
-
+.testBody {
+   
+            font-family: "Tajawal", sans-serif;
+           
+            font-weight: 300;
+            font-style: normal;
+       
+}
 
 
 a, .btn-link {

@@ -17,7 +17,7 @@ namespace ReceiptVoucher.EF.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Receipt>> GetAllSubProjectAsync()
+        public async Task<IEnumerable<Receipt>> GetAllReceiptAsync()
         {
             return await _context.Receipts.Include(p => p.Branch).Include(p=>p.SubProject).ToListAsync();
         }
