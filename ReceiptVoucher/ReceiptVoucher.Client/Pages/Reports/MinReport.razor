@@ -13,7 +13,12 @@
 
 <style>
 
-    
+  
+    :root {
+        --color-custom: #3090C7;
+    }
+
+
 
     .date-picker-color{
         background-color: #DBE9FA;
@@ -39,6 +44,9 @@
     </span>
 
  </p>
+
+<div style="border: 1px solid gainsboro;border-radius:3px;padding:1%">
+
 
 
 <MudRadioGroup @bind-Value="RadioDateType">
@@ -141,6 +149,10 @@ else
  
     
 }
+    <br />
+    <MudFab Size="Size.Medium" StartIcon="@Icons.Material.Filled.EventNote" Style="background-color: var(--color-custom); color: white;" Label="عرض التقرير" />
+
+</div>
 <br />
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
@@ -484,11 +496,12 @@ else
         receiptViewModel.Date = receipt.Date;
         receiptViewModel.PaymentType = receipt.PaymentType;
         receiptViewModel.CheckNumber = receipt.CheckNumber;
-
+        receiptViewModel.ProjectId = receipt.ProjectId;
         receiptViewModel.GrantDestinations = receipt.GrantDestinations;
         receiptViewModel.Gender = receipt.Gender;
         receiptViewModel.Age = receipt.Age;
         receiptViewModel.Mobile = receipt.Mobile;
+
 
 
 
@@ -511,6 +524,8 @@ else
         parameters.Add("Branches", Branches);
 
         parameters.Add("SubProjects", SubProjects);
+
+        parameters.Add("Projects", Projects);
 
         var options = new DialogOptions() { CloseButton = true };
 
