@@ -37,3 +37,56 @@ Content-Type: application/json
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
 
 ###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/token
+Content-Type: application/json
+
+{
+  //TokenRequestModel
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/AddRole
+Content-Type: application/json
+
+{
+  //AddRoleModel
+}
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/projects/GetAllAsync
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "waleed1",
+  "lastName": "mohammed",
+  "userName": "waleedUser1",
+  "Email": "waleedUser1",
+  "password": "edf"
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
+}
+
+###

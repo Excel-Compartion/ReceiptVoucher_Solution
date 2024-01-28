@@ -1,7 +1,9 @@
 
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
 //using ReceiptVoucher.Components;
@@ -9,9 +11,11 @@ using ReceiptVoucher.Core;
 using ReceiptVoucher.Core.Helper;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Interfaces;
+using ReceiptVoucher.Core.Services;
 using ReceiptVoucher.EF;
 using ReceiptVoucher.EF.Repositories;
 using ReceiptVoucher.Server.Components;
+using System.Text;
 using System.Text.Json.Serialization;
 
 
@@ -34,6 +38,9 @@ builder.Services.AddControllers().AddJsonOptions(option =>
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+
+// here inject all Services --------
+
 builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
 builder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
 
@@ -41,6 +48,9 @@ builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 
 builder.Services.AddMudServices();  // MudBlazor
 builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefualtConnection")
@@ -57,8 +67,29 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();    // Register IUnitOf
 //--- JWT Configurations
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.RequireHttpsMetadata = false;
+    o.SaveToken = false;
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+        ClockSkew = TimeSpan.Zero
 
+    };
+});
 
+//-------------------
 
 var app = builder.Build();
 
@@ -83,6 +114,10 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Counter).Assembly);
+
+// -----
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 app.MapControllers();
