@@ -1,0 +1,84 @@
+﻿@page "/Login"
+
+<style>
+    :root {
+        --color-custom: #3090C7;
+    }
+
+    
+</style>
+
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-6 col-xl-5">
+                <img src="images\loginicon.jpg"
+                     class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-12 col-md-6 col-xl-4 offset-xl-1" style="border: 1px solid gainsboro;border-radius:3px;padding:1%;margin-bottom: 2rem;">
+
+                <EditForm Model="@login" OnValidSubmit="Submit" Class="custom-form">
+                    <DataAnnotationsValidator />
+
+                    <MudTextField Immediate="false" Label="البريد الالكتروني" id="form3Example3" class="form-control form-control-lg" For="@(()=>login.Email)" @bind-Value="@login.Email" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+
+
+                    <br />
+                    <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر" Variant="Variant.Text" For="@(()=>login.Password)" @bind-Value="@login.Password" />
+
+
+
+
+
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Checkbox -->
+                        <div class="form-check mb-0">
+
+                            <MudCheckBox Size="Size.Small" @bind-Value="@login.RemmberMe" Dense="true" Color="Color.Info" class="form-check-input me-2" id="form2Example3"></MudCheckBox>
+                            <label class="form-check-label" for="form2Example3">
+                                تذكرني
+                            </label>
+                        </div>
+                        <a href="#!" class="text-body">هل نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+
+                        <MudButton ButtonType="ButtonType.Submit" class="btn btn-primary btn-lg" id="LoginBtn" style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">تسجيل الدخول</MudButton>
+                    </div>
+
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+        <!-- Copyright -->
+        <div class="text-white mb-3 mb-md-0">
+            Copyright © 2020. All rights reserved.
+        </div>
+        <!-- Copyright -->
+        <!-- Right -->
+        <div>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-google"></i>
+            </a>
+            <a href="#!" class="text-white">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <!-- Right -->
+    </div>
+</section>
+@code {
+    public LoginModel login { get; set; } = new LoginModel();
+
+    public void Submit() { }
+}

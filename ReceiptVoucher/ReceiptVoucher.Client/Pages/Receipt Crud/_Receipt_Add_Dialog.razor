@@ -16,7 +16,7 @@
 
             <MudGrid>
                 <MudItem xs="4">
-                    <MudTextField Label="اسم المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    <MudTextField Label="المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                 </MudItem>
                 <MudItem xs="4">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
@@ -129,7 +129,7 @@
 
 
 
-                    <MudTextField Label="اسم البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    <MudTextField Label="البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
                 }
 
@@ -215,7 +215,7 @@
             <MudGrid>
                 <MudItem xs="4">
                     <MudSelect Label="الفرع" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
-                        <MudSelectItem Value="0">--- اختيار اسم الفرع ---</MudSelectItem>
+                        <MudSelectItem Value="0">--- اختيار الفرع ---</MudSelectItem>
                         @foreach (var branch in Branches)
                         {
                             <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
@@ -225,7 +225,7 @@
 
                 <MudItem xs="4">
                     <MudSelect Label="المشروع الرئيسي" For="@(()=>ReceiptViewModel.ProjectId)" @bind-Value="@ReceiptViewModel.ProjectId" ReadOnly="@ReadOnlyStatus">
-                        <MudSelectItem Value="0">--- اختيار اسم المشروع الرئيسي ---</MudSelectItem>
+                        <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
                         @foreach (var project in Projects)
                         {
                             <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
@@ -240,7 +240,7 @@
 
                 <MudItem xs="4">
                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
-                        <MudSelectItem Value="0">--- اختيار اسم المشروع الفرعي ---</MudSelectItem>
+                        <MudSelectItem Value="0">--- اختيار المشروع الفرعي ---</MudSelectItem>
                         @foreach (var subProject in SubProjects)
                         {
                             @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)

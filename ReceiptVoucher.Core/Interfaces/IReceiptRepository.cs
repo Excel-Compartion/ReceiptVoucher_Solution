@@ -10,11 +10,13 @@ namespace ReceiptVoucher.Core.Interfaces
 {
     public interface IReceiptRepository: IBaseRepository<Receipt>
     {
-        Task<IEnumerable<Receipt>> GetAllSubProjectAsync();
+        Task<IEnumerable<Receipt>> GetAllReceiptAsync();
+
+        Task<IEnumerable<Receipt>> GetFilteredData( FilterData filterData);
 
         //  GetReceiptRdcl
 
-       Task<Receipt>  GetReceiptRdclById(int id);
+        Task<Receipt>  GetReceiptRdclById(int id);
 
     }
 }
