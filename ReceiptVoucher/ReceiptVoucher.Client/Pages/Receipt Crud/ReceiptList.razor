@@ -8,6 +8,8 @@
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
 
+<PageTitle>Makarim</PageTitle>
+
 <style>
     :root {
         --color-custom: #3090C7;
@@ -52,7 +54,7 @@
 <MudTable  Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه سند" />
+        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" />
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
