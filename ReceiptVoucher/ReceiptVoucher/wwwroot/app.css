@@ -134,3 +134,15 @@ h1:focus {
     justify-content: space-between;
 }
 /* End headrt */
+
+/* S mainTitle */
+.testBody .mainTitle{
+    background-color: #DBE9FA;
+    font-size: x-large;
+    color: #52595D;
+    padding: 4px 4px 4px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 22px;
+}
+/* E mainTitle */
