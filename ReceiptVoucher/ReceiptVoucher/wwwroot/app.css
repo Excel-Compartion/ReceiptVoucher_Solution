@@ -126,3 +126,11 @@ h1:focus {
     font-size: 24px;
 }
 /* End dialog */
+
+/* Start headrt */
+.testBody .main-header .mud-toolbar.mud-toolbar-gutters.mud-toolbar-appbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* End headrt */
