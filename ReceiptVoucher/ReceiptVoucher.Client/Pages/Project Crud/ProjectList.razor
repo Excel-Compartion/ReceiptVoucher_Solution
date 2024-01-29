@@ -220,7 +220,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"https://localhost:7210/api/Projects/{projectId}");
+                var response = await Http.DeleteAsync($"api/Projects/{projectId}");
 
                 if (response.IsSuccessStatusCode)
                 {
