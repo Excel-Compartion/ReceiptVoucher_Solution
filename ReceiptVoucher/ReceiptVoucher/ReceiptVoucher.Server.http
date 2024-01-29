@@ -73,11 +73,20 @@ POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "firstName": "waleed1",
-  "lastName": "mohammed",
-  "userName": "waleedUser1",
-  "Email": "waleedUser1",
-  "password": "edf"
+  "firstName": "Gmail10",
+  "lastName": "Gmail10",
+  "userName": "Gmail10",
+  "Email": "Gmail10",
+  "password": "Gmail123!"
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
 }
 
 ###
