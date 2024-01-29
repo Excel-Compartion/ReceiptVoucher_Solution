@@ -16,10 +16,6 @@
         
     }
 
-
-
-
- 
 </style>
 
 <br />
@@ -51,17 +47,20 @@
 
 
 <MudTable Style="width:100%;height:auto;" ServerData="@(new Func<TableState, Task<TableData<Branch>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table">
+            Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
 
-        <MudFab Size="Size.Small" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialog" Variant="Variant.Outlined" Style="background-color: var(--color-custom); color: white;" Label="اضافة" />
+
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>إضافة</span>
+        </MudButton>
 
 
-      
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
     <HeaderContent>
@@ -94,10 +93,10 @@
             </MudTd>
         </RowTemplate>
     <NoRecordsContent>
-        <MudText>No matching records found</MudText>
+        <MudText>لم يتم العثور على سجلات</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading...</MudText>
+        <MudText>جاري التحميل...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />
