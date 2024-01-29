@@ -70,4 +70,25 @@ h1:focus {
 
 
 
+/* Start Login */
+.testBody .container-fluid.h-custom{
+    display: flex;
+    align-items: center;
+    min-height: 100vh!important;
+}
+@media (min-width:768px) {
+    .testBody .form-img{
+        flex-direction: row-reverse;
+    }
+}
+.testBody .login-footer{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-teal) !important;
+}
+/* End Login */
+
+
+
 

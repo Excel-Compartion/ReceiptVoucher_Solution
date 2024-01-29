@@ -148,7 +148,7 @@
             {
 
                 
-                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/SubProjects/AddOneAsync", SubProject);
+                var response = await Http.PostAsJsonAsync("api/SubProjects/AddOneAsync", SubProject);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("تمت اضافه المشروع الفرعي بنجاح!", Severity.Success);

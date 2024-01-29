@@ -91,7 +91,7 @@
              
 
 
-                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
+                var response = await Http.PostAsJsonAsync("api/Projects/AddOneAsync", Project);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("Project add successfully!", Severity.Success);
