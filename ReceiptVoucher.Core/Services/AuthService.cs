@@ -97,7 +97,7 @@ namespace ReceiptVoucher.Core.Services
 				UserName = registerModel.UserName, 
 				Email = registerModel.Email,
 				FirstName = registerModel.FirstName,
-				LastName = registerModel.lastName
+				LastName = registerModel.LastName
 			};
 
 			

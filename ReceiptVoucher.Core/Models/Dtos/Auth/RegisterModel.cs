@@ -9,7 +9,7 @@ namespace ReceiptVoucher.Core.Models.Dtos.Auth
 
 
         [Required, StringLength(100)]
-        public string lastName { get; set; }
+        public string LastName { get; set; }
 
         [Required, StringLength(100)]
         public string UserName { get; set; }

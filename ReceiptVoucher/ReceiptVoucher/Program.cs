@@ -52,6 +52,7 @@ builder.Services.AddMudServices();  // MudBlazor
 builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ReceiptVoucher.Client.Services.IAuthService, ReceiptVoucher.Client.Services.AuthService>();
 
 
 

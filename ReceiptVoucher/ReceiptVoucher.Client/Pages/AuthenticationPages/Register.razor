@@ -1,0 +1,127 @@
+﻿@page "/Register"
+
+@using Blazored.LocalStorage
+@using ReceiptVoucher.Core.Models
+@using ReceiptVoucher.Core.Models.Dtos.Auth
+
+@rendermode InteractiveAuto
+
+
+@inject ReceiptVoucher.Client.Services.IAuthService _AuthService
+@inject ILocalStorageService _LocalStorage
+@inject NavigationManager _NavigationManager
+
+
+<style>
+    :root {
+        --color-custom: #3090C7;
+    }
+</style>
+
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-6 col-xl-5">
+                <img src="images\loginicon.jpg" class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-12 col-md-6 col-xl-4 offset-xl-1"
+                 style="border: 1px solid gainsboro;border-radius:3px;padding:1%;margin-bottom: 2rem;">
+
+                <EditForm Model="RegisterModel" OnValidSubmit="HandleRegister" Class="custom-form">
+                    <DataAnnotationsValidator />
+
+                    <MudTextField Immediate="false" Label="الاسم الأول" id="form3Example3"
+                                  class="form-control form-control-lg" For="@(()=> RegisterModel.FirstName)" @bind-Value="@RegisterModel.FirstName"
+                                  Adornment="Adornment.End" AdornmentColor="Color.Success">
+                    </MudTextField>
+
+                    <br />
+
+                    <MudTextField Immediate="false" Label="الاسم الأخير" id="form3Example3"
+                                  class="form-control form-control-lg" For="@(()=>RegisterModel.LastName)" @bind-Value="@RegisterModel.LastName"
+                                  Adornment="Adornment.End" AdornmentColor="Color.Success">
+                    </MudTextField>
+
+                    <br />
+
+                    <MudTextField Immediate="false" Label="اسم المستخدم(UserName)" id="form3Example3"
+                                  class="form-control form-control-lg" For="@(()=>RegisterModel.UserName)" @bind-Value="@RegisterModel.UserName"
+                                  Adornment="Adornment.End" AdornmentColor="Color.Success">
+                    </MudTextField>
+
+                    <br />
+
+                    <MudTextField Immediate="false" Label="البريد الالكتروني" id="form3Example3"
+                                  class="form-control form-control-lg" For="@(()=>RegisterModel.Email)" @bind-Value="@RegisterModel.Email"
+                                  Adornment="Adornment.End" AdornmentColor="Color.Success">
+                    </MudTextField>
+
+                    <br />
+
+                    <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر"
+                                  Variant="Variant.Text" For="@(()=>RegisterModel.Password)" @bind-Value="@RegisterModel.Password" />
+
+                   
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <MudButton ButtonType="ButtonType.Submit" class="btn btn-primary btn-lg" id="LoginBtn"
+                                   style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">
+                            انشاء الحساب
+                        </MudButton>
+                    </div>
+                </EditForm>
+                <div class="@messageCssClass">
+                    <span>@message</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+        <!-- Copyright -->
+        <div class="text-white mb-3 mb-md-0">
+            Copyright © 2020. All rights reserved.
+        </div>
+        <!-- Copyright -->
+        <!-- Right -->
+        <div>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#!" class="text-white me-4">
+                <i class="fab fa-google"></i>
+            </a>
+            <a href="#!" class="text-white">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <!-- Right -->
+    </div>
+</section>
+@code {
+    public RegisterModel RegisterModel { get; set; } = new ();
+
+    private string returnUrl = string.Empty;
+
+    string message = string.Empty;
+    string messageCssClass = string.Empty;
+
+    async Task HandleRegister()
+    {
+        BaseResponse<AuthModel> result = await _AuthService.RegisterAsync(RegisterModel);
+
+
+        message = result.Message;
+        if (result.Success)
+        {
+            messageCssClass = "text-success";
+            RegisterModel = new();
+        }
+
+
+        else
+            messageCssClass = "text-danger";
+
+    }
+}

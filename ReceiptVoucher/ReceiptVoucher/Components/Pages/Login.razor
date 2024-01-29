@@ -3,9 +3,11 @@
 @using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.Dtos.Auth
 
-@rendermode InteractiveServer
+@rendermode InteractiveAuto
 
-@inject HttpClient _httpClient
+
+@* @inject HttpClient _httpClient *@
+@inject ReceiptVoucher.Client.Services.IAuthService _AuthService
 @inject ILocalStorageService _LocalStorage
 @inject NavigationManager _NavigationManager
 
@@ -93,7 +95,7 @@
 
     private async Task HandleLogin()
     {
-        var result = await LoginAsync(model);
+        var result = await _AuthService.LoginAsync(model);
         if (result.Success)
         {
             errorMessage = string.Empty;
@@ -108,10 +110,10 @@
     }
 
     <!-----------------       Services    --------------------->
-    private async Task<BaseResponse<AuthModel>> LoginAsync(LoginModel model)
-    {
-        var result = await _httpClient.PostAsJsonAsync("api/Auth/token", model);
-        return await result.Content.ReadFromJsonAsync<BaseResponse<AuthModel>>();
-    }
+    // private async Task<BaseResponse<AuthModel>> LoginAsync(LoginModel model)
+    // {
+    //     var result = await _httpClient.PostAsJsonAsync("api/Auth/token", model);
+    //     return await result.Content.ReadFromJsonAsync<BaseResponse<AuthModel>>();
+    // }
 
 }
