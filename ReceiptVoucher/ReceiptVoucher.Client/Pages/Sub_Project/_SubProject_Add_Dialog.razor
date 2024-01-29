@@ -10,7 +10,7 @@
             <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"  For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
             <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End"  For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" >
+            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" class="mt-5" >
                 <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>
 
                 @foreach (var project in Projects)
@@ -48,15 +48,14 @@
 
 
              
-
             @if (isActive)
             {
-                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success" class="mt-4"></MudCheckBox>
 
             }
             else
             {
-                <MudCheckBox Disabled  Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox Disabled  Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success" class="mt-4"></MudCheckBox>
 
             }
 
@@ -66,10 +65,18 @@
 
             @if(BtnName != ButtonTypes.Details)
             {
-                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+            <div class="mt-5 d-flex" style="gap: 10px;">
+                                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                </div>
             }
-           
+            
             <br />
 
         </EditForm>
