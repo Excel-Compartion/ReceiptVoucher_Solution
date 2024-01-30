@@ -7,11 +7,20 @@
         <EditForm Model="@SubProject" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"  For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End"  For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"
+                For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" class="mt-5" >
-                <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>
+            <MudSelect Label="نوع المشروع الفرعي" For="@(()=>SubProject.SubProjectType)"
+                @bind-Value="@SubProject.SubProjectType" class="mt-5">
+                <MudSelectItem Value="@subProjectType.Message">@subProjectType.Message.GetDisplayName()</MudSelectItem>
+                <MudSelectItem Value="@subProjectType.Seasonal">@subProjectType.Seasonal.GetDisplayName()
+                </MudSelectItem>
+                <MudSelectItem Value="@subProjectType.Continuous">@subProjectType.Continuous.GetDisplayName()
+                </MudSelectItem>
+            </MudSelect>
+
+            <MudSelect Label="المشروع" For="@(()=>SubProject.ProjectId)" @bind-Value="@SubProject.ProjectId">
+                <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
 
                 @foreach (var project in Projects)
                 {
@@ -20,6 +29,22 @@
 
                 }
             </MudSelect>
+
+            <MudGrid>
+                <MudItem xs="9">
+                    <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration"
+                        Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudTextField Immediate="true" @bind-Value="@Unit" Adornment="Adornment.End"
+                        AdornmentColor="Color.Success" ReadOnly></MudTextField>
+                </MudItem>
+            </MudGrid>
+
+
+
+
 
 
             @{
@@ -44,45 +69,51 @@
 
 
             <br />
-            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>SubProject.Note)" @bind-Value="@SubProject.Note" Lines="2" />
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>SubProject.Note)"
+                @bind-Value="@SubProject.Note" Lines="2" />
 
 
-             
+
             @if (isActive)
             {
-                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success" class="mt-4"></MudCheckBox>
+                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"
+                    class="mt-4"></MudCheckBox>
 
             }
             else
             {
-                <MudCheckBox Disabled  Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success" class="mt-4"></MudCheckBox>
+                <MudCheckBox Disabled Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true"
+                    Color="Color.Success" class="mt-4"></MudCheckBox>
 
             }
 
-            
-           
 
 
-            @if(BtnName != ButtonTypes.Details)
+
+
+            @if (BtnName != ButtonTypes.Details)
             {
-            <div class="mt-5 d-flex" style="gap: 10px;">
-                                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+                <div class="mt-5 d-flex" style="gap: 10px;">
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit"
+                        Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple "
+                        style='font-size: 13px;
     font-family: "Tajawal", sans-serif;
     font-weight: 700;
     padding: 5px 0px;'>@BtnName</MudButton>
-                <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+                    <MudButton OnClick="Cancel"
+                        Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple"
+                        style='font-size: 13px;
     font-family: "Tajawal", sans-serif;
     font-weight: 700;
     padding: 5px 0px;'>الغاء</MudButton>
                 </div>
             }
-            
             <br />
 
         </EditForm>
     </DialogContent>
-  
-    </MudDialog>
+
+</MudDialog>
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
@@ -90,31 +121,16 @@
     [Parameter] public SubProject OriginalSubProject { get; set; }
     [Parameter] public string BtnName { get; set; }
     public SubProject SubProject { get; set; }
+    public string Unit = "يوم";
 
-    [Parameter] 
+    [Parameter]
     public List<Project> Projects { get; set; }
 
-   
+
 
     bool isActive = true;
 
 
-
-    // async Task UpdateIsActive(int projectId)
-    // {
-    //     var selectedProject = Projects.FirstOrDefault(p => p.Id == projectId);
-    //     if (selectedProject != null)
-    //     {
-    //         isActive = selectedProject.IsActive;
-
-    //         SubProject.IsActive = selectedProject.IsActive;
-
-           
-    //     }
-    //     }
-    
-
-    
 
 
 
@@ -135,11 +151,12 @@
                 {
                     Id = OriginalSubProject.Id,
                     Name = OriginalSubProject.Name,
-                    ProjectId = OriginalSubProject.ProjectId, // Add this line
+                    ProjectId = OriginalSubProject.ProjectId,
                     Duration = OriginalSubProject.Duration,
-                    CreatedDate = OriginalSubProject.CreatedDate,
+                    Date = OriginalSubProject.Date,
                     IsActive = OriginalSubProject.IsActive,
-                    Note = OriginalSubProject.Note
+                    Note = OriginalSubProject.Note,
+                    SubProjectType = OriginalSubProject.SubProjectType
 
 
                 };
@@ -154,7 +171,6 @@
             if (SubProject.Id == 0)
             {
 
-                
                 var response = await Http.PostAsJsonAsync("api/SubProjects/AddOneAsync", SubProject);
                 if (response.IsSuccessStatusCode)
                 {
@@ -166,13 +182,13 @@
                 }
 
 
-               
+
             }
             else
             {
 
 
-                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/SubProjects", SubProject);
+                var response = await Http.PutAsJsonAsync("api/SubProjects", SubProject);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("تم تعديل المشروع الفرعي بنجاح!", Severity.Success);
@@ -182,7 +198,7 @@
                     _Snackbar.Add($"فشل في تعديل المشروع الفرعي: {response.StatusCode}", Severity.Error);
                 }
 
-               
+
             }
 
             MudDialog.Close(DialogResult.Ok(true));

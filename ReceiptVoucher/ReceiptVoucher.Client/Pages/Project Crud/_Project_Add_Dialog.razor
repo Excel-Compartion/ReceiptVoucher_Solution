@@ -12,7 +12,7 @@
 
 
             <br />
-            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>Project.Note)" @bind-Value="@Project.Note" Lines="3" />
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>Project.Note)" @bind-Value="@Project.Note" Lines="3" />
 
 
             <br />
@@ -116,7 +116,7 @@
             else
             {
 
-                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/Projects", Project);
+                var response = await Http.PutAsJsonAsync("api/Projects", Project);
                 if (response.IsSuccessStatusCode)
                 {
                     _Snackbar.Add("project updated successfully!", Severity.Success);

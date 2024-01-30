@@ -68,7 +68,7 @@
         <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
@@ -79,7 +79,7 @@
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
-            <MudTd DataLabel="الفرع">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
             <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>

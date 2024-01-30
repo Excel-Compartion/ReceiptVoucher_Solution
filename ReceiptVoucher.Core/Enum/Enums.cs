@@ -37,6 +37,7 @@ namespace ReceiptVoucher.Core.Enums
     }
 
 
+
     public enum Age
     {
         [Display(Name = "-- تحديد العمر --")]
@@ -56,10 +57,7 @@ namespace ReceiptVoucher.Core.Enums
     }
 
 
-    //public const string Check = "شيك";
-    //public const string Cash = "نقد";
-    //public const string Account = "حساب";
-    //public const string Bank = "بنك";
+   
 
     public enum PaymentTypes
     {
@@ -79,6 +77,18 @@ namespace ReceiptVoucher.Core.Enums
         Bank = 4
     }
 
+    public enum subProjectType
+    {
+        [Display(Name = "-- اختيار نوع المشروع --")]
+        Message = 0,
+
+        [Display(Name = "موسمي")]
+        Seasonal = 1,
+
+        [Display(Name = "مستمر")]
+        Continuous = 2,
+
+    }
 
 
     public static class EnumExtensions

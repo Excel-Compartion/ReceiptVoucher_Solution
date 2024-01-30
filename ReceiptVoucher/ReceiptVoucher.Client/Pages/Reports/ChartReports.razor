@@ -1,0 +1,100 @@
+﻿@page "/ChartReports"
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
+<PageTitle>Makarim</PageTitle>
+
+
+
+@if (Series != null && XAxisLabels != null && BarChartNoData != true)
+{
+    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
+        <CustomGraphics>
+            <style>
+                .heavy {
+                    font: bold 30px Helvetica;
+                }
+
+                .Rrrrr {
+                    font: italic 40px Helvetica;
+                    fill: rgb(62,44,221);
+                }
+            </style>
+        </CustomGraphics>
+    </MudChart>
+}
+
+
+
+
+
+
+@if (Series2 != null && XAxisLabels2 != null && LineChartNoData != true)
+{
+    <div>
+        <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px"  />
+    </div>
+}
+
+
+
+@code {
+    public BranchesBarChartViewModel branchesBarChartViewModel { get; set; } = null!;
+    public List<ChartSeries> Series { get; set; } = null!;
+    public string[] XAxisLabels { get; set; } = null!;
+    private double CenterTotalAmount;
+    private bool BarChartNoData = false;
+    private bool LineChartNoData = false;
+
+    public Dictionary<string, double[]> MainProjectsReportData { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            branchesBarChartViewModel = await Http.GetFromJsonAsync<BranchesBarChartViewModel>("api/Reports/GetAllBranchesBarChartDataAsync");
+
+            if (branchesBarChartViewModel != null)
+            {
+                Series = new List<ChartSeries>()
+                {
+                    new ChartSeries() { Name = GrantDest.Individual.GetDisplayName(), Data = branchesBarChartViewModel.Individual },
+                    new ChartSeries() { Name = GrantDest.Company.GetDisplayName(), Data = branchesBarChartViewModel.Company },
+                    new ChartSeries() { Name = GrantDest.Association.GetDisplayName(), Data = branchesBarChartViewModel.Association },
+                    new ChartSeries() { Name = GrantDest.Foundation.GetDisplayName(), Data = branchesBarChartViewModel.Foundation },
+                };
+
+                XAxisLabels = branchesBarChartViewModel.BranchesNames;
+            }
+        }
+
+        catch { BarChartNoData = true; }
+
+
+
+
+        try
+        {
+            MainProjectsReportData = await Http.GetFromJsonAsync<Dictionary<string, double[]>>("api/Reports/GetAllProjectsLineChartDataAsync");
+
+
+            if (MainProjectsReportData != null && MainProjectsReportData.Count() != 0)
+            {
+                Series2.Clear();
+                foreach (var item in MainProjectsReportData)
+                {
+                    Series2.Add(new ChartSeries() { Name = item.Key, Data = item.Value });
+                }
+            }
+
+
+        }
+        catch { LineChartNoData = true; }
+
+    }
+
+    
+
+    public List<ChartSeries> Series2 = new List<ChartSeries>();
+    public string[] XAxisLabels2 = { "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر" };
+}

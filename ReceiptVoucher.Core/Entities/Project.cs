@@ -13,6 +13,8 @@ public class Project
 
     public bool IsActive { get; set; } = true;
 
+    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
     //-------- Navigation Properties ---
     public ICollection<SubProject> SubProjects { get; set; } = new List<SubProject>();
 }

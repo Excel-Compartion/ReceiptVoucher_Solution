@@ -53,11 +53,16 @@
     <HeaderContent>
 
         <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="subProjectType_field" T="SubProject">نوع المشروع الفرعي</MudTableSortLabel></MudTh>
 
         <MudTh><MudTableSortLabel SortLabel="project_field" T="SubProject">المشروع الرئيسي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="duration_field" T="SubProject">المدة</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel  T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="SubProject">تاريخ الانشاء</MudTableSortLabel></MudTh>
+
+
+      
         <MudTh><MudTableSortLabel  T="SubProject">الاجراءت</MudTableSortLabel></MudTh>
         
         
@@ -66,9 +71,10 @@
     <RowTemplate>
 
             <MudTd DataLabel="المشروع الفرعي">@context.Name</MudTd>
+            <MudTd DataLabel="نوع المشروع الفرعي">@context.SubProjectType.GetDisplayName()</MudTd>
 
             <MudTd DataLabel="المشروع الرئيسي">@context.Project.Name</MudTd>
-            <MudTd DataLabel="المدة">@context.Duration</MudTd>
+            <MudTd DataLabel="المدة">@(context.Duration + " يوم")</MudTd>
 
             <MudTd DataLabel="حاله التفعيل">
 
@@ -89,7 +95,7 @@
 
         </MudTd>
 
-
+        <MudTd DataLabel="تاريخ الانشاء">@context.Date</MudTd>
 
         <MudTd DataLabel="الاجراءت">
 
@@ -166,6 +172,14 @@
 
             case "duration_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Duration);
+                break;
+
+            case "subProjectType_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.SubProjectType.GetDisplayName());
+                break;
+
+            case "Date_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Date);
                 break;
         }
 
@@ -252,7 +266,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"https://localhost:7210/api/SubProjects/{subProjectId}");
+                var response = await Http.DeleteAsync($"api/SubProjects/{subProjectId}");
 
                 if (response.IsSuccessStatusCode)
                 {
