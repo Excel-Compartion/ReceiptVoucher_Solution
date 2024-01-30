@@ -23,13 +23,13 @@
 <p style=" margin-bottom:2% ;">
 
 
-    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
         المشاريع الفرعية
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
 
 
     </span>
@@ -40,32 +40,41 @@
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
-        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Class="My-Add-Btn" Label="اضافة" Size="Size.Small" Style=" background-color:var(--color-teal);color:white;" />
-  
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>إضافة</span>
+        </MudButton>
+
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
     <HeaderContent>
 
         <MudTh><MudTableSortLabel SortLabel="name_field" T="SubProject">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="subProjectType_field" T="SubProject">نوع المشروع الفرعي</MudTableSortLabel></MudTh>
 
         <MudTh><MudTableSortLabel SortLabel="project_field" T="SubProject">المشروع الرئيسي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="duration_field" T="SubProject">المدة</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel  T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="SubProject">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="SubProject">حاله التفعيل</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="SubProject">تاريخ الانشاء</MudTableSortLabel></MudTh>
+
+
       
+        <MudTh><MudTableSortLabel  T="SubProject">الاجراءت</MudTableSortLabel></MudTh>
         
-       
+        
+        
     </HeaderContent>
     <RowTemplate>
 
             <MudTd DataLabel="المشروع الفرعي">@context.Name</MudTd>
+            <MudTd DataLabel="نوع المشروع الفرعي">@context.SubProjectType.GetDisplayName()</MudTd>
 
             <MudTd DataLabel="المشروع الرئيسي">@context.Project.Name</MudTd>
-            <MudTd DataLabel="المدة">@context.Duration</MudTd>
+            <MudTd DataLabel="المدة">@(context.Duration + " يوم")</MudTd>
 
             <MudTd DataLabel="حاله التفعيل">
 
@@ -86,7 +95,7 @@
 
         </MudTd>
 
-
+        <MudTd DataLabel="تاريخ الانشاء">@context.Date</MudTd>
 
         <MudTd DataLabel="الاجراءت">
 
@@ -100,10 +109,10 @@
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>No matching records found</MudText>
+        <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading...</MudText>
+        <MudText class="LodingNow">جاري التحميل...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />
@@ -163,6 +172,14 @@
 
             case "duration_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Duration);
+                break;
+
+            case "subProjectType_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.SubProjectType.GetDisplayName());
+                break;
+
+            case "Date_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Date);
                 break;
         }
 
@@ -249,7 +266,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"https://localhost:7210/api/SubProjects/{subProjectId}");
+                var response = await Http.DeleteAsync($"api/SubProjects/{subProjectId}");
 
                 if (response.IsSuccessStatusCode)
                 {

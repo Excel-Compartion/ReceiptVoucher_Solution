@@ -8,22 +8,31 @@
         <EditForm Model="@Project" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End"  AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Immediate="true" For="@(()=>Project.Name)" @bind-Value="@Project.Name" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="اسم المشروع الرئيسي" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
             <br />
-            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>Project.Note)" @bind-Value="@Project.Note" Lines="3" />
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>Project.Note)" @bind-Value="@Project.Note" Lines="3" ReadOnly="@ReadOnlyStatus" />
 
 
             <br />
-            <MudCheckBox Label="حاله التفعيل" @bind-Value="@Project.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+            <MudCheckBox Label="حاله التفعيل" @bind-Value="@Project.IsActive" Dense="true" Color="Color.Success" style='font-family: "Tajawal", sans-serif;' ReadOnly="@ReadOnlyStatus"></MudCheckBox>
 
             <br />
 
             @if (BtnName != ButtonTypes.Details)
             {
-                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+                <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
+                                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                </div>
+
             }
 
 
@@ -55,7 +64,7 @@
 
   public Project Project {get; set; }
 
-  
+    bool ReadOnlyStatus = false;
 
     protected override void OnParametersSet()
     {
@@ -76,7 +85,10 @@
                 
             };
 
-
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
         }
     }
 
@@ -91,14 +103,14 @@
              
 
 
-                var response = await Http.PostAsJsonAsync("https://localhost:7210/api/Projects/AddOneAsync", Project);
+                var response = await Http.PostAsJsonAsync("api/Projects/AddOneAsync", Project);
                 if (response.IsSuccessStatusCode)
                 {
-                    _Snackbar.Add("Project add successfully!", Severity.Success);
+                    _Snackbar.Add("تم اضافة المشروع بنجاح!", Severity.Success);
                 }
                 else
                 {
-                    _Snackbar.Add($"Failed to add project. Error: {response.StatusCode}", Severity.Error);
+                    _Snackbar.Add($"لم يتم اضافه المشروع. Error: {response.StatusCode}", Severity.Error);
                 }
 
                
@@ -107,14 +119,14 @@
             else
             {
 
-                var response = await Http.PutAsJsonAsync("https://localhost:7210/api/Projects", Project);
+                var response = await Http.PutAsJsonAsync("api/Projects", Project);
                 if (response.IsSuccessStatusCode)
                 {
-                    _Snackbar.Add("project updated successfully!", Severity.Success);
+                    _Snackbar.Add("تم تعديل المشروع بنجاح!", Severity.Success);
                 }
                 else
                 {
-                    _Snackbar.Add($"Failed to update project. Error: {response.StatusCode}", Severity.Error);
+                    _Snackbar.Add($"لم يتم تعديل المنتج. Error: {response.StatusCode}", Severity.Error);
                 }
 
             }

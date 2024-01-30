@@ -39,7 +39,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(SubProject subProject)
         {
-            subProject.CreatedDate = DateTime.Now;
+           
             
            
             if (!ModelState.IsValid)

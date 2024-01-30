@@ -63,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\ReceiptVoucher.Client\Pages\HomePage\ChartTooltipSettings.razor" Link="ChartTooltipSettings.razor" />
     <None Include="wwwroot\_Reports\DataSet1.xsc" />
     <None Include="wwwroot\_Reports\DataSet1.xsd">
       <SubType>Designer</SubType>

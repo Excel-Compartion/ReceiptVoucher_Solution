@@ -17,12 +17,11 @@
     :root {
         --color-custom: #3090C7;
     }
-
-
-
     .date-picker-color {
         background-color: #DBE9FA;
     }
+
+
 
 </style>
 <br />
@@ -30,27 +29,27 @@
 <!--اسم الصفحه-->
 <p style=" margin-bottom:2% ;">
 
-
-    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.Assessment" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
         التقارير
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
+        
 
 
     </span>
 
 </p>
 
-<div style="border: 1px solid gainsboro;border-radius:3px;padding:1%">
+<div class="containerContent" style="border: 1px solid gainsboro;border-radius:3px;padding:1%">
 
 
 
     <MudRadioGroup @bind-Value="RadioDateType">
-        <MudRadio Value="Day" Color="Color.Info" Size="Size.Small">تقرير يومي</MudRadio>
-        <MudRadio Value="Month" Color="Color.Warning" Size="Size.Small">تقرير عام</MudRadio>
+        <MudRadio class="Day" Value="Day" Color="Color.Info" Size="Size.Small">تقرير يومي</MudRadio>
+        <MudRadio class="Month" Value="Month" Color="Color.Warning" Size="Size.Small">تقرير عام</MudRadio>
     </MudRadioGroup>
 
 
@@ -59,7 +58,7 @@
     
 
     <MudGrid>
-        <MudItem xs="6">
+        <MudItem xs="12" sm="6">
 
             <!--Project Select-->
             <MudSelect  Style="width:100%" T="string" SelectAll="true" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" ValueChanged="UnCheckedChange">
@@ -83,7 +82,7 @@
             }
         }
 
-        <MudItem xs="6">
+        <MudItem xs="12" sm="6">
 
             <!--SubProject Select-->
             <MudSelect T="string" SelectAll="true" Label="المشاريع الفرعية" MultiSelection="true" @bind-SelectedValues="SelectSubProject">
@@ -161,8 +160,6 @@
 
 
     }
-    <br />
-    <MudFab Size="Size.Medium" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.EventNote" OnClick="Submit" Style="background-color: var(--color-custom);  color: white;" Label="عرض التقرير" />
 
 
 
@@ -172,9 +169,13 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
+        <MudButton Class="custom-btn" OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.EventNote" Title="add" />
+            <span>عرض التقارير</span>
+        </MudButton>
 
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
@@ -182,7 +183,7 @@
         <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">الفرع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
@@ -193,7 +194,7 @@
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
-            <MudTd DataLabel="الفرع">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
             <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
@@ -205,10 +206,10 @@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No matching records found</MudText>
+            <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
         </NoRecordsContent>
         <LoadingContent>
-            <MudText>Loading...</MudText>
+            <MudText class="LodingNow">جاري التحميل...</MudText>
         </LoadingContent>
         <PagerContent>
             <MudTablePager />

@@ -16,14 +16,20 @@
 
             <MudTextField Label="رقم الجوال" For="@(()=>Branch.Mobile)" @bind-Value="@Branch.Mobile" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudTextField Label="البريد الالكتروني" For="@(()=>Branch.Email)" @bind-Value="@Branch.Email" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="البريد الالكتروني" For="@(()=>Branch.Email)" @bind-Value="@Branch.Email" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success" ></MudTextField>
 
-           
+            <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
+                                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                </div>
 
-            <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
-            
-             </EditForm>
+                </EditForm>
     </DialogContent>
   
 </MudDialog>
@@ -84,19 +90,32 @@
         {
             if (Branch.Id == 0)
             {
-                // The branch has no ID, so it's a new branch
-
-                await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
-
-                // Show a success message
-                _Snackbar.Add("Branch added successfully!", Severity.Success);
+             
+               
+                var response = await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم اضافة المركز بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($" لم يتم اضافة المركز: {response.StatusCode}", Severity.Error);
+                }
             }
 
             else
             {
 
-                await Http.PutAsJsonAsync("api/Branches", Branch);
-                _Snackbar.Add("Branch updated successfully!", Severity.Success);
+               
+                var response = await Http.PutAsJsonAsync("api/Branches", Branch);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم تعديل المركز بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($" لم يتم تعديل المركز: {response.StatusCode}", Severity.Error);
+                }
             }
 
             MudDialog.Close(DialogResult.Ok(true));
