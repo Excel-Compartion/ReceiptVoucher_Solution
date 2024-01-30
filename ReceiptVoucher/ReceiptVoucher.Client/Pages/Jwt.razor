@@ -1,0 +1,17 @@
+﻿<h3>Jwt</h3>
+
+<MudSelect  @bind-Value="@SubProject.ProjectId" ReadOnly="@ReadOnlyStatus">
+    <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
+
+   
+        <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
+
+
+    
+</MudSelect>
+
+
+
+@code {
+
+}

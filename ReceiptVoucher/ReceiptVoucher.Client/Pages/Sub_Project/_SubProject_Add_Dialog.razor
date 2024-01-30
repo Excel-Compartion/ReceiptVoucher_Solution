@@ -8,10 +8,10 @@
             <DataAnnotationsValidator />
 
             <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"
-                For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+                          For="@(()=>SubProject.Name)" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
             <MudSelect Label="نوع المشروع الفرعي" For="@(()=>SubProject.SubProjectType)"
-                @bind-Value="@SubProject.SubProjectType" class="mt-5">
+                       @bind-Value="@SubProject.SubProjectType" class="mt-5" ReadOnly="@ReadOnlyStatus">
                 <MudSelectItem Value="@subProjectType.Message">@subProjectType.Message.GetDisplayName()</MudSelectItem>
                 <MudSelectItem Value="@subProjectType.Seasonal">@subProjectType.Seasonal.GetDisplayName()
                 </MudSelectItem>
@@ -19,7 +19,7 @@
                 </MudSelectItem>
             </MudSelect>
 
-            <MudSelect Label="المشروع" For="@(()=>SubProject.ProjectId)" @bind-Value="@SubProject.ProjectId">
+            <MudSelect Label="المشروع" For="@(()=>SubProject.ProjectId)" @bind-Value="@SubProject.ProjectId" ReadOnly="@ReadOnlyStatus">
                 <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
 
                 @foreach (var project in Projects)
@@ -33,7 +33,7 @@
             <MudGrid>
                 <MudItem xs="9">
                     <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration"
-                        Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success">
+                                  Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="3">
@@ -70,20 +70,20 @@
 
             <br />
             <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>SubProject.Note)"
-                @bind-Value="@SubProject.Note" Lines="2" />
+                          @bind-Value="@SubProject.Note" Lines="2" ReadOnly="@ReadOnlyStatus" />
 
 
 
             @if (isActive)
             {
                 <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"
-                    class="mt-4"></MudCheckBox>
+                             class="mt-4" ReadOnly="@ReadOnlyStatus"></MudCheckBox>
 
             }
             else
             {
                 <MudCheckBox Disabled Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true"
-                    Color="Color.Success" class="mt-4"></MudCheckBox>
+                              Color="Color.Success" class="mt-4" ReadOnly="@ReadOnlyStatus"></MudCheckBox>
 
             }
 
@@ -130,7 +130,7 @@
 
     bool isActive = true;
 
-
+    bool ReadOnlyStatus = false;
 
 
 
@@ -160,6 +160,11 @@
 
 
                 };
+
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
         }
     }
 
