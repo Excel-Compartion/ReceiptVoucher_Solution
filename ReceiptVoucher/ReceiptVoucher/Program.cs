@@ -2,11 +2,14 @@
 
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
 using ReceiptVoucher.Client.Pages;
+using ReceiptVoucher.Client.Services;
+
 //using ReceiptVoucher.Components;
 using ReceiptVoucher.Core;
 using ReceiptVoucher.Core.Helper;
@@ -51,8 +54,11 @@ builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddMudServices();  // MudBlazor
 builder.Services.AddAutoMapper(typeof(Program));    // add AutoMapper.
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ReceiptVoucher.Client.Services.IAuthService, ReceiptVoucher.Client.Services.AuthService>();
+builder.Services.AddScoped<ReceiptVoucher.Core.Services.IAuthService, ReceiptVoucher.Core.Services.AuthService>(); // server
+
+builder.Services.AddScoped<ReceiptVoucher.Client.Services.IAuthService, ReceiptVoucher.Client.Services.AuthService>(); // client
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>(); // located in client
 
 
 

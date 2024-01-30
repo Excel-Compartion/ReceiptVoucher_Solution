@@ -9,6 +9,7 @@
 @* @inject HttpClient _httpClient *@
 @inject ReceiptVoucher.Client.Services.IAuthService _AuthService
 @inject ILocalStorageService _LocalStorage
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _NavigationManager
 
 
@@ -100,6 +101,7 @@
         {
             errorMessage = string.Empty;
             await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
+            await _AuthenticationStateProvider.GetAuthenticationStateAsync();
 
             _NavigationManager.NavigateTo("/");
         }

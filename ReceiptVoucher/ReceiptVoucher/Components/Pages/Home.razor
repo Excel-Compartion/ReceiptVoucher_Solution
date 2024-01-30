@@ -1,5 +1,8 @@
 ﻿@page "/"
 
+@* @rendermode InteractiveServer *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
 <PageTitle>Makarim</PageTitle>
 
 <br/>
@@ -17,6 +20,10 @@
 
 
     </span>
+
+    <br />
+
+    <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
 
 </p>
 
