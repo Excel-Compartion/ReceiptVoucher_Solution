@@ -8,7 +8,7 @@ public class SubProject
     [Key]
     public int Id { get; set; }
 
-    [Range(1, int.MaxValue,ErrorMessage ="--- يرجى اختيار اسم المشروع ---")]
+    [Range(1, int.MaxValue,ErrorMessage ="--- يرجى اختيار المشروع الرئيسي ---")]
     public int ProjectId { get; set; }  // Foreign Key
 
     [Required(ErrorMessage ="حقل الاسم مطلوب")]
@@ -17,10 +17,10 @@ public class SubProject
 
     public int? Duration { get; set; }
 
-
+    [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار نوع المشروع ---")]
     public subProjectType SubProjectType { get; set; }
 
-    public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
     public string? Note { get; set; }
 

@@ -53,6 +53,8 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Project">تاريخ الانشاء</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
 
@@ -81,7 +83,7 @@
 
             </MudTd>
 
-
+        <MudTd DataLabel="اسم المشروع">@context.Date</MudTd>
             <MudTd DataLabel="الاجراءت">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
@@ -139,6 +141,9 @@
             
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+            case "Date_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Date);
                 break;
         }
 
