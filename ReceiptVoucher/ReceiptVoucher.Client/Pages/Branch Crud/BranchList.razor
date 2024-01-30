@@ -16,10 +16,6 @@
         
     }
 
-
-
-
- 
 </style>
 
 <br />
@@ -30,13 +26,13 @@
 <p style=" margin-bottom:2% ;">
 
 
-    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.Apartment" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
         المراكز الاعلامية
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
 
 
     </span>
@@ -51,17 +47,20 @@
 
 
 <MudTable Style="width:100%;height:auto;" ServerData="@(new Func<TableState, Task<TableData<Branch>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table">
+            Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
 
-        <MudFab Size="Size.Small" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialog" Variant="Variant.Outlined" Style="background-color: var(--color-custom); color: white;" Label="اضافة" />
+
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>إضافة</span>
+        </MudButton>
 
 
-      
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
     <HeaderContent>
@@ -94,10 +93,10 @@
             </MudTd>
         </RowTemplate>
     <NoRecordsContent>
-        <MudText>No matching records found</MudText>
+        <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading...</MudText>
+        <MudText class="LodingNow">جاري التحميل...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />

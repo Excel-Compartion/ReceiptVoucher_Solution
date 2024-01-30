@@ -7,9 +7,11 @@
 */
 
 html, body {
-   /* font-family: 'tajawal-bold', Helvetica, Arial, sans-serif;*/
+    /* font-family: 'tajawal-bold', Helvetica, Arial, sans-serif;*/
 }
-
+:root {
+    --color-custom: #3090C7;
+}
 .testBody {
    
             font-family: "Tajawal", sans-serif;
@@ -70,4 +72,151 @@ h1:focus {
 
 
 
+/* Start Login */
+.testBody .container-fluid.h-custom{
+    display: flex;
+    align-items: center;
+    min-height: 100vh!important;
+}
+@media (min-width:768px) {
+    .testBody .form-img{
+        flex-direction: row-reverse;
+    }
+}
+.testBody .login-footer{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-teal) !important;
+}
+/* End Login */
 
+/* Start Receipt */
+.testBody .receipt-dialog{
+    max-width: 91% !important;
+    width: 91% !important;
+}
+@media (min-width:992px) {
+    .testBody .receipt-dialog{
+        max-width: 75% !important;
+    }
+}
+/* Start End */
+
+/* start custom-btn */
+.testBody .custom-btn{
+    background-color: var(--color-custom) !important;
+    display: flex;
+    align-items: center;
+    font-family: "Tajawal", sans-serif;
+    color: white;
+    padding: 2px 6px;
+}
+.testBody .custom-btn svg{}
+.testBody .custom-btn span{
+    font-size: 18px;
+    font-weight: 500;
+}
+/* End custom-btn */
+/* start dialog */
+.testBody .mud-typography.mud-typography-h6{
+    font-family: "Tajawal", sans-serif;
+    color: var(--color-custom);
+    font-weight: bold;
+    font-size: 24px;
+}
+/* End dialog */
+
+/* Start headrt */
+.testBody .main-header .mud-toolbar.mud-toolbar-gutters.mud-toolbar-appbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* End headrt */
+
+/* S mainTitle */
+.testBody .mainTitle{
+    background-color: #DBE9FA;
+    font-size: x-large;
+    color: #52595D;
+    padding: 4px 4px 4px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 22px;
+}
+/* E mainTitle */
+
+/* S MinReports */
+.testBody .containerContent *{
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .mud-input-control-input-container{
+    font-size: 16px;
+}
+.testBody .mud-input-control-input-container::placeholder{
+    font-size: 16px;
+    background-color: red;
+}
+.testBody .mud-radio.mud-radio-content-placement-end{
+    border: 1px solid ;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0;
+    margin-left: 10px;
+    gap: 5px;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Day{
+    border-color: #2196f3;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Month{
+    border-color: #ff9800;
+}
+.testBody .mud-radio.mud-radio-content-placement-end span{
+    padding: 0px;
+    font-weight: 600;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Day span{
+    color: #2196f3;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Month span{
+     color: #ff9800;
+}
+.testBody
+/* E MinReports */
+
+/* S Table */
+.testBody .mud-table *{
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .mud-table-container {
+    margin-top: 15px;
+}
+.testBody .mud-table-dense * .mud-table-row .mud-table-cell{
+    padding: 4px 5px;
+}
+.testBody .mud-table-root .mud-table-head .mud-table-cell {
+    font-weight: 700;
+    font-size: 15px;
+    border-bottom: 1.7px solid #7d7d7d;
+}
+.testBody .mud-table-root>.mud-table-body:last-child>.mud-table-row:last-child>.mud-table-cell, .mud-table-root>.mud-table-foot:last-child>.mud-table-row:last-child>.mud-table-cell {
+    font-size: 16px;
+    font-weight: 500;
+}
+.testBody .LodingNow{
+    color: var(--color-custom);
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 600;
+}
+.testBody .NotFound{
+    color: #b32121;
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 600;
+
+}
+/* E Table */

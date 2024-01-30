@@ -38,13 +38,13 @@
 <p style=" margin-bottom:2% ;">
 
 
-    <span style="background-color:#DBE9FA ;font-size:x-large;color:#52595D">
+        <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
         السندات
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
 
 
     </span>
@@ -54,10 +54,14 @@
 <MudTable  Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudFab OnClick="OpenAddDialog" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" />
+        @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>اضافة</span>
+        </MudButton>
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
@@ -97,10 +101,10 @@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No matching records found</MudText>
+            <MudText class="NotFound">لاتوجد بيانات مضافة</MudText>
         </NoRecordsContent>
         <LoadingContent>
-            <MudText>Loading...</MudText>
+            <MudText class="LodingNow">جاري التحميل ...</MudText>
         </LoadingContent>
         <PagerContent>
             <MudTablePager />

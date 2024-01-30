@@ -7,18 +7,22 @@
         <EditForm Model="@SubProject" OnValidSubmit="Submit" Class="custom-form">
             <DataAnnotationsValidator />
 
-            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End" For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"
+                For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
 
-            <MudSelect Label="نوع المشروع الفرعي" For="@(()=>SubProject.SubProjectType)" @bind-Value="@SubProject.SubProjectType">
+            <MudSelect Label="نوع المشروع الفرعي" For="@(()=>SubProject.SubProjectType)"
+                @bind-Value="@SubProject.SubProjectType" class="mt-5">
                 <MudSelectItem Value="@subProjectType.Message">@subProjectType.Message.GetDisplayName()</MudSelectItem>
-                    <MudSelectItem Value="@subProjectType.Seasonal">@subProjectType.Seasonal.GetDisplayName()</MudSelectItem>
-                    <MudSelectItem Value="@subProjectType.Continuous">@subProjectType.Continuous.GetDisplayName()</MudSelectItem>
-                </MudSelect>
+                <MudSelectItem Value="@subProjectType.Seasonal">@subProjectType.Seasonal.GetDisplayName()
+                </MudSelectItem>
+                <MudSelectItem Value="@subProjectType.Continuous">@subProjectType.Continuous.GetDisplayName()
+                </MudSelectItem>
+            </MudSelect>
 
-                <MudSelect Label="المشروع" For="@(()=>SubProject.ProjectId)" @bind-Value="@SubProject.ProjectId">
-                    <MudSelectItem Value="0">---  اختيار المشروع الرئيسي ---</MudSelectItem>
+            <MudSelect Label="المشروع" For="@(()=>SubProject.ProjectId)" @bind-Value="@SubProject.ProjectId">
+                <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
 
-                    @foreach (var project in Projects)
+                @foreach (var project in Projects)
                 {
                     <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
 
@@ -28,19 +32,22 @@
 
             <MudGrid>
                 <MudItem xs="9">
-                    <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+                    <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration"
+                        Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success">
+                    </MudTextField>
                 </MudItem>
                 <MudItem xs="3">
-                    <MudTextField Immediate="true" @bind-Value="@Unit" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly></MudTextField>
-                 </MudItem>
-             </MudGrid>
+                    <MudTextField Immediate="true" @bind-Value="@Unit" Adornment="Adornment.End"
+                        AdornmentColor="Color.Success" ReadOnly></MudTextField>
+                </MudItem>
+            </MudGrid>
 
 
-          
 
 
 
-             @{
+
+            @{
                 if (SubProject.ProjectId != 0)
                 {
                     var project = Projects.Where(x => x.Id == SubProject.ProjectId).FirstOrDefault();
@@ -62,19 +69,21 @@
 
 
             <br />
-            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>SubProject.Note)" @bind-Value="@SubProject.Note" Lines="2" />
-
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>SubProject.Note)"
+                @bind-Value="@SubProject.Note" Lines="2" />
 
 
 
             @if (isActive)
             {
-                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"
+                    class="mt-4"></MudCheckBox>
 
             }
             else
             {
-                <MudCheckBox Disabled Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox Disabled Label="حاله التفعيل" @bind-Value="@SubProject.IsActive" Dense="true"
+                    Color="Color.Success" class="mt-4"></MudCheckBox>
 
             }
 
@@ -84,10 +93,21 @@
 
             @if (BtnName != ButtonTypes.Details)
             {
-                <MudButton OnClick="Cancel" Class="custom-button">الغاء</MudButton>
-                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="custom-button">@BtnName</MudButton>
+                <div class="mt-5 d-flex" style="gap: 10px;">
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit"
+                        Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple "
+                        style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                    <MudButton OnClick="Cancel"
+                        Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple"
+                        style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                </div>
             }
-
             <br />
 
         </EditForm>
@@ -150,7 +170,6 @@
         {
             if (SubProject.Id == 0)
             {
-
 
                 var response = await Http.PostAsJsonAsync("api/SubProjects/AddOneAsync", SubProject);
                 if (response.IsSuccessStatusCode)

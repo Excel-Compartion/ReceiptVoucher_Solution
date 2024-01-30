@@ -12,10 +12,9 @@
     <MudSnackbarProvider />
    
     <MudLayout>
-        <MudAppBar Style="background-color: var(--color-teal);">
+        <MudAppBar class="main-header" Style="background-color: var(--color-teal);">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-           
-            <MudSpacer />
+            
             <MudImage Src="images\header-logo.png" Style="margin-left:20px" Width="150" Height="50" Alt="Icon" />
 
             <MudImage Src="images\vision.png" Style="margin-right:10px;margin-left:2%;" Width="70" Height="35" Alt="Icon" />
@@ -24,7 +23,7 @@
             <MyNavMenu />
         </MudDrawer>
         <MudMainContent>
-            <MudContainer Fixed="true" MaxWidth="MaxWidth.Medium">
+            <MudContainer >
                 @Body
             </MudContainer>
         </MudMainContent>
