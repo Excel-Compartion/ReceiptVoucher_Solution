@@ -146,3 +146,62 @@ h1:focus {
     font-size: 22px;
 }
 /* E mainTitle */
+
+/* S MinReports */
+.testBody .containerContent *{
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .mud-input-control-input-container{
+    font-size: 16px;
+}
+.testBody .mud-input-control-input-container::placeholder{
+    font-size: 16px;
+    background-color: red;
+}
+.testBody .mud-radio.mud-radio-content-placement-end{
+    border: 1px solid ;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0;
+    margin-left: 10px;
+    gap: 5px;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Day{
+    border-color: #2196f3;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Month{
+    border-color: #ff9800;
+}
+.testBody .mud-radio.mud-radio-content-placement-end span{
+    padding: 0px;
+    font-weight: 600;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Day span{
+    color: #2196f3;
+}
+.testBody .mud-radio.mud-radio-content-placement-end.Month span{
+     color: #ff9800;
+}
+.testBody
+/* E MinReports */
+
+/* S Table */
+.testBody .mud-table *{
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .LodingNow{
+    color: var(--color-custom);
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 600;
+}
+.testBody .NotFound{
+    color: #b32121;
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 600;
+
+}
+/* E Table */
