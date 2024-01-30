@@ -8,8 +8,16 @@
             <DataAnnotationsValidator />
 
             <MudTextField Label="الاسم" Immediate="true" @bind-Value="@SubProject.Name" Adornment="Adornment.End"  For="@(()=>SubProject.Name)" AdornmentColor="Color.Success"></MudTextField>
-            <MudTextField Label="المدة" Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End"  For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
 
+            <MudGrid>
+                <MudItem xs="9">
+                    <MudTextField Label="المدة"  Immediate="true" @bind-Value="@SubProject.Duration" Adornment="Adornment.End" For="@(()=>SubProject.Duration)" AdornmentColor="Color.Success"></MudTextField>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudTextField   Immediate="true" @bind-Value="@Unit" Adornment="Adornment.End"  AdornmentColor="Color.Success" ReadOnly></MudTextField>
+                </MudItem>
+            </MudGrid>
+            
             <MudSelect Label="المشروع" @bind-Value="@SubProject.ProjectId" >
                 <MudSelectItem Value="0">---  اختيار اسم المشروع ---</MudSelectItem>
 
@@ -44,7 +52,7 @@
 
 
             <br />
-            <MudTextField T="string" Label="ملاحظة" Variant="Variant.Text" For="@(()=>SubProject.Note)" @bind-Value="@SubProject.Note" Lines="2" />
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>SubProject.Note)" @bind-Value="@SubProject.Note" Lines="2" />
 
 
              
@@ -83,6 +91,7 @@
     [Parameter] public SubProject OriginalSubProject { get; set; }
     [Parameter] public string BtnName { get; set; }
     public SubProject SubProject { get; set; }
+    public string Unit = "يوم";
 
     [Parameter] 
     public List<Project> Projects { get; set; }
@@ -92,22 +101,6 @@
     bool isActive = true;
 
 
-
-    // async Task UpdateIsActive(int projectId)
-    // {
-    //     var selectedProject = Projects.FirstOrDefault(p => p.Id == projectId);
-    //     if (selectedProject != null)
-    //     {
-    //         isActive = selectedProject.IsActive;
-
-    //         SubProject.IsActive = selectedProject.IsActive;
-
-           
-    //     }
-    //     }
-    
-
-    
 
 
 

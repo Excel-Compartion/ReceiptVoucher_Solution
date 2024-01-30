@@ -4,32 +4,42 @@
 
 <PageTitle>Makarim</PageTitle>
 
-@if (Series != null && XAxisLabels != null)
-{
-    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
-        <CustomGraphics>
-            <style>
-                .heavy {
-                    font: bold 30px Helvetica;
-                }
-
-                .Rrrrr {
-                    font: italic 40px Helvetica;
-                    fill: rgb(62,44,221);
-                }
-            </style>
-        </CustomGraphics>
-    </MudChart>
-}
-
-
-<div>
-    <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px" ChartOptions="@Options" />
-
-</div>
 
 
 
+
+
+
+<MudGrid>
+    <MudItem xs="6">
+        @if (Series != null && XAxisLabels != null)
+        {
+            <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
+                <CustomGraphics>
+                    <style>
+                        .heavy {
+                            font: bold 30px Helvetica;
+                        }
+
+                        .Rrrrr {
+                            font: italic 40px Helvetica;
+                            fill: rgb(62,44,221);
+                        }
+                    </style>
+                </CustomGraphics>
+            </MudChart>
+        }
+    </MudItem>
+    <MudItem xs="6">
+        @if (Series2 != null && XAxisLabels2 != null)
+        {
+            <div>
+                <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px" ChartOptions="@Options" />
+
+            </div>
+        }
+    </MudItem>
+</MudGrid>
 
 
 @code {

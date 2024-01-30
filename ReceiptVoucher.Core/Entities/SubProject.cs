@@ -1,4 +1,6 @@
-﻿namespace ReceiptVoucher.Core.Entities;
+﻿using ReceiptVoucher.Core.Enums;
+
+namespace ReceiptVoucher.Core.Entities;
 
 [Table("Sub_Projects")]
 public class SubProject
@@ -15,8 +17,10 @@ public class SubProject
 
     public int? Duration { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime CreatedDate { get; set; }
+
+    public subProjectType SubProjectType { get; set; }
+
+    public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
     public string? Note { get; set; }
 
