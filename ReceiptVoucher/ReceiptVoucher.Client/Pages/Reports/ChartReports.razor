@@ -4,11 +4,11 @@
 
 <PageTitle>Makarim</PageTitle>
 
-
-
-@if (Series != null && XAxisLabels != null && BarChartNoData != true)
+<MudGrid>
+    <MudItem sm="12" md="6">
+        @if (Series != null && XAxisLabels != null && BarChartNoData != true)
 {
-    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
+    <MudChart class="" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
         <CustomGraphics>
             <style>
                 .heavy {
@@ -23,18 +23,25 @@
         </CustomGraphics>
     </MudChart>
 }
-
-
-
-
-
-
-@if (Series2 != null && XAxisLabels2 != null && LineChartNoData != true)
+    </MudItem>
+    <MudItem  sm="12" md="6">
+        @if (Series2 != null && XAxisLabels2 != null && LineChartNoData != true)
 {
     <div>
         <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px"  />
     </div>
 }
+    </MudItem>
+</MudGrid>
+
+
+
+
+
+
+
+
+
 
 
 
