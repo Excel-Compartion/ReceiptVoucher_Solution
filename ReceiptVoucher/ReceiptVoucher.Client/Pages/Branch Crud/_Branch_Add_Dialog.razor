@@ -90,19 +90,32 @@
         {
             if (Branch.Id == 0)
             {
-                // The branch has no ID, so it's a new branch
-
-                await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
-
-                // Show a success message
-                _Snackbar.Add("Branch added successfully!", Severity.Success);
+             
+               
+                var response = await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم اضافة المركز بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($" لم يتم اضافة المركز: {response.StatusCode}", Severity.Error);
+                }
             }
 
             else
             {
 
-                await Http.PutAsJsonAsync("api/Branches", Branch);
-                _Snackbar.Add("Branch updated successfully!", Severity.Success);
+               
+                var response = await Http.PutAsJsonAsync("api/Branches", Branch);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم تعديل المركز بنجاح!", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($" لم يتم تعديل المركز: {response.StatusCode}", Severity.Error);
+                }
             }
 
             MudDialog.Close(DialogResult.Ok(true));
