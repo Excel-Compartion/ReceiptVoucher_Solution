@@ -189,6 +189,21 @@ h1:focus {
 .testBody .mud-table *{
     font-family: "Tajawal", sans-serif;
 }
+.testBody .mud-table-container {
+    margin-top: 15px;
+}
+.testBody .mud-table-dense * .mud-table-row .mud-table-cell{
+    padding: 4px 5px;
+}
+.testBody .mud-table-root .mud-table-head .mud-table-cell {
+    font-weight: 700;
+    font-size: 15px;
+    border-bottom: 1.7px solid #7d7d7d;
+}
+.testBody .mud-table-root>.mud-table-body:last-child>.mud-table-row:last-child>.mud-table-cell, .mud-table-root>.mud-table-foot:last-child>.mud-table-row:last-child>.mud-table-cell {
+    font-size: 16px;
+    font-weight: 500;
+}
 .testBody .LodingNow{
     color: var(--color-custom);
     padding: 20px;
