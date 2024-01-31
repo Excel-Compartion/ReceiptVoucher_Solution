@@ -12,8 +12,6 @@ namespace ReceiptVoucher.Core.Interfaces
     {
         Task<IEnumerable<SubProject>> GetAllSubProjectAsync();
 
-        //Task<DTO> AddSubProjectAsync(DTO dTO);
-
-        //Task<DTO> UpdateSubProjectAsync(DTO dTO);
+        Task<bool> DeleteSubProjectAsync(int id);
     }
 }

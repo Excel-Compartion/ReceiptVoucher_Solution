@@ -20,54 +20,31 @@ namespace ReceiptVoucher.EF.Repositories
             return await _context.SubProjects.Include(p => p.Project).ToListAsync();
         }
 
-        //public async Task<DTO> AddSubProjectAsync(DTO dTO)
-        //{
+        public async Task<bool> DeleteSubProjectAsync(int id)
+        {
+            var isDeleted = false;
 
-        //    // تأكد من أن ProjectId يشير إلى مشروع موجود
-        //    var project = await _context.Projects.FindAsync(dTO.ProjectId);
-        //    if (project == null)
-        //    {
-        //        return dTO;
-        //    }
-        //    else
-        //    {
-        //        SubProject subProject = new SubProject
-        //        {
-        //            CreatedDate = DateTime.Now,
-        //            IsActive = true,
-        //            Duration = dTO.Duration,
-        //            ProjectId = dTO.ProjectId,
-        //            Name = dTO.Name,
+            var subProject = await _context.SubProjects.FindAsync(id);
 
-        //        };
-
-        //        _context.SubProjects.Add(subProject);
-        //        await _context.SaveChangesAsync();
+            if (subProject is null)
+                return false;
 
 
-        //        return dTO;
-        //    }
-           
-           
-        //}
+            var receipt = await _context.Receipts.Where(x => x.SubProjectId == id).ToListAsync();
 
-        //public async Task<DTO> UpdateSubProjectAsync(DTO dTO)
-        //{
-        //    var subProject =await _context.SubProjects.FindAsync(dTO.SubProjectId);
+            if (receipt != null && receipt.Count() > 0)
+            {
+                return false;
+            }
 
-        //    if (subProject != null)
-        //    {
-        //        subProject.Name= dTO.Name;
-        //        subProject.Duration=dTO.Duration;
-        //        subProject.ProjectId=dTO.ProjectId;
+            _context.SubProjects.Remove(subProject);
 
-        //        _context.Update(subProject);
-        //        await _context.SaveChangesAsync();
+            int effectedRows = await _context.SaveChangesAsync();
 
-        //    }
+            if (effectedRows > 0)
+                isDeleted = true;
 
-           
-        //    return dTO;
-        //}
+            return isDeleted;
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace ReceiptVoucher.Core.Interfaces
     {
 
         Task<bool> UpdateProjectAsync(Project project);
+
+        Task<bool> DeleteProjectAsync(int id);
     }
 }

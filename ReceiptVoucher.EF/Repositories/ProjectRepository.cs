@@ -16,7 +16,34 @@ namespace ReceiptVoucher.EF.Repositories
             _context = context;
         }
 
+        public async Task<bool> DeleteProjectAsync(int id)
+        {
+            var isDeleted = false;
 
+            var project = await _context.Projects.FindAsync(id);
+
+            if (project is null)
+                return false;
+
+
+            var receipt = await _context.Receipts.Where(x => x.ProjectId == id).ToListAsync();
+
+            var subProject= await _context.SubProjects.Where(x => x.ProjectId == id).ToListAsync();
+
+            if ((receipt != null && receipt.Count() > 0)|| (subProject != null && subProject.Count() > 0))
+            {
+                return false;
+            }
+
+            _context.Projects.Remove(project);
+
+            int effectedRows = await _context.SaveChangesAsync();
+
+            if (effectedRows > 0)
+                isDeleted = true;
+
+            return isDeleted;
+        }
 
         public async Task<bool> UpdateProjectAsync(Project project)
         {

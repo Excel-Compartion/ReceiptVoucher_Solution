@@ -206,7 +206,7 @@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
+            <MudText class="NotFound">@ResponseMessage</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudText class="LodingNow">جاري التحميل...</MudText>
@@ -222,19 +222,21 @@
 
 
     @code {
-    private MudTable<Receipt> table;
-    private string searchString = null;
+    private MudTable<Receipt>? table;
+    private string? searchString ;
     private DateTime? selectedDate = DateTime.Now;
     private DateTime? selectedMonth1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     private DateTime? selectedMonth2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
 
-    private string RadioDateType;
+    private string RadioDateType=null!;
     private string Day = "Day";
     private string Month = "Month";
 
+    public string ResponseMessage = "لم يتم العثور على سجلات";
 
 
-    public List<Branch> Branches { get; set; }
+
+    public List<Branch> Branches { get; set; } = new List<Branch>();
 
     // SubProject Select
     private List<SubProject> SubProjects { get; set; } = new List<SubProject>();
@@ -309,11 +311,46 @@
     {
         RadioDateType = Day;
 
-        Branches = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
-        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
-        Projects = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch {  }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
 
 
     }
@@ -372,12 +409,20 @@
         // التحقق من الاستجابة
         if (response.IsSuccessStatusCode)
         {
-            // تحويل البيانات المرتجعة إلى قائمة الإيصالات
-            var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
 
-            data = receipts;
+            try
+            {
+                // تحويل البيانات المرتجعة إلى قائمة الإيصالات
+                var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
 
-            table.ReloadServerData();
+
+                if (receipts != null) { data = receipts; }
+                
+                if (table != null) { await table.ReloadServerData(); }
+                
+            }
+            catch{}
+       
 
         }
     }
@@ -439,7 +484,8 @@
     private void OnSearch(string text)
     {
         searchString = text;
-        table.ReloadServerData();
+        if (table != null) { table.ReloadServerData(); }
+        
     }
 
     private void OpenDetailsDialog(Receipt receipt)
