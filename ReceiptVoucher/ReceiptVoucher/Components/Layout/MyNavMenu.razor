@@ -6,30 +6,35 @@
 
     <MudImage Src="images\logo.svg" Style="margin-top:-2%;margin-right:10px" Width="200" Height="100" Alt="Icon" />
     <hr style="color:deepskyblue ;margin-top:0%" />
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Class="mud-nav-link-right">
+    <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right">
         <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
         الصفحة الرئيسية
     </MudNavLink>
-    <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
-        المراكز الاعلامية
-    </MudNavLink>
-    <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.FileCopy" Class="icon-color" />
-        المشاريع
-    </MudNavLink>
-    <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Class="icon-color" />
-        المشاريع الفرعية
-    </MudNavLink>
-    <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
-        السندات
-    </MudNavLink>
-    <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
-        التقارير
-    </MudNavLink> 
+
+    <AuthorizeView>
+        <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+            <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
+            المراكز الاعلامية
+        </MudNavLink>
+        <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+            <MudIcon Icon="@Icons.Material.Filled.FileCopy" Class="icon-color" />
+            المشاريع
+        </MudNavLink>
+        <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+            <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Class="icon-color" />
+            المشاريع الفرعية
+        </MudNavLink>
+        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+            <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
+            السندات
+        </MudNavLink>
+        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+            <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
+            التقارير
+        </MudNavLink>
+    </AuthorizeView>
+
+    
     <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
         <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
         UserProfile

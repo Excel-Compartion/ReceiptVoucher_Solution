@@ -3,6 +3,7 @@
 @using Blazored.LocalStorage
 @using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.Dtos.Auth
+@* @using _LoginLayout *@
 
 @rendermode InteractiveAuto
 
@@ -10,6 +11,8 @@
 @inject ReceiptVoucher.Client.Services.IAuthService _AuthService
 @inject ILocalStorageService _LocalStorage
 @inject NavigationManager _NavigationManager
+
+@* @layout LoginLayout *@
 
 
 <style>
