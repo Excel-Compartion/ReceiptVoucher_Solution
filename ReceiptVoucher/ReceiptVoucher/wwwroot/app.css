@@ -222,7 +222,7 @@ h1:focus {
 /* E Table */
 
 /* S Home ChartReports */
-.testBody .mud-grid.mud-grid-spacing-xs-3.justify-start{
+.testBody .ChartContainer{
     margin-top: 40px;
     margin-bottom: auto;
     border: 1px solid var(--color-custom);
