@@ -1,6 +1,10 @@
-﻿@page "/"
+﻿@page "/home"
 @rendermode InteractiveAuto
-@inject HttpClient Http
+@* @rendermode @(new InteractiveServerRenderMode(false) ) *@
+
+
+@attribute [Authorize]
+
 
 <PageTitle>Makarim</PageTitle>
 

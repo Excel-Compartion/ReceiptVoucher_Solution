@@ -1,4 +1,6 @@
-﻿@page "/Login"
+﻿@page "/"
+@page "/Login"
+
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.WebUtilities
 @using ReceiptVoucher.Core.Models
@@ -117,7 +119,7 @@
             await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
             await _AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            _NavigationManager.NavigateTo(returnUrl);
+            _NavigationManager.NavigateTo("home");
         }
         else
         {
