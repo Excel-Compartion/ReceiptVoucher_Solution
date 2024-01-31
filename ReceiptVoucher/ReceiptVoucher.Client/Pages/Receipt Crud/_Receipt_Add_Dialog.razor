@@ -141,7 +141,7 @@
 
             <MudGrid>
                 <MudItem xs="6">
-                    <MudSelect Label="وجهة المنحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
+                    <MudSelect Label="الجهة المانحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
                             <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
@@ -214,8 +214,8 @@
 
             <MudGrid>
                 <MudItem sm="4" xs="12">
-                    <MudSelect Label="الفرع" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
-                        <MudSelectItem Value="0">--- اختيار الفرع ---</MudSelectItem>
+                    <MudSelect Label="المركز" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
                         @foreach (var branch in Branches)
                         {
                             <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>

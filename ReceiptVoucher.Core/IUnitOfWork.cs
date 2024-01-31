@@ -20,6 +20,6 @@ namespace ReceiptVoucher.Core
 
         void Detach<T>(T entity ) where T : class;
 
-        int Complete();
+       Task<int>  Complete();
     }
 }
