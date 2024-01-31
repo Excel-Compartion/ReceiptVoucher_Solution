@@ -7,7 +7,7 @@ namespace ReceiptVoucher.Core.Enums
 {
     public enum GrantDest
     {
-        [Display(Name = "-- اختيار الجهه المانحه --")]
+        [Display(Name = "-- اختيار الجهة المانحة --")]
         Message = 0,
 
         [Display(Name = "فرد")]
