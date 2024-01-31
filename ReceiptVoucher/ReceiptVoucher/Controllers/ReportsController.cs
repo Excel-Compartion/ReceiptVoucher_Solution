@@ -50,10 +50,10 @@ namespace ReceiptVoucher.Server.Controllers
                     decimal AssociationTotalAmount;
                     decimal FoundationTotalAmount;
 
-                    IndividualTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Individual).Select(x => x.TotalAmount).Sum();
-                    CompanyTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Company).Select(x => x.TotalAmount).Sum();
-                    AssociationTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Association).Select(x => x.TotalAmount).Sum();
-                    FoundationTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Foundation).Select(x => x.TotalAmount).Sum();
+                    IndividualTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Individual && x.Date.Year==DateTime.Now.Year).Select(x => x.TotalAmount).Sum();
+                    CompanyTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Company && x.Date.Year == DateTime.Now.Year).Select(x => x.TotalAmount).Sum();
+                    AssociationTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Association && x.Date.Year == DateTime.Now.Year).Select(x => x.TotalAmount).Sum();
+                    FoundationTotalAmount = receipt.Where(x => x.BranchId == branch[i].Id && x.GrantDestinations == GrantDest.Foundation && x.Date.Year == DateTime.Now.Year).Select(x => x.TotalAmount).Sum();
 
                     Individual[i] = Convert.ToDouble(IndividualTotalAmount);
                     Company[i] = Convert.ToDouble(CompanyTotalAmount);
