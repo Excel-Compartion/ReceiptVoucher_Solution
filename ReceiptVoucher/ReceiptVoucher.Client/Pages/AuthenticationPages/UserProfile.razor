@@ -20,9 +20,14 @@
 <EditForm Model="request" OnValidSubmit="ChangePassword">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <div class="mb-3">
-        <label for="password">New Password</label>
-        <InputText id="password" @bind-Value="request.Password" class="form-control" type="password" />
-        <ValidationMessage For="@(() => request.Password)" />
+        <label for="currentPassword">Current Password</label>
+        <InputText id="currentPassword" @bind-Value="request.CurrentPassword" class="form-control" type="password" />
+        <ValidationMessage For="@(() => request.CurrentPassword)" />
+    </div> 
+    <div class="mb-3">
+        <label for="newPassword">New Password</label>
+        <InputText id="newPassword" @bind-Value="request.NewPassword" class="form-control" type="password" />
+        <ValidationMessage For="@(() => request.NewPassword)" />
     </div>
     <div class="mb-3">
         <label for="confirmPassword">Confirm New Password</label>

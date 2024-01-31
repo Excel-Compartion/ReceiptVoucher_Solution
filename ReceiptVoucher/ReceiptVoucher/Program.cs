@@ -73,6 +73,24 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();    // Register IUnitOfWork
 
+// ------ Configure Passowrd ------------
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequiredUniqueChars = 0; // Allow repeated characters
+    options.Password.RequireUppercase = false;
+
+
+});
+
+//--------------------
+
+
 //--- JWT Configurations
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 

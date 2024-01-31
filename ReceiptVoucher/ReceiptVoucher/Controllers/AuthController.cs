@@ -85,13 +85,13 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPost("change-password"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<BaseResponse<bool>>> ChangePassword([FromHeader] string newPassword, [FromHeader] string currentPassword)
+        public async Task<ActionResult<BaseResponse<bool>>> ChangePassword([FromBody] UserChangePassword model )
         {
             var userId = User.FindFirstValue("uid");
 
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            BaseResponse<bool> response = await _authService.ChangePassword(userId,currentPassword ,newPassword);
+            BaseResponse<bool> response = await _authService.ChangePassword(userId,model.CurrentPassword ,model.NewPassword);
 
             if (!response.Success)
             {
