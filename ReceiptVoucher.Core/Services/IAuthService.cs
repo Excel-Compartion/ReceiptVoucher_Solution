@@ -11,6 +11,6 @@ namespace ReceiptVoucher.Core.Services
 		Task<string> AddRoleAsync(AddRoleModel roleModel);
 		Task<AuthModel> RefreshTokenAsync(string token);
 		Task<bool> RevokeTokenAsync(string token);
-		Task<BaseResponse<bool>> ChangePassword(string userId , string newPassword);
+		Task<BaseResponse<bool>> ChangePassword(string userId ,string currentPassword, string newPassword);
 	}
 }

@@ -271,7 +271,7 @@ namespace ReceiptVoucher.Core.Services
 			return true;
 		}
 
-        public async Task<BaseResponse<bool>> ChangePassword(string userId, string newPassword)
+        public async Task<BaseResponse<bool>> ChangePassword(string userId,string currentPassword ,string newPassword)
         {
             // Find the user by id
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
@@ -285,7 +285,7 @@ namespace ReceiptVoucher.Core.Services
 
             // Change the user's password
 
-            var result = await _userManager.ChangePasswordAsync(user, user.PasswordHash, newPassword);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
 
 			// Check if the password change was successful
