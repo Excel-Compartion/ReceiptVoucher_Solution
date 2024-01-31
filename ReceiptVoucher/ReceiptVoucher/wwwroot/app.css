@@ -229,7 +229,17 @@ h1:focus {
     font-family: "Tajawal", sans-serif;
 }
 
-
+/* ديلوق الحذف */
+.testBody .mud-dialog .mud-dialog-actions>:not(:first-child){
+    border-radius: var(--mud-default-borderradius);
+    color: var(--mud-palette-error);
+    border: 1px solid var(--mud-palette-error);
+}
+.testBody .mud-button-text.mud-button-text-primary{
+    border-radius: var(--mud-default-borderradius);
+    color: var(--mud-palette-info);
+    border: 1px solid var(--mud-palette-info);
+}
 /* E Table */
 
 /* S Home ChartReports */
