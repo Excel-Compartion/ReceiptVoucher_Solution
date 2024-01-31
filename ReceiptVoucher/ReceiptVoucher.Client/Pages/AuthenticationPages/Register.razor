@@ -120,6 +120,10 @@
         {
             messageCssClass = "text-success";
             RegisterModel = new();
+
+            Task.Delay(500);
+
+            _NavigationManager.NavigateTo("login");
         }
 
 
