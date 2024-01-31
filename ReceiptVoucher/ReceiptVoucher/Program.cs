@@ -31,6 +31,7 @@ builder.Services.AddControllers().AddJsonOptions(option =>
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+builder.Services.AddTransient<IBranchRepository, BranchRepository>();
 builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
 builder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
 

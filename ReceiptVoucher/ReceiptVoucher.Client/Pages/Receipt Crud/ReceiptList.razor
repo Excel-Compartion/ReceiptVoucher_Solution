@@ -101,7 +101,7 @@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText class="NotFound">لاتوجد بيانات مضافة</MudText>
+            <MudText class="NotFound">@ResponseMessage</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudText class="LodingNow">جاري التحميل ...</MudText>
@@ -125,23 +125,24 @@
 
 
     @code {
-    public IEnumerable<Receipt> pagedData;
-    private MudTable<Receipt> table;
+    public IEnumerable<Receipt>? pagedData;
+    private MudTable<Receipt>? table;
 
     private int totalItems;
-    private string searchString = null;
+    private string? searchString;
 
 
-    public List<Branch> Branches { get; set; }
-    public List<Project> Projects { get; set; }
+    public List<Branch> Branches { get; set; } = new List<Branch>();
+    public List<Project> Projects { get; set; } = new List<Project>();
 
-    public List<SubProject> SubProjects { get; set; }
+    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
 
 
     public int RecId;
 
     public bool PrintActive = false;
 
+    public string ResponseMessage = "لم يتم العثور على سجلات";
    
     void PrintReceipt(int id)
     {
@@ -165,12 +166,47 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Branches = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
-        Projects = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
 
 
-        SubProjects = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+        }
+        catch {  }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
+
+
     }
 
     /// <summary>
@@ -181,7 +217,21 @@
 
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
+
+            if (response != null)
+            {
+                data = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
+
+       
 
         data = data.Where(receipt =>
         {
@@ -240,7 +290,9 @@
     private void OnSearch(string text)
     {
         searchString = text;
-        table.ReloadServerData();
+
+        if (table != null) { table.ReloadServerData(); }
+       
     }
 }
 
@@ -346,7 +398,7 @@
         if (dialogResult)
         {
             // Reload the table data
-            table.ReloadServerData();
+            if (table != null) { await table.ReloadServerData(); }
         }
     }
 
@@ -377,7 +429,7 @@
                     _Snackbar.Add("تم حذف بيانات السند بنجاح", Severity.Success);
 
                     // Reload the table data
-                    table.ReloadServerData();
+                    if (table != null) {await table.ReloadServerData(); }
                 }
                 else
                 {

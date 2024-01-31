@@ -1,11 +1,9 @@
-﻿
-
-@page "/Branches"
+﻿@page "/Branches"
 @rendermode InteractiveAuto
 
 @inject HttpClient Http
 
-@inject IDialogService _DialogService 
+@inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 
 
@@ -15,7 +13,6 @@
 <style>
     :root {
         --color-custom: #3090C7;
-        
     }
 
 </style>
@@ -28,7 +25,7 @@
 <p style=" margin-bottom:2% ;">
 
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
     <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.Apartment" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
@@ -45,7 +42,7 @@
 
 
 <MudTable Style="width:100%;height:auto;" ServerData="@(new Func<TableState, Task<TableData<Branch>>>(ServerReload))"
-            Dense="true" Hover="true" @ref="table">
+          Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
 
@@ -58,7 +55,7 @@
 
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
     <HeaderContent>
@@ -71,13 +68,13 @@
         <MudTh><MudTableSortLabel SortLabel="mobile_field" T="Branch">رقم الجوال</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="email_field" T="Branch">البريد الالكتروني</MudTableSortLabel></MudTh>
 
-        
-        <MudTh><MudTableSortLabel  T="Branch">الاجراءت</MudTableSortLabel></MudTh>
-        
-       
+
+        <MudTh><MudTableSortLabel T="Branch">الاجراءت</MudTableSortLabel></MudTh>
+
+
     </HeaderContent>
     <RowTemplate>
-        
+
         <MudTd DataLabel="اسم المركز">@context.Name</MudTd>
             <MudTd DataLabel="المنطقة">@context.Area</MudTd>
             <MudTd DataLabel="الشخص المسؤول">@context.ResponsiblePerson</MudTd>
@@ -90,27 +87,28 @@
                 </MudButtonGroup>
             </MudTd>
         </RowTemplate>
-    <NoRecordsContent>
-        <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText class="LodingNow">جاري التحميل...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+        <NoRecordsContent>
+            <MudText class="NotFound">@ResponseMessage</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText class="LodingNow">جاري التحميل...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 
 
 
 
     @code {
-    public IEnumerable<Branch> pagedData;
-    private MudTable<Branch> table;
+    public IEnumerable<Branch>? pagedData;
+    private MudTable<Branch>? table;
 
     private int totalItems;
-    private string searchString = null;
+    private string? searchString ;
 
+    public string ResponseMessage = "لم يتم العثور على سجلات";
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -120,7 +118,21 @@
 
     private async Task<TableData<Branch>> ServerReload(TableState state)
     {
-        data = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+
+            if (response!=null)
+            {
+                data = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
+
+
+        
 
         data = data.Where(branch =>
         {
@@ -135,7 +147,7 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-          
+
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;
@@ -156,7 +168,7 @@
                 data = data.OrderByDirection(state.SortDirection, o => o.Email);
                 break;
 
-           
+
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
@@ -166,7 +178,8 @@
     private void OnSearch(string text)
     {
         searchString = text;
-        table.ReloadServerData();
+        if (table != null) { table.ReloadServerData(); }
+       
     }
 }
 
@@ -203,7 +216,11 @@
         if (dialogResult)
         {
             // Reload the table data
-            table.ReloadServerData();
+            if (table != null)
+            {
+                await table.ReloadServerData();
+            }
+            
         }
     }
 
@@ -234,12 +251,16 @@
                     _Snackbar.Add("تم حذف بيانات المركز بنجاح", Severity.Success);
 
                     // Reload the table data
-                    table.ReloadServerData();
+                    if (table != null)
+                    {
+                        await table.ReloadServerData();
+                    }
+                    
                 }
                 else
                 {
                     // Deletion failed
-                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات المركز!", Severity.Error);
+                    _Snackbar.Add("فشل حذف بيانات المركز!", Severity.Error);
                 }
 
                 StateHasChanged();

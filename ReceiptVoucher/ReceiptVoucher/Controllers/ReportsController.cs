@@ -93,7 +93,7 @@ namespace ReceiptVoucher.Server.Controllers
 
                 for (int i = 0; i < 12; i++)
                 {
-                    var TotalAmount = receipt.Where(x => x.ProjectId == project.Id && (x.Date.Month == i+1)).Select(x => x.TotalAmount).Sum();
+                    var TotalAmount = receipt.Where(x => x.ProjectId == project.Id && (x.Date.Month == i+1 && x.Date.Year==DateTime.Now.Year)).Select(x => x.TotalAmount).Sum();
 
                     
                     TotalAmountForMonths[i] = Convert.ToDouble(TotalAmount);
