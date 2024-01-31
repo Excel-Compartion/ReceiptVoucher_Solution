@@ -180,7 +180,7 @@ h1:focus {
     color: #2196f3;
 }
 .testBody .mud-radio.mud-radio-content-placement-end.Month span{
-     color: #ff9800;
+    color: #ff9800;
 }
 .testBody
 /* E MinReports */
@@ -217,7 +217,17 @@ h1:focus {
     font-size: 18px;
     font-family: "Tajawal", sans-serif;
     font-weight: 600;
+}
+.testBody .mud-button-group-root .mud-button-root{
+    font-weight: 600;
+    font-family: "Tajawal", sans-serif;
+}
 
+.testBody .mud-input-control>.mud-input-control-input-container>div.mud-input.mud-input-text{
+    color: var(--color-custom);
+    font-weight: 600;
+    /* font-weight: 500; */
+    font-family: "Tajawal", sans-serif;
 }
 /* E Table */
 
