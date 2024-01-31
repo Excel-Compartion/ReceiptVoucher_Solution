@@ -1,4 +1,6 @@
-﻿@page "/Branches"
+﻿
+
+@page "/Branches"
 @rendermode InteractiveAuto
 
 @inject HttpClient Http
@@ -119,7 +121,7 @@
     private async Task<TableData<Branch>> ServerReload(TableState state)
     {
         data = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
-       
+
         data = data.Where(branch =>
         {
             if (string.IsNullOrWhiteSpace(searchString))

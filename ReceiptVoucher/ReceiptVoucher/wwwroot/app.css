@@ -200,7 +200,7 @@ h1:focus {
     font-size: 15px;
     border-bottom: 1.7px solid #7d7d7d;
 }
-.testBody .mud-table-root>.mud-table-body:last-child>.mud-table-row:last-child>.mud-table-cell, .mud-table-root>.mud-table-foot:last-child>.mud-table-row:last-child>.mud-table-cell {
+.testBody .mud-table-root .mud-table-body .mud-table-cell  {
     font-size: 16px;
     font-weight: 500;
 }
@@ -220,3 +220,30 @@ h1:focus {
 
 }
 /* E Table */
+
+/* S Home ChartReports */
+.testBody .mud-grid.mud-grid-spacing-xs-3.justify-start{
+    margin-top: 40px;
+    margin-bottom: auto;
+    border: 1px solid var(--color-custom);
+    border-radius: 30px;
+    background: #dbe9fa78;
+}
+.testBody .mud-chart.mud-chart-legend-bottom{
+    background-color: #a5a7a924;
+    border-radius: 15px;
+}
+.testBody .mud-typography.mud-typography-body2.mud-typography-display-inline{
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .mud-charts-xaxis,
+.testBody .mud-charts-yaxis{
+    font-weight: 600;
+    font-family: "Tajawal", sans-serif;
+}
+.testBody .mud-charts-xaxis text {
+
+}
+/* E Home ChartReports */
