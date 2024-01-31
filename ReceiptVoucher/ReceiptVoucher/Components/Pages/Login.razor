@@ -1,4 +1,18 @@
 ﻿@page "/Login"
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.WebUtilities
+@using ReceiptVoucher.Core.Models
+@using ReceiptVoucher.Core.Models.Dtos.Auth
+
+@rendermode InteractiveAuto
+
+
+@* @inject HttpClient _httpClient *@
+@inject ReceiptVoucher.Client.Services.IAuthService _AuthService
+@inject ILocalStorageService _LocalStorage
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager _NavigationManager
+
 
 @using _LoginLayout
 
@@ -7,8 +21,6 @@
     :root {
         --color-custom: #3090C7;
     }
-
-    
 </style>
 
 <section class="">
@@ -18,42 +30,41 @@
                 <img src="images\loginicon.jpg"
                     class="img-fluid" alt="Sample image">
             </div>
-            <div class="col-12 col-md-6 col-xl-4 offset-xl-1" style="border: 1px solid gainsboro;border-radius:3px;padding:1%;margin-bottom: 2rem;">
+            <div class="col-12 col-md-6 col-xl-4 offset-xl-1"
+                style="border: 1px solid gainsboro;border-radius:3px;padding:1%;margin-bottom: 2rem;">
 
-                <EditForm Model="@login" OnValidSubmit="Submit" Class="custom-form">
+                <EditForm Model="model" OnValidSubmit="HandleLogin"  Class="custom-form">
                     <DataAnnotationsValidator />
 
-                    <MudTextField Immediate="false" Label="البريد الالكتروني" id="form3Example3" class="form-control form-control-lg" For="@(()=>login.Email)" @bind-Value="@login.Email" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
-
-
+                    <MudTextField Immediate="false" Label="البريد الالكتروني" id="form3Example3"
+                        class="form-control form-control-lg" For="@(()=>model.Email)" @bind-Value="@model.Email"
+                        Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                    
                     <br />
-                    <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر" Variant="Variant.Text" For="@(()=>login.Password)" @bind-Value="@login.Password" />
-
-
-
-
-
-
-
+                    
+                    <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر"
+                        Variant="Variant.Text" For="@(()=>model.Password)" @bind-Value="@model.Password" />
+                    
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Checkbox -->
                         <div class="form-check mb-0">
-
-                            <MudCheckBox Size="Size.Small" @bind-Value="@login.RemmberMe" Dense="true" Color="Color.Info" class="form-check-input me-2" id="form2Example3"></MudCheckBox>
+                            <MudCheckBox Size="Size.Small" @bind-Value="@model.RemmberMe" Dense="true"
+                                Color="Color.Info" class="form-check-input me-2" id="form2Example3"></MudCheckBox>
                             <label class="form-check-label" for="form2Example3">
                                 تذكرني
                             </label>
                         </div>
                         <a href="#!" class="text-body">هل نسيت كلمة المرور؟</a>
                     </div>
-
                     <div class="text-center text-lg-start mt-4 pt-2">
 
                         @* <MudButton ButtonType="ButtonType.Submit" class="btn btn-primary btn-lg" id="LoginBtn" style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">تسجيل الدخول</MudButton> *@
                         <MudButton ButtonType="ButtonType.Submit" class="d-block m-auto mud-button" id="LoginBtn" style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">تسجيل الدخول</MudButton>
                     </div>
-
                 </EditForm>
+                <div class="text-danger">
+                    <span>@errorMessage</span>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +93,43 @@
     </div>
 </section>
 @code {
-    public LoginModel login { get; set; } = new LoginModel();
+    public LoginModel model { get; set; } = new LoginModel();
+    private string errorMessage = string.Empty;
 
-    public void Submit() { }
+    private string returnUrl = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var uri = _NavigationManager.ToAbsoluteUri(_NavigationManager.Uri);
+
+        if ( QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url) )
+        {
+            returnUrl = url;
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        var result = await _AuthService.LoginAsync(model);
+        if (result.Success)
+        {
+            errorMessage = string.Empty;
+            await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
+            await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            _NavigationManager.NavigateTo(returnUrl);
+        }
+        else
+        {
+            errorMessage = result.Message + " -- \n";
+        }
+    }
+
+    <!-----------------       Services    --------------------->
+    // private async Task<BaseResponse<AuthModel>> LoginAsync(LoginModel model)
+    // {
+    //     var result = await _httpClient.PostAsJsonAsync("api/Auth/token", model);
+    //     return await result.Content.ReadFromJsonAsync<BaseResponse<AuthModel>>();
+    // }
+
 }
