@@ -15,7 +15,6 @@ namespace ReceiptVoucher.Client.Services
             _httpClient = httpClient;
         }
 
-       
 
         public async Task<BaseResponse<AuthModel>> LoginAsync(LoginModel loginModel)
         {
@@ -27,6 +26,12 @@ namespace ReceiptVoucher.Client.Services
         {
             var result = await _httpClient.PostAsJsonAsync("api/Auth/register", registerModelmodel);
             return await result.Content.ReadFromJsonAsync<BaseResponse<AuthModel>>();
+        }
+        public async Task<BaseResponse<bool>> ChangePassword(UserChangePassword userChangePasswordModel)
+        {
+            var result = await _httpClient.PostAsJsonAsync("api/Auth/change-password", userChangePasswordModel);
+
+            return await result.Content.ReadFromJsonAsync<BaseResponse<bool>>();
         }
 
     }

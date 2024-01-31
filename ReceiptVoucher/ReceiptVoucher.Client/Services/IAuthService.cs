@@ -9,9 +9,11 @@ namespace ReceiptVoucher.Client.Services
 	{
 		Task<BaseResponse<AuthModel>> RegisterAsync(RegisterModel registerModel);
 		Task<BaseResponse<AuthModel>> LoginAsync(LoginModel loginModel);
+        Task<BaseResponse<bool>> ChangePassword(UserChangePassword userChangePasswordModel);
 
-		//Task<string> AddRoleAsync(AddRoleModel roleModel);
-		//Task<AuthModel> RefreshTokenAsync(string token);
-		//Task<bool> RevokeTokenAsync(string token);
-	}
+
+        //Task<string> AddRoleAsync(AddRoleModel roleModel);
+        //Task<AuthModel> RefreshTokenAsync(string token);
+        //Task<bool> RevokeTokenAsync(string token);
+    }
 }

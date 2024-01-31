@@ -99,3 +99,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
+
+###

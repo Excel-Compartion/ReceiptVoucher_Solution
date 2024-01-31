@@ -1,5 +1,6 @@
 ﻿@page "/Login"
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.WebUtilities
 @using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.Dtos.Auth
 
@@ -97,6 +98,16 @@
 
     private string returnUrl = string.Empty;
 
+    protected override void OnInitialized()
+    {
+        var uri = _NavigationManager.ToAbsoluteUri(_NavigationManager.Uri);
+
+        if ( QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url) )
+        {
+            returnUrl = url;
+        }
+    }
+
     private async Task HandleLogin()
     {
         var result = await _AuthService.LoginAsync(model);
@@ -106,7 +117,7 @@
             await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
             await _AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            _NavigationManager.NavigateTo("/");
+            _NavigationManager.NavigateTo(returnUrl);
         }
         else
         {

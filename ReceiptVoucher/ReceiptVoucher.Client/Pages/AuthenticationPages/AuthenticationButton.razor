@@ -14,12 +14,15 @@
     <CascadingAuthenticationState>
         <AuthorizeView>
             <Authorized>
+                <MudListItem Value="@("معلومات الحساب")" Href="UserProfile">
+                    معلومات الحساب
+                </MudListItem>
                 <MudListItem Value="@("Logout")" OnClick="Logout">
                     Logout
                 </MudListItem>
             </Authorized>
             <NotAuthorized>
-                <MudListItem Value="@("Login")" Href="Login">
+                <MudListItem Value="@("Login")" Href="@($"Login?returnUrl={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}")">
                     Login
                 </MudListItem>
                 <MudListItem Value="@("Register")" Href="register">

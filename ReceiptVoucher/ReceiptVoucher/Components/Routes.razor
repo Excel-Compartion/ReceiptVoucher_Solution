@@ -4,7 +4,13 @@
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" >
+                <NotAuthorized>
+                    <h3>Your are Not  Allowed To see this page.!</h3>
+                    <h5>Please <a href="Login">Login</a> Or <a href="Register">Register</a></h5>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
     </Router>

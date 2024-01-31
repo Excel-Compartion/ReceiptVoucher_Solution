@@ -5,6 +5,9 @@ using ReceiptVoucher.Core.Models.Dtos.Auth;
 using ReceiptVoucher.Core.Services;
 using ReceiptVoucher.Core.Models;
 using ReceiptVoucher.Core.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -81,5 +84,23 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-	}
+        [HttpPost("change-password"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<BaseResponse<bool>>> ChangePassword([FromBody] string newPassword)
+        {
+            var userId = User.FindFirstValue("uid");
+
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            BaseResponse<bool> response = await _authService.ChangePassword(userId, newPassword);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+
+    }
 }

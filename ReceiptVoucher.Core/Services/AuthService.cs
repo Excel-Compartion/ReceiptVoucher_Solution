@@ -11,6 +11,7 @@ using ReceiptVoucher.Core.Services;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Helper;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
+using ReceiptVoucher.Core.Models;
 
 namespace ReceiptVoucher.Core.Services
 {
@@ -269,5 +270,36 @@ namespace ReceiptVoucher.Core.Services
 
 			return true;
 		}
-	}
+
+        public async Task<BaseResponse<bool>> ChangePassword(string userId, string newPassword)
+        {
+            // Find the user by id
+            ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+
+
+            // Check if the user exists
+            if (user is null )
+			{
+				return new BaseResponse<bool>(false, "User Not Found !", null, false);
+			}
+
+            // Change the user's password
+
+            var result = await _userManager.ChangePasswordAsync(user, user.PasswordHash, newPassword);
+
+
+			// Check if the password change was successful
+			if (result.Succeeded)
+			{
+				return new BaseResponse<bool>(true, "Password changed successfully", null, true);
+			}
+			else
+			{
+				return new BaseResponse<bool>(false, result.Errors.FirstOrDefault()?.Description , null , false);
+			}
+
+        }
+
+       
+    }
 }
