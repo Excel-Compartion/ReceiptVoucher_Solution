@@ -59,6 +59,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
+
             bool isDeleted = await _unitOfWork.Branches.DeleteAsync(id);
 
             return isDeleted ? Ok() : BadRequest("Bad Request");

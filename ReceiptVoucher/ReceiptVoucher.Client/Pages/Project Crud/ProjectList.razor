@@ -98,7 +98,7 @@
             </MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText class="NotFound">لم يتم العثور على سجلات</MudText>
+            <MudText class="NotFound">@ResponseMessage</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText class="LodingNow">جاري التحميل...</MudText>
@@ -112,11 +112,11 @@
 
 
     @code {
-    public IEnumerable<Project> pagedData;
-    private MudTable<Project> table;
+    public IEnumerable<Project>? pagedData;
+    private MudTable<Project>? table;
 
     private int totalItems;
-    private string searchString = null;
+    private string? searchString ;
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -124,10 +124,24 @@
 
     public IEnumerable<Project> data = new List<Project>();
 
+    public string ResponseMessage = "لم يتم العثور على سجلات";
+
     private async Task<TableData<Project>> ServerReload(TableState state)
     {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
 
-        data = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+            if (response != null)
+            {
+                data = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
+
+        
        
         data = data.Where(project =>
         {
@@ -158,7 +172,8 @@
     private void OnSearch(string text)
     {
         searchString = text;
-        table.ReloadServerData();
+
+        if (table != null) {  table.ReloadServerData(); }
     }
 }
 
@@ -206,7 +221,8 @@
         if (dialogResult)
         {
             // Reload the table data
-            table.ReloadServerData();
+            if (table != null) { await table.ReloadServerData(); }
+          
         }
     }
 
@@ -237,7 +253,7 @@
                     _Snackbar.Add("تم حذف بيانات المشروع بنجاح", Severity.Success);
 
                     // Reload the table data
-                    table.ReloadServerData();
+                    if (table != null) { await table.ReloadServerData(); }
                 }
                 else
                 {
