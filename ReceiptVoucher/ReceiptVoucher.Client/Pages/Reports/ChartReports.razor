@@ -5,7 +5,7 @@
 <PageTitle>Makarim</PageTitle>
 
 <MudGrid class="ChartContainer">
-    <MudItem sm="12" md="6">
+    <MudItem xs="12">
         @if (Series != null && XAxisLabels != null && BarChartNoData != true)
 {
     <MudChart class="" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
@@ -25,7 +25,7 @@
 }
     </MudItem>
  
-    <MudItem  sm="12" md="6">
+    <MudItem  xs="12">
         @if (Series2 != null && XAxisLabels2 != null && LineChartNoData != true)
 {
     <div>
