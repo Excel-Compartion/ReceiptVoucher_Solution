@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core;
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Interfaces;
+using System.Net.NetworkInformation;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -11,9 +13,17 @@ namespace ReceiptVoucher.Server.Controllers
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        public BranchesController(IUnitOfWork unitOfWork)
+        private readonly IBranchRepository _branchRepository;
+       
+    
+
+        public BranchesController(IUnitOfWork unitOfWork,IBranchRepository branchRepository)
         {
             _unitOfWork = unitOfWork;
+
+            _branchRepository = branchRepository;
+
+           
         }
 
         [HttpGet("GetAllAsync")]
@@ -60,7 +70,7 @@ namespace ReceiptVoucher.Server.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
 
-            bool isDeleted = await _unitOfWork.Branches.DeleteAsync(id);
+            bool isDeleted = await _branchRepository.DeleteBranchAsync(id);
 
             return isDeleted ? Ok() : BadRequest("Bad Request");
 

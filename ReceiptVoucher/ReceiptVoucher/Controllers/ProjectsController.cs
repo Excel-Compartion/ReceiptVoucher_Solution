@@ -104,7 +104,7 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            bool isDeleted = await _unitOfWork.Projects.DeleteAsync(id);
+            bool isDeleted = await _projectRepository.DeleteProjectAsync(id);
 
             return isDeleted ? Ok() : BadRequest("Bad Request");
 
