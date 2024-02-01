@@ -1,0 +1,273 @@
+﻿
+@page "/Accounts"
+@rendermode InteractiveAuto
+
+@inject HttpClient Http
+
+@inject IDialogService _DialogService 
+@inject ISnackbar _Snackbar
+
+<PageTitle>Makarim</PageTitle>
+
+<style>
+    :root {
+        --color-custom: #3090C7;
+    }
+
+</style>
+
+<br />
+
+
+<!--اسم الصفحه-->
+<p style=" margin-bottom:2% ;">
+
+
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <span class="mainTitle">
+
+        <MudIcon Icon="@Icons.Material.Filled.FileCopy" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
+
+        المشاريع الرئيسية
+
+
+
+    </span>
+
+</p>
+
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>إضافة</span>
+        </MudButton>
+
+
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Project">تاريخ الانشاء</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+
+        
+           <MudTd DataLabel="اسم المشروع">@context.Name</MudTd>
+
+            
+            <MudTd DataLabel="حاله التفعيل">
+                
+                @{
+                var isActive = @context.IsActive;
+
+                if (isActive)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Color="Color.Success" Class="icon-color" />
+                }
+
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.HighlightOff" Color="Color.Error" Class="icon-color" />
+                }
+
+                }
+
+            </MudTd>
+
+        <MudTd DataLabel="اسم المشروع">@context.Date</MudTd>
+            <MudTd DataLabel="الاجراءت">
+
+                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+                </MudButtonGroup>
+
+            </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+            <MudText class="NotFound">@ResponseMessage</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText class="LodingNow">جاري التحميل...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+    @code {
+    public IEnumerable<Project>? pagedData;
+    private MudTable<Project>? table;
+
+    private int totalItems;
+    private string? searchString ;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+
+    public IEnumerable<Project> data = new List<Project>();
+
+    public string ResponseMessage = "لم يتم العثور على سجلات";
+
+    private async Task<TableData<Project>> ServerReload(TableState state)
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+
+            if (response != null)
+            {
+                data = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
+
+        
+       
+        data = data.Where(project =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (project.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{project.Id}".Contains(searchString))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            
+            case "name_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+            case "Date_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Date);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<Project>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+
+        if (table != null) {  table.ReloadServerData(); }
+    }
+}
+
+
+
+    @code {
+
+
+
+    //<!--==================     Add / Edit Dialog      =========================================-->
+
+    private void OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+
+        parameters.Add("BtnName", "اضافه");
+
+        _DialogService.Show<_Account_Add_Dialog>("اضافة مشروع جديد", parameters);
+    }
+
+    private void OpenEditDialog(Project project, string optionalParameter = "")
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
+        parameters.Add("OriginalProject", project);
+
+        var options = new DialogOptions() { CloseButton = true };
+
+        if (optionalParameter == ButtonTypes.Details)
+        {
+            parameters.Add("BtnName", ButtonTypes.Details);
+            _DialogService.Show<_Account_Add_Dialog>("تفاصيل المشروع", parameters, options);
+        }
+        else
+        {
+            parameters.Add("BtnName", "تعديل");
+            _DialogService.Show<_Account_Add_Dialog>("تعديل مشروع", parameters, options);
+        }
+
+    }
+
+    private async void RefreshData(bool dialogResult)
+    {
+        if (dialogResult)
+        {
+            // Reload the table data
+            if (table != null) { await table.ReloadServerData(); }
+          
+        }
+    }
+
+
+
+
+    private async Task DeleteBranch(int projectId)
+    {
+        Project? selectedBranch = data.SingleOrDefault(b => b.Id == projectId);
+
+        if (selectedBranch != null)
+        {
+            var parameters = new DialogParameters() { { "ProjectName", selectedBranch.Name } };
+            var dialog = _DialogService.Show<_AccountConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+
+            var result = await dialog.Result;
+
+            if (!result.Cancelled && result.Data is bool data && data)
+            {
+                // User confirmed deletion, proceed with deletion
+
+                // Try to delete the branch using the API controller
+                var response = await Http.DeleteAsync($"api/Projects/{projectId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Show a success message
+                    _Snackbar.Add("تم حذف بيانات المشروع بنجاح", Severity.Success);
+
+                    // Reload the table data
+                    if (table != null) { await table.ReloadServerData(); }
+                }
+                else
+                {
+                    // Deletion failed
+                    _Snackbar.Add("فشل حذف بيانات المشروع!", Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
+
+}
+
+
