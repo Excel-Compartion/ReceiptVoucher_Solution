@@ -1,6 +1,8 @@
 ﻿using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Interfaces;
 
 namespace ReceiptVoucher.Server.Controllers
@@ -61,7 +63,8 @@ namespace ReceiptVoucher.Server.Controllers
         //}
 
 
-
+        //[Authorize(Roles = RolesNames.Admin)]
+        [Authorize]
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {

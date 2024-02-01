@@ -1,0 +1,45 @@
+﻿@rendermode InteractiveServer
+
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+
+
+<MudMenu Dense="true" T="string" Label="Coffee" Variant="Variant.Filled" Icon="account_box" OnOpened="ToggleUserMenu" OnClosed="ToggleUserMenu">
+    <CascadingAuthenticationState>
+        <AuthorizeView>
+            <Authorized>
+                <MudListItem Value="@("معلومات الحساب")" Href="UserProfile">
+                    معلومات الحساب
+                </MudListItem>
+                <MudListItem Value="@("Logout")" OnClick="Logout">
+                    Logout
+                </MudListItem>
+            </Authorized>
+            <NotAuthorized>
+                <MudListItem Value="@("Login")" Href="@($"Login?returnUrl={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}")">
+                    Login
+                </MudListItem>
+                <MudListItem Value="@("Register")" Href="register">
+                    Register
+                </MudListItem>
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingAuthenticationState>
+</MudMenu>
+
+@code {
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        // await CartService.GetCartItemsCount();
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/Login");
+    }
+}

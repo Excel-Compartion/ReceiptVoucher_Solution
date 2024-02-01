@@ -1,9 +1,11 @@
 ﻿
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Identity;
 
 namespace ReceiptVoucher.EF;
 
-public class ReceiptVoucherDbContext : DbContext
+public class ReceiptVoucherDbContext : IdentityDbContext<ApplicationUser>
 {
     public ReceiptVoucherDbContext()
     {
