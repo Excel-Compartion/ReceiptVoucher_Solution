@@ -118,13 +118,13 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
-    [Parameter] public SubProject OriginalSubProject { get; set; }
-    [Parameter] public string BtnName { get; set; }
-    public SubProject SubProject { get; set; }
+    [Parameter] public SubProject? OriginalSubProject { get; set; }
+    [Parameter] public string BtnName { get; set; } = null!;
+    public SubProject SubProject { get; set; } = new SubProject();
     public string Unit = "يوم";
 
     [Parameter]
-    public List<Project> Projects { get; set; }
+    public List<Project> Projects { get; set; } = new List<Project>();
 
 
 

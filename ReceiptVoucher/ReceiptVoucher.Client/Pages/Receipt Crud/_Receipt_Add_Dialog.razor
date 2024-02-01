@@ -298,25 +298,25 @@
     public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
-    public ReceiptViewModel OriginalReceiptViewModel { get; set; }
+    public ReceiptViewModel? OriginalReceiptViewModel { get; set; }
 
 
     [Parameter]
-    public string BtnName { get; set; }
+    public string BtnName { get; set; } = null!;
 
     string Icon = string.Empty;
 
 
     [Parameter]
-    public List<Branch> Branches { get; set; }
+    public List<Branch> Branches { get; set; } = new List<Branch>();
 
     [Parameter]
-    public List<Project> Projects { get; set; }
+    public List<Project> Projects { get; set; } = new List<Project>();
 
     [Parameter]
-    public List<SubProject> SubProjects { get; set; }
+    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
 
-    public ReceiptViewModel ReceiptViewModel { get; set; }
+    public ReceiptViewModel ReceiptViewModel { get; set; } = new ReceiptViewModel();
 
 
     bool isCheckNumberCleared = false;
