@@ -102,7 +102,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(o =>
 {
     o.RequireHttpsMetadata = false;
-    o.SaveToken = false;
+    o.SaveToken = true;
     o.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,

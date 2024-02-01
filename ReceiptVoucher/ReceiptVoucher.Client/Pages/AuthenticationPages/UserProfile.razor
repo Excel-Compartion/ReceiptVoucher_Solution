@@ -10,11 +10,12 @@
 @attribute [Authorize]
 
 @inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 
 
 <AuthorizeView>
     <h3>Hi You Logged with  <i>@context.User.Identity.Name</i> .</h3>
-    <h3>Hi  <i>@DisplayName(context.User.Claims.ToList())</i> .</h3>
+    <h3>Hi   <i>@userName</i> .</h3>
 </AuthorizeView>
 
 <h5>Change Password</h5>
@@ -46,15 +47,21 @@
 
     string message = string.Empty;
 
+    private string userName;
+
+
     private async Task ChangePassword()
     {
         var result = await _IAuthService.ChangePassword(request);
         message = result.Message;
     }
 
-
-    private string DisplayName(List<Claim> claims)
+    protected override async Task OnInitializedAsync()
     {
-        return  claims.Where(_ => _.Type == "Email" ).Select(_ => _.Value).FirstOrDefault();
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        userName = user.FindFirstValue("Email"); // or "UserName"
     }
+
+  
 }
