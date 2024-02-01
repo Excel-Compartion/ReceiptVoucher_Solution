@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Models;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 
 namespace ReceiptVoucher.Server.Controllers
 {
