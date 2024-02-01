@@ -54,7 +54,7 @@
     private bool BarChartNoData = false;
     private bool LineChartNoData = false;
 
-    public Dictionary<string, double[]> MainProjectsReportData { get; set; }
+    public Dictionary<string, double[]> MainProjectsReportData { get; set; } = new Dictionary<string, double[]>();
 
     protected override async Task OnInitializedAsync()
     {
