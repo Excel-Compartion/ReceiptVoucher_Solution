@@ -37,3 +37,69 @@ Content-Type: application/json
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
 
 ###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/token
+Content-Type: application/json
+
+{
+  //TokenRequestModel
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/AddRole
+Content-Type: application/json
+
+{
+  //AddRoleModel
+}
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/projects/GetAllAsync
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Gmail10",
+  "lastName": "Gmail10",
+  "userName": "Gmail10",
+  "Email": "Gmail10",
+  "password": "Gmail123!"
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
+}
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  //RegisterModel
+}
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
+
+###
