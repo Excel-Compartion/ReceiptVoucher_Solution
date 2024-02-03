@@ -103,3 +103,26 @@ Content-Type: application/json
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
 
 ###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/users/api/users
+
+###
+
+POST {{ReceiptVoucher.Server_HostAddress}}/api/users/api/users
+Content-Type: application/json
+
+{
+  "FirstName": "John",
+  "LastName": "Doe",
+  "Email": "johndoe@example.com",
+  "UserName": "johndoe",
+  "Password": "P@ssw0rd",
+  "Roles": ["Role1"]
+  
+}
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/users/users
+
+###

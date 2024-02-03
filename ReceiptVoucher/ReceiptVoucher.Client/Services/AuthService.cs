@@ -2,8 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using ReceiptVoucher.Client.Services;
-using ReceiptVoucher.Core.Models;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
+using ReceiptVoucher.Core.Models.ResponseModels;
 
 namespace ReceiptVoucher.Client.Services
 {
