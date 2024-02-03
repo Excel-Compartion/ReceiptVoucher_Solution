@@ -1,12 +1,15 @@
-﻿@page "/Register"
+﻿
+@page "/Register"
 
 @using Blazored.LocalStorage
 @using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.Dtos.Auth
+@using ReceiptVoucher.Core.Models.ResponseModels
 @* @using _LoginLayout *@
 
 @rendermode InteractiveAuto
 
+@attribute [AllowAnonymous]
 
 @inject ReceiptVoucher.Client.Services.IAuthService _AuthService
 @inject ILocalStorageService _LocalStorage

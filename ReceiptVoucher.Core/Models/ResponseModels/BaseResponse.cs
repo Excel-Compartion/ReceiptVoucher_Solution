@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReceiptVoucher.Core.Models
+namespace ReceiptVoucher.Core.Models.ResponseModels
 {
     public class BaseResponse<T>(T? data, string message, List<string> errors = null, bool success = true)
     {
