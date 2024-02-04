@@ -25,12 +25,12 @@
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
-            <MudSelect SelectAll="true" Style="width:100%" T="RoleViewModel" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
+            <MudSelect SelectAll="true" Style="width:100%" T="string" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
 
 
                     @foreach (var role in RolesList)
                     {
-                    <MudSelectItem T="RoleViewModel" Value="@role">@role.RoleName</MudSelectItem>
+                    <MudSelectItem T="string" Value="@role.RoleName">@role.RoleName</MudSelectItem>
                     }
                 
 
@@ -93,7 +93,7 @@
     bool ReadOnlyStatus = false;
 
 
-    private IEnumerable<RoleViewModel> RolesListIEnumerable { get; set; } = new List<RoleViewModel>();
+    private IEnumerable<string> RolesListIEnumerable { get; set; } = new List<string>();
 
 
     protected override void OnParametersSet()
@@ -135,11 +135,16 @@
 
             List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
 
-            foreach (var role in RolesListIEnumerable)
+            foreach (var RoleName in RolesListIEnumerable)
             {
+                var Role = RolesList.Where(x => x.RoleName == RoleName).FirstOrDefault();
 
+                if(Role != null)
+                {
+                    RolesListFromIEn.Add(Role);
+                }
 
-                RolesListFromIEn.Add(role);
+               
 
             }
 
