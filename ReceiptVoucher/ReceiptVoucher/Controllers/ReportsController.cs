@@ -21,7 +21,9 @@ namespace ReceiptVoucher.Server.Controllers
         {
             var branch = await _unitOfWork.Branches.GetAllAsync();
 
-            if (branch == null || branch.Count() == 0) { return NotFound(); }
+            BranchesBarChartViewModel branchesBarChartViewModel = new BranchesBarChartViewModel();
+
+            if (branch == null || branch.Count() == 0) { return Ok(branchesBarChartViewModel); }
 
             // BranchesNames []
 
@@ -62,7 +64,7 @@ namespace ReceiptVoucher.Server.Controllers
                 }
             }
 
-            BranchesBarChartViewModel branchesBarChartViewModel = new BranchesBarChartViewModel();
+           
 
             branchesBarChartViewModel.BranchesNames = BranchesNames;
             branchesBarChartViewModel.Individual = Individual;

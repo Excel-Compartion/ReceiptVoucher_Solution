@@ -1,0 +1,202 @@
+﻿@inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
+
+<MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
+    <DialogContent>
+
+        <EditForm Model="@CreateUserModel" OnValidSubmit="Submit" Class="custom-form">
+
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.FirstName)" @bind-Value="@CreateUserModel.FirstName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاول" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.LastName)" @bind-Value="@CreateUserModel.LastName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاخير" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.UserName)" @bind-Value="@CreateUserModel.UserName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="اسم المستخدم" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
+            <MudSelect SelectAll="true" Style="width:100%" T="RoleViewModel" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
+
+
+                    @foreach (var role in RolesList)
+                    {
+                    <MudSelectItem T="RoleViewModel" Value="@role">@role.RoleName</MudSelectItem>
+                    }
+                
+
+            </MudSelect>
+
+
+
+
+            
+
+
+
+            @if (BtnName != ButtonTypes.Details)
+            {
+                <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                        <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                    </div>
+
+            }
+
+
+
+
+        </EditForm>
+
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public CreateUserModel? OriginalCreateUserModel { get; set; }
+
+
+    [Parameter]
+    public string BtnName { get; set; } = null!;
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
+
+
+    [Parameter]
+    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+
+
+    public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
+
+    bool ReadOnlyStatus = false;
+
+
+    private IEnumerable<RoleViewModel> RolesListIEnumerable { get; set; } = new List<RoleViewModel>();
+
+
+    protected override void OnParametersSet()
+    {
+        if (OriginalCreateUserModel == null)
+        {
+            CreateUserModel = new CreateUserModel();
+
+        }
+        else
+        {
+
+            CreateUserModel = new CreateUserModel
+                {
+                    FirstName = OriginalCreateUserModel.FirstName,
+                    LastName = OriginalCreateUserModel.LastName,
+                    UserName = OriginalCreateUserModel.UserName,
+                    Email = OriginalCreateUserModel.Email,
+                    Password = OriginalCreateUserModel.Password,
+                    ConfirmPassword = OriginalCreateUserModel.ConfirmPassword,
+                    Roles = OriginalCreateUserModel.Roles
+
+
+                };
+
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
+        }
+    }
+
+    async void Submit()
+    {
+
+        if (UserId == "0")
+        {
+            // The branch has no ID, so it's a new branch
+
+            List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
+
+            foreach (var role in RolesListIEnumerable)
+            {
+
+
+                RolesListFromIEn.Add(role);
+
+            }
+
+            CreateUserModel.Roles = RolesListFromIEn;
+
+
+            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
+            }
+
+
+        }
+
+        else
+        {
+
+            EditProfileViewModel editProfileViewModel = new EditProfileViewModel()
+
+                {
+
+                    UserId = UserId,
+                    FirstName = CreateUserModel.FirstName,
+                    LastName = CreateUserModel.LastName,
+                    UserName = CreateUserModel.UserName,
+                    Email = CreateUserModel.Email
+                };
+
+
+
+
+            var response = await Http.PutAsJsonAsync("api/Users", CreateUserModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم تعديل الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"لم يتم تعديل الحساب. Error: {response.StatusCode}", Severity.Error);
+            }
+
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+
+        // Trigger the OnClose event
+        OnClose.InvokeAsync(true);
+
+    }
+
+
+    void Cancel() => MudDialog.Cancel();
+
+
+}

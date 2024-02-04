@@ -1,11 +1,9 @@
-﻿
-
-using ReceiptVoucher.Core.Models;
-using ReceiptVoucher.Core.Models.Dtos.Auth;
+﻿using ReceiptVoucher.Core.Models.Dtos.Auth;
+using ReceiptVoucher.Core.Models.ResponseModels;
 
 namespace ReceiptVoucher.Client.Services
 {
-	public interface IAuthService
+    public interface IAuthService
 	{
 		Task<BaseResponse<AuthModel>> RegisterAsync(RegisterModel registerModel);
 		Task<BaseResponse<AuthModel>> LoginAsync(LoginModel loginModel);
