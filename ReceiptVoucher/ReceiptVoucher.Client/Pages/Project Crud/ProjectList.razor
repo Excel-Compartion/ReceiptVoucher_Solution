@@ -36,79 +36,77 @@
 
 </p>
 
-<AuthorizeView Roles="@RolesNames.User">
 
-    <MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
-              Dense="true" Hover="true" @ref="table">
-        <ToolBarContent>
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
+            Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
 
-            <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
-                <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
-                <span>إضافة</span>
-            </MudButton>
+        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
+            <span>إضافة</span>
+        </MudButton>
 
 
-            <MudSpacer />
-            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
-        </ToolBarContent>
+    </ToolBarContent>
 
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Project">اسم المشروع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">حاله التفعيل</MudTableSortLabel></MudTh>
 
-            <MudTh><MudTableSortLabel SortLabel="Date_field" T="Project">تاريخ الانشاء</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
-        </HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Project">تاريخ الانشاء</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
+    </HeaderContent>
 
-        <RowTemplate Context="MudContext">
+    <RowTemplate Context="MudContext">
 
         
-               <MudTd DataLabel="اسم المشروع">@MudContext.Name</MudTd>
+            <MudTd DataLabel="اسم المشروع">@MudContext.Name</MudTd>
 
             
-                <MudTd DataLabel="حاله التفعيل">
+            <MudTd DataLabel="حاله التفعيل">
                 
-                    @{
-                    var isActive = @MudContext.IsActive;
+                @{
+                var isActive = @MudContext.IsActive;
 
-                    if (isActive)
-                    {
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Color="Color.Success" Class="icon-color" />
-                    }
+                if (isActive)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Color="Color.Success" Class="icon-color" />
+                }
 
-                    else
-                    {
-                        <MudIcon Icon="@Icons.Material.Filled.HighlightOff" Color="Color.Error" Class="icon-color" />
-                    }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.HighlightOff" Color="Color.Error" Class="icon-color" />
+                }
 
-                    }
+                }
 
-                </MudTd>
+            </MudTd>
 
-            <MudTd DataLabel="اسم المشروع">@MudContext.Date</MudTd>
-                <MudTd DataLabel="الاجراءت">
+        <MudTd DataLabel="اسم المشروع">@MudContext.Date</MudTd>
+            <MudTd DataLabel="الاجراءت">
 
-                    <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
-                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(MudContext.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
-                    </MudButtonGroup>
+                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(MudContext.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+                </MudButtonGroup>
 
-                </MudTd>
-        </RowTemplate>
-        <NoRecordsContent>
-                <MudText class="NotFound">@ResponseMessage</MudText>
-        </NoRecordsContent>
-        <LoadingContent>
-            <MudText class="LodingNow">جاري التحميل...</MudText>
-        </LoadingContent>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
-</AuthorizeView>
+            </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+            <MudText class="NotFound">@ResponseMessage</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText class="LodingNow">جاري التحميل...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 
 
