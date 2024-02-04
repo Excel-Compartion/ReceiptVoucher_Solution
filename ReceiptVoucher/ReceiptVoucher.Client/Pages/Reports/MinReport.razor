@@ -176,7 +176,7 @@
 
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
@@ -206,6 +206,7 @@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
+        
             <MudText class="NotFound">@ResponseMessage</MudText>
         </NoRecordsContent>
         <LoadingContent>
