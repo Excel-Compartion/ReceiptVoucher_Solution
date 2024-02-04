@@ -25,16 +25,21 @@
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
-            <MudSelect Label="المشروع" For="@(()=>CreateUserModel.Roles)" @bind-Value="@CreateUserModel.Roles" ReadOnly="@ReadOnlyStatus">
-                <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
-
-                @foreach (var role in Roles)
-                {
-                    <MudSelectItem Value="@role">@role.RoleName</MudSelectItem>
+            <MudSelect SelectAll="true" Style="width:100%" T="RoleViewModel" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
 
 
-                }
+                    @foreach (var role in RolesList)
+                    {
+                    <MudSelectItem T="RoleViewModel" Value="@role">@role.RoleName</MudSelectItem>
+                    }
+                
+
             </MudSelect>
+
+
+
+
+            
 
 
 
@@ -80,11 +85,16 @@
 
 
     [Parameter]
-    public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
+    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+
 
     public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
 
     bool ReadOnlyStatus = false;
+
+
+    private IEnumerable<RoleViewModel> RolesListIEnumerable { get; set; } = new List<RoleViewModel>();
+
 
     protected override void OnParametersSet()
     {
@@ -119,11 +129,21 @@
     async void Submit()
     {
 
-        if (UserId == "")
+        if (UserId == "0")
         {
             // The branch has no ID, so it's a new branch
 
+            List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
 
+            foreach (var role in RolesListIEnumerable)
+            {
+
+
+                RolesListFromIEn.Add(role);
+
+            }
+
+            CreateUserModel.Roles = RolesListFromIEn;
 
 
             var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);

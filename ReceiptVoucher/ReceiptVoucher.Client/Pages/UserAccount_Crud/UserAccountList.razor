@@ -1,5 +1,7 @@
 ﻿
 @page "/Accounts"
+@using Microsoft.AspNetCore.Identity
+@using ReceiptVoucher.Core.Models.ResponseModels
 @rendermode InteractiveAuto
 
 @inject HttpClient Http
@@ -130,11 +132,18 @@
     {
         try
         {
-            var response = await Http.GetFromJsonAsync<List<RoleViewModel>>("api/Projects/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<BaseResponse<List<IdentityRole>>>("api/Roles");
 
-            if (response != null)
+
+
+            if (response != null && response.Data != null)
             {
-                RolesList = response;
+                var RolesData = response.Data;
+
+                foreach (var roleData in RolesData)
+                {
+                    RolesList.Add(new RoleViewModel { RoleId = roleData.Id, RoleName = roleData.Name,IsSelected=false });
+                }
             }
 
 
@@ -224,7 +233,8 @@
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
 
         parameters.Add("BtnName", "اضافه");
-
+        parameters.Add("RolesList", RolesList);
+        parameters.Add("UserId", "0");
         _DialogService.Show<_UserAccount_Add_Dialog>("اضافة حساب جديد", parameters);
     }
 
@@ -235,6 +245,10 @@
         parameters.Add("OriginalUserViewModel", UserViewModel);
 
         parameters.Add("RolesList", RolesList);
+
+        parameters.Add("UserId", UserViewModel.Id);
+
+       
 
         var options = new DialogOptions() { CloseButton = true };
 
