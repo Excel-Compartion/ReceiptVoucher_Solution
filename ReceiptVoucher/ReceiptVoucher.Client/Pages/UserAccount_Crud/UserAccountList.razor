@@ -7,6 +7,8 @@
 @inject IDialogService _DialogService 
 @inject ISnackbar _Snackbar
 
+
+
 <PageTitle>Makarim</PageTitle>
 
 <style>
@@ -57,6 +59,8 @@
         <MudTh><MudTableSortLabel  T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel  T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
 
+        <MudTh><MudTableSortLabel T="UserViewModel"> الصلاحية</MudTableSortLabel></MudTh>
+
        
         <MudTh><MudTableSortLabel  T="UserViewModel">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
@@ -66,10 +70,29 @@
         
            <MudTd DataLabel="اسم المستخدم">@(context.FirstName + context.LastName)</MudTd>
 
-            
-           
+        <MudTd DataLabel="البريد  الالكتروني">@context.Email</MudTd>
 
-        <MudTd DataLabel="اسم المشروع">@context.Email</MudTd>
+            <MudTd DataLabel="الصلاحية">
+
+                @{
+                var Roles = "";
+
+                if (context.Roles != null &&context.Roles.Count()!=0)
+                {
+                    foreach (var role in context.Roles)
+                    {
+                        Roles += role + " ";
+                    }
+
+                }
+                
+            }
+
+            @Roles
+
+            </MudTd>
+
+
             <MudTd DataLabel="الاجراءت">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
@@ -113,7 +136,7 @@
     {
         try
         {
-            var response = await Http.GetFromJsonAsync<List<UserViewModel>>("api/؟/GetAllAsync"); // قم بالاستبدال هنا
+            var response = await Http.GetFromJsonAsync<List<UserViewModel>>("api/Users"); // قم بالاستبدال هنا
 
             if (response != null)
             {
@@ -176,7 +199,7 @@
 
         parameters.Add("BtnName", "اضافه");
 
-        _DialogService.Show<_Account_Add_Dialog>("اضافة حساب جديد", parameters);
+        _DialogService.Show<_UserAccount_Add_Dialog>("اضافة حساب جديد", parameters);
     }
 
     private void OpenEditDialog(UserViewModel UserViewModel, string optionalParameter = "")
@@ -190,12 +213,12 @@
         if (optionalParameter == ButtonTypes.Details)
         {
             parameters.Add("BtnName", ButtonTypes.Details);
-            _DialogService.Show<_Account_Add_Dialog>("تفاصيل الحساب", parameters, options);
+            _DialogService.Show<_UserAccount_Add_Dialog>("تفاصيل الحساب", parameters, options);
         }
         else
         {
             parameters.Add("BtnName", "تعديل");
-            _DialogService.Show<_Account_Add_Dialog>("تعديل الحساب", parameters, options);
+            _DialogService.Show<_UserAccount_Add_Dialog>("تعديل الحساب", parameters, options);
         }
 
     }
@@ -219,8 +242,8 @@
 
         if (selectedUserViewModelId != null)
         {
-            var parameters = new DialogParameters() { { "UserViewModelName", selectedUserViewModelId.FirstName + selectedUserViewModelId.LastName } };
-            var dialog = _DialogService.Show<_AccountConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+            var parameters = new DialogParameters() { { "UserAccountName", selectedUserViewModelId.FirstName + " " + selectedUserViewModelId.LastName } };
+            var dialog = _DialogService.Show<_UserAccountConfirmDeleteDialog>("الرجاء التأكيد", parameters);
 
             var result = await dialog.Result;
 
@@ -229,7 +252,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"api/?/{UserViewModelId}"); // قم باالاستبدال هنا
+                var response = await Http.DeleteAsync($"api/Users/{selectedUserViewModelId.Id}"); // قم باالاستبدال هنا
 
                 if (response.IsSuccessStatusCode)
                 {

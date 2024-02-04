@@ -1,0 +1,125 @@
+﻿@inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
+
+
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public CreateUserModel? OriginalCreateUserModel { get; set; }
+
+
+    [Parameter]
+    public string BtnName { get; set; } = null!;
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
+
+
+
+
+    public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
+
+    bool ReadOnlyStatus = false;
+
+    protected override void OnParametersSet()
+    {
+        if (OriginalCreateUserModel == null)
+        {
+            CreateUserModel = new CreateUserModel();
+
+        }
+        else
+        {
+
+            CreateUserModel = new CreateUserModel
+                {
+                    FirstName = OriginalCreateUserModel.FirstName,
+                    LastName = OriginalCreateUserModel.LastName,
+                    UserName = OriginalCreateUserModel.UserName,
+                    Email = OriginalCreateUserModel.Email,
+                    Password = OriginalCreateUserModel.Password,
+                    ConfirmPassword = OriginalCreateUserModel.ConfirmPassword,
+                    Roles = OriginalCreateUserModel.Roles
+
+
+                };
+
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
+        }
+    }
+
+    async void Submit()
+    {
+
+        if (UserId == "")
+        {
+            // The branch has no ID, so it's a new branch
+
+
+
+
+            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
+            }
+
+
+        }
+
+        else
+        {
+
+                EditProfileViewModel editProfileViewModel = new EditProfileViewModel()
+
+                {
+
+                    UserId = UserId,
+                    FirstName = CreateUserModel.FirstName,
+                    LastName = CreateUserModel.LastName,
+                    UserName = CreateUserModel.UserName,
+                    Email = CreateUserModel.Email
+                };
+
+
+
+
+            var response = await Http.PutAsJsonAsync("api/Users", CreateUserModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم تعديل الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"لم يتم تعديل الحساب. Error: {response.StatusCode}", Severity.Error);
+            }
+
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+
+        // Trigger the OnClose event
+        OnClose.InvokeAsync(true);
+
+    }
+
+
+    void Cancel() => MudDialog.Cancel();
+
+
+}
