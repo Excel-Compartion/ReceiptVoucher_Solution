@@ -124,9 +124,30 @@
     private int totalItems;
     private string? searchString ;
 
+    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<RoleViewModel>>("api/Projects/GetAllAsync");
+
+            if (response != null)
+            {
+                RolesList = response;
+            }
+
+
+        }
+        catch { }
+    }
+
+
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
+
 
     public IEnumerable<UserViewModel> data = new List<UserViewModel>();
 
@@ -182,6 +203,11 @@
 
         if (table != null) {  table.ReloadServerData(); }
     }
+
+
+
+
+
 }
 
 
@@ -207,6 +233,8 @@
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
         parameters.Add("OriginalUserViewModel", UserViewModel);
+
+        parameters.Add("RolesList", RolesList);
 
         var options = new DialogOptions() { CloseButton = true };
 
