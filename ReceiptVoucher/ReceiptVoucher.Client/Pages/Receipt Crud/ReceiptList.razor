@@ -92,8 +92,11 @@
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
                     <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" @onclick="@(() => SendSMSMessage(context))" StartIcon="@Icons.Material.Filled.SendToMobile">ارسال</MudButton>
+
 
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+
                 </MudButtonGroup>
 
 
@@ -144,11 +147,25 @@
     public bool PrintActive = false;
 
     public string ResponseMessage = "لم يتم العثور على سجلات";
-   
+
     void PrintReceipt(int id)
     {
         var url = $"api/Receipts/GetReceiptRdcl/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+
+
+   async void SendSMSMessage(Receipt receipt)
+    {
+        var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
+        if (response.IsSuccessStatusCode)
+        {
+            _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
+        }
+        else
+        {
+            _Snackbar.Add($"فشل في ارسال رسالة ال SMS : {response.Content}", Severity.Error);
+        }
     }
 
 

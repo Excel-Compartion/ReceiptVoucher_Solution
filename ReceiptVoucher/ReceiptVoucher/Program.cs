@@ -47,6 +47,7 @@ builder.Services.AddTransient<IBranchRepository, BranchRepository>();
 
 // here inject all Services --------
 
+builder.Services.AddTransient<ISMSMessage, SMSMessage>();
 builder.Services.AddTransient<ISubProjectRepository, SubProjectRepository>();
 builder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
 
