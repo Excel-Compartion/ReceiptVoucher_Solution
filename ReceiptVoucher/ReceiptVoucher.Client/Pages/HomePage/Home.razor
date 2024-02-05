@@ -1,12 +1,15 @@
 ﻿@page "/home"
+@using System.Security.Claims
 @* @rendermode InteractiveAuto *@
 @rendermode @(new InteractiveServerRenderMode(false) )
 
 
 @* @attribute [Authorize] *@
-
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager _NavigationManager
 
 <PageTitle>Makarim</PageTitle>
+
 
 <br />
 <!--اسم الصفحه-->
@@ -21,3 +24,29 @@
 <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
 
 <ChartReports/>
+    
+
+
+
+@code {
+
+    private string userRole = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        List<string> userRoles = user.FindAll(c => c.Type == "roles").Select(c => c.Value).ToList(); // Get all roles
+
+        if (!userRoles.Any(a=> a.Contains(RolesNames.Admin)))
+        {
+            _NavigationManager.NavigateTo("/login");
+            _NavigationManager.Refresh();
+        }
+        
+    }
+
+
+}
