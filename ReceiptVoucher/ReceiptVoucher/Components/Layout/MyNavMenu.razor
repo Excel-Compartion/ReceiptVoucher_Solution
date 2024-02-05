@@ -6,51 +6,57 @@
 
     <MudImage Src="images\logo.svg" Style="margin-top:-2%;margin-right:10px" Width="200" Height="100" Alt="Icon" />
 
-    <hr style="color: var(--color-custom); ;margin-top:10%" />
+    <hr style="color: var(--color-custom); ;margin-top:0%" />
 
 
-    <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right">
+    <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right navLinkBtn">
         <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
         الصفحة الرئيسية
     </MudNavLink>
 
     <AuthorizeView>
-        <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
             المراكز الاعلامية
         </MudNavLink>
-        <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.FileCopy" Class="icon-color" />
             المشاريع
         </MudNavLink>
-        <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Class="icon-color" />
             المشاريع الفرعية
         </MudNavLink>
-        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
             السندات
         </MudNavLink>
-        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
             التقارير
         </MudNavLink>
 
-        <MudNavLink Href="/Accounts" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Accounts" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.SupervisorAccount" Class="icon-color" />
             الحسابات
         </MudNavLink>
     </AuthorizeView>
 
-    <hr style="color: var(--color-custom); ;margin-top:9%" />
-    <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+    <hr style="color: var(--color-custom); ;margin-top:4%" />
+    <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
         <MudIcon Icon="@Icons.Material.Filled.AccountBox" Class="icon-color" />
         الصفحة الشخصية
-    </MudNavLink> 
-    <MudNavLink   Class="mud-nav-link-right">
+    </MudNavLink>
+    <MudNavLink Href="/Accounts" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+        <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
+        تسجيل خروج
+    </MudNavLink>
+
+@*     <MudNavLink   Class="mud-nav-link-right">
+
         <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
         
-    </MudNavLink>
+    </MudNavLink> *@
 
 
 
