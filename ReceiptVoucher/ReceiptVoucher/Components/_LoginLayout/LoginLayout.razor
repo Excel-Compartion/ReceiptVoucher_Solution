@@ -13,15 +13,15 @@
    
     <MudLayout>
         <MudAppBar class="main-header" Style="background-color: var(--color-teal);">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-            
+@*             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+ *@            
             <MudImage Src="images\header-logo.png" Style="margin-left:20px" Width="150" Height="50" Alt="Icon" />
 
             <MudImage Src="images\vision.png" Style="margin-right:10px;margin-left:2%;" Width="70" Height="35" Alt="Icon" />
         </MudAppBar>
-        <MudDrawer @bind-Open="@_drawerOpen">
+       @*  <MudDrawer @bind-Open="@_drawerOpen">
          
-        </MudDrawer>
+        </MudDrawer> *@
         <MudMainContent>
             <MudContainer >
                 @Body
@@ -34,12 +34,12 @@
 
 
 @code {
-    bool _drawerOpen = true;
+    // bool _drawerOpen = true;
 
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
+    // void DrawerToggle()
+    // {
+    //     _drawerOpen = !_drawerOpen;
+    // }
 }
 
 
