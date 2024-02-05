@@ -50,7 +50,7 @@
             <h4 class="">البريد الإلكتروني: <span>mrai.hlabi@gmail.com</span></h4>
         </MudItem>
         <MudItem xs="12">
-            <MudButton Class="custom-btn mx-auto" Variant="Variant.Filled" Color="Color.Primary">
+            <MudButton Class="custom-btn mx-auto" Variant="Variant.Filled" Color="Color.Primary" OnClick="ToggleContainerPass">
                 <MudIcon Icon="@Icons.Material.Filled.VpnKey" Title="add" />
                 <span>تغيير كلمة المرور</span>
             </MudButton>
@@ -65,7 +65,7 @@
 
 
 
-<div class="continerPass">
+<div class="continerPass" style="display: @(showContainerPass ? "block" : "none")">
     <h5>تغيير كلمة المرور</h5>
     <EditForm Model="request" OnValidSubmit="ChangePassword">
         <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -115,5 +115,12 @@
         userName = user.FindFirstValue("roles"); // or "UserName"
     }
 
+
+    bool showContainerPass = false;
+
+    private void ToggleContainerPass()
+    {
+        showContainerPass = !showContainerPass;
+    }
   
 }
