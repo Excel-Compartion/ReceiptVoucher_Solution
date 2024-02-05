@@ -142,3 +142,11 @@ POST {{ReceiptVoucher.Server_HostAddress}}/api/roles?roleName=Gest
 GET {{ReceiptVoucher.Server_HostAddress}}/api/users
 
 ###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/users
+
+###
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/users
+
+###
