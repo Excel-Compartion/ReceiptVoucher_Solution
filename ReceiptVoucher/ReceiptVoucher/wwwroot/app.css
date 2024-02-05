@@ -347,6 +347,7 @@ h1:focus {
     box-shadow: -1px 4px 5px 0px #8685856b;
     margin-top: 15px;
     position: relative;
+    padding-bottom:0px
 }
 .continerPass h5 {
     color: var(--color-custom);
@@ -365,9 +366,10 @@ h1:focus {
 }
 .continerPass p{
     text-align: center;
-    margin-top: 26px;
+    margin-top: 15px;
     font-size: 17px;
     font-weight: 500;
     color: var(--mud-palette-success-darken);
+    margin-bottom: 10px;
 }
 /*E Profile page*/
