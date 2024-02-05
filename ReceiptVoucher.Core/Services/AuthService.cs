@@ -11,11 +11,11 @@ using ReceiptVoucher.Core.Services;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Helper;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
-using ReceiptVoucher.Core.Models;
+using ReceiptVoucher.Core.Models.ResponseModels;
 
 namespace ReceiptVoucher.Core.Services
 {
-	public class AuthService : IAuthService
+    public class AuthService : IAuthService
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;

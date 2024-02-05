@@ -7,7 +7,7 @@
 @page "/UserProfile"
 @using ReceiptVoucher.Core.Models.Dtos.Auth
 @using System.Security.Claims
-@attribute [Authorize]
+@* @attribute [Authorize] *@
 
 @inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
 @inject AuthenticationStateProvider _AuthenticationStateProvider
@@ -60,7 +60,7 @@
     {
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        userName = user.FindFirstValue("Email"); // or "UserName"
+        userName = user.FindFirstValue("roles"); // or "UserName"
     }
 
   
