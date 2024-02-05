@@ -17,11 +17,10 @@
     :root {
         --color-custom: #3090C7;
     }
+
     .date-picker-color {
         background-color: #DBE9FA;
     }
-
-
 
 </style>
 <br />
@@ -36,7 +35,7 @@
 
         التقارير
 
-        
+
 
 
     </span>
@@ -53,15 +52,15 @@
     </MudRadioGroup>
 
 
-   
 
-    
+
+
 
     <MudGrid>
         <MudItem xs="12" sm="6">
 
             <!--Project Select-->
-            <MudSelect  Style="width:100%" T="string" SelectAll="true" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" ValueChanged="UnCheckedChange">
+            <MudSelect Style="width:100%" T="string" SelectAll="true" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" ValueChanged="UnCheckedChange">
 
                 @if (Projects != null)
                 {
@@ -76,7 +75,7 @@
 
 
         @{
-            if(SelectProject.Count()==0 && SelectSubProject.Count() != 0)
+            if (SelectProject.Count() == 0 && SelectSubProject.Count() != 0)
             {
                 UnCheckedChange();
             }
@@ -96,7 +95,7 @@
                         isUnChecked = false;
                         StateHasChanged(); // إعادة تقديم العنصر
 
-                      
+
                     }
 
                     @foreach (var subProjects in SubProjects)
@@ -119,7 +118,7 @@
 
 
 
-   
+
 
 
     <!--Center Select-->
@@ -127,10 +126,26 @@
 
         @if (Branches != null)
         {
-            @foreach (var branch in Branches)
+            if (UserBranchId != null)
             {
-                <MudSelectItem T="string" Value="@branch.Name">@branch.Name</MudSelectItem>
+                @foreach (var branch in Branches)
+                {
+                    if (branch.Id == UserBranchId)
+                    {
+                        <MudSelectItem T="string" Value="@branch.Name">@branch.Name</MudSelectItem>
+                    }
+
+                }
+
             }
+            else
+            {
+                @foreach (var branch in Branches)
+                {
+                    <MudSelectItem T="string" Value="@branch.Name">@branch.Name</MudSelectItem>
+                }
+            }
+
         }
 
     </MudSelect>
@@ -148,15 +163,15 @@
 
         <MudGrid>
             <MudItem xs="6">
-                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth1" Label="من التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog"  />
+                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth1" Label="من التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" />
             </MudItem>
             <MudItem xs="6">
-                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth2" Label="الى التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog"  />
+                <MudDatePicker Class="date-picker-color" Color="Color.Info" Style="width: 100%;" @bind-Date="selectedMonth2" Label="الى التاريخ" OpenTo="OpenTo.Month" Variant="Variant.Filled" Formated="true" PickerVariant="PickerVariant.Dialog" />
             </MudItem>
         </MudGrid>
 
 
-      
+
 
 
     }
@@ -183,7 +198,14 @@
         <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+
+        @{
+            if (UserBranchId == null)
+            {
+                <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+
+            }
+        }
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
@@ -194,8 +216,13 @@
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+
+            @if (UserBranchId == null)
+        {
             <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
-            <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+        }
+
+        <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
@@ -223,12 +250,12 @@
 
     @code {
     private MudTable<Receipt>? table;
-    private string? searchString ;
+    private string? searchString;
     private DateTime? selectedDate = DateTime.Now;
     private DateTime? selectedMonth1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     private DateTime? selectedMonth2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
 
-    private string RadioDateType=null!;
+    private string RadioDateType = null!;
     private string Day = "Day";
     private string Month = "Month";
 
@@ -258,7 +285,7 @@
 
     private List<string> SelectSubProjectList = new List<string>();
 
-
+    public int? UserBranchId { get; set; } = 42;
 
     void UnCheckedChange()
     {
@@ -268,7 +295,7 @@
 
             SelectProjectCount = SelectProject.Count();
 
-            if (SelectSubProject.Count() != 0 && SelectProject.Count()!=0)
+            if (SelectSubProject.Count() != 0 && SelectProject.Count() != 0)
             {
                 foreach (var selectSubProject in SelectSubProject)
                 {
@@ -323,7 +350,7 @@
 
 
         }
-        catch {  }
+        catch { }
 
         try
         {
@@ -417,19 +444,19 @@
 
 
                 if (receipts != null) { data = receipts; }
-                
+
                 if (table != null) { await table.ReloadServerData(); }
-                
+
             }
-            catch{}
-       
+            catch { }
+
 
         }
     }
 
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
-       
+
 
         if (!string.IsNullOrWhiteSpace(searchString))
         {
@@ -485,7 +512,7 @@
     {
         searchString = text;
         if (table != null) { table.ReloadServerData(); }
-        
+
     }
 
     private void OpenDetailsDialog(Receipt receipt)

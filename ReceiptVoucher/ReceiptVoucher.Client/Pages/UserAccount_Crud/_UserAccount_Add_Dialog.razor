@@ -87,6 +87,7 @@
     [Parameter]
     public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
 
+ 
 
     public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
 
@@ -94,6 +95,8 @@
 
 
     private IEnumerable<string> RolesListIEnumerable { get; set; } = new List<string>();
+
+
 
 
     protected override void OnParametersSet()
