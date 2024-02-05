@@ -18,14 +18,14 @@
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.UserName)" @bind-Value="@CreateUserModel.UserName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="اسم المستخدم" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
-            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالكتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
-            <MudSelect SelectAll="true" Style="width:100%" T="string" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
+            <MudSelect SelectAll="true" Style="width:100%" T="string" Label="الصلاحيات" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
 
 
                     @foreach (var role in RolesList)

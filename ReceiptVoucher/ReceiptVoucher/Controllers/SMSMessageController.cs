@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Interfaces;
 using ReceiptVoucher.Server.Components;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace ReceiptVoucher.Server.Controllers
@@ -21,10 +22,32 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpPost]
         public  IActionResult SendSMSMessage(Receipt receipt)
         {
-            if (!ModelState.IsValid || receipt.Mobile==null)
-                return BadRequest();
+            if (!ModelState.IsValid )
+                return BadRequest("بيانات السند غير صالحه");
 
-        
+
+
+            if(receipt.Mobile == null || receipt.Mobile == "")
+            {
+                return BadRequest("حقل الرقم غير مدخل");
+            }
+
+            string receiptMobile = receipt.Mobile;
+
+            // إزالة المسافات من الرقم
+            string mobileWithoutSpaces = receiptMobile.Replace(" ", "");
+
+
+
+            // التحقق مما إذا كانت القيمة المتبقية هي عبارة عن أرقام فقط
+            bool isDigitsOnly = mobileWithoutSpaces.All(char.IsDigit);
+
+            if (isDigitsOnly==false)
+            {
+                return BadRequest("الرقم غير صالح");
+            }
+         
+
 
             String sendingResult;
             String username = "966535155222";
