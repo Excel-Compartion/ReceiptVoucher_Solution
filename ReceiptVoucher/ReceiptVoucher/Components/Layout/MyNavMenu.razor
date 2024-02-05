@@ -5,7 +5,10 @@
 <MudNavMenu Color="Color.Info" Bordered="true">
 
     <MudImage Src="images\logo.svg" Style="margin-top:-2%;margin-right:10px" Width="200" Height="100" Alt="Icon" />
-    <hr style="color:deepskyblue ;margin-top:0%" />
+
+    <hr style="color: var(--color-custom); ;margin-top:10%" />
+
+
     <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right">
         <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
         الصفحة الرئيسية
@@ -39,10 +42,10 @@
         </MudNavLink>
     </AuthorizeView>
 
-    
+    <hr style="color: var(--color-custom); ;margin-top:9%" />
     <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
-        UserProfile
+        <MudIcon Icon="@Icons.Material.Filled.AccountBox" Class="icon-color" />
+        الصفحة الشخصية
     </MudNavLink> 
     <MudNavLink   Class="mud-nav-link-right">
         <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
