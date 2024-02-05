@@ -49,7 +49,7 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] CreateUserModel model)
+        public async Task<ActionResult> CreateUser(CreateUserModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -215,7 +215,7 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(new BaseResponse<string>(null, "تم تعديل صلاحيات حساب المستخدم بنجاح", null, true));
         }
 
-        [HttpDelete]
+        [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             var userInDB = await _userManager.FindByIdAsync(userId);
