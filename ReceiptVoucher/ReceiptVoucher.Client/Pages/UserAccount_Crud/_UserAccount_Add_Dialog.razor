@@ -18,21 +18,27 @@
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.UserName)" @bind-Value="@CreateUserModel.UserName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="اسم المستخدم" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
-            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالكتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
-            <MudSelect SelectAll="true" Style="width:100%" T="RoleViewModel" Label="المراكز" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
+            <MudSelect Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
+                @{
+                    
+                        @foreach (var branch in Branches)
+                        {
+
+                            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
 
 
-                    @foreach (var role in RolesList)
-                    {
-                    <MudSelectItem T="RoleViewModel" Value="@role">@role.RoleName</MudSelectItem>
-                    }
-                
+                        }
+                    
+
+                }
 
             </MudSelect>
 
@@ -84,16 +90,22 @@
     public string UserId { get; set; } = null!;
 
 
-    [Parameter]
-    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+    // [Parameter]
+    // public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
 
+    [Parameter]
+    public List<Branch> Branches { get; set; } = new List<Branch>();
+
+ 
 
     public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
 
     bool ReadOnlyStatus = false;
 
 
-    private IEnumerable<RoleViewModel> RolesListIEnumerable { get; set; } = new List<RoleViewModel>();
+    private IEnumerable<string> RolesListIEnumerable { get; set; } = new List<string>();
+
+
 
 
     protected override void OnParametersSet()
@@ -114,7 +126,8 @@
                     Email = OriginalCreateUserModel.Email,
                     Password = OriginalCreateUserModel.Password,
                     ConfirmPassword = OriginalCreateUserModel.ConfirmPassword,
-                    Roles = OriginalCreateUserModel.Roles
+                    Role = OriginalCreateUserModel.Role,
+                    BranchId = OriginalCreateUserModel.BranchId
 
 
                 };
@@ -131,30 +144,36 @@
 
         if (UserId == "0")
         {
-            // The branch has no ID, so it's a new branch
+            // // The branch has no ID, so it's a new branch
 
-            List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
+            // List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
 
-            foreach (var role in RolesListIEnumerable)
-            {
+            // foreach (var RoleName in RolesListIEnumerable)
+            // {
+            //     var Role = RolesList.Where(x => x.RoleName == RoleName).FirstOrDefault();
+
+            //     if(Role != null)
+            //     {
+            //         RolesListFromIEn.Add(Role);
+            //     }
+
+               
+
+            // }
+
+            
+            // CreateUserModel.Role = RolesListFromIEn;
 
 
-                RolesListFromIEn.Add(role);
-
-            }
-
-            CreateUserModel.Roles = RolesListFromIEn;
-
-
-            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
-            if (response.IsSuccessStatusCode)
-            {
-                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
-            }
-            else
-            {
-                _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
-            }
+            // var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            // }
+            // else
+            // {
+            //     _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
+            // }
 
 
         }
@@ -170,7 +189,9 @@
                     FirstName = CreateUserModel.FirstName,
                     LastName = CreateUserModel.LastName,
                     UserName = CreateUserModel.UserName,
-                    Email = CreateUserModel.Email
+                    Email = CreateUserModel.Email,
+                    BranchId = CreateUserModel.BranchId
+                    
                 };
 
 

@@ -28,13 +28,26 @@
 
 <section class="">
     <div class="container-fluid h-custom">
-        <div class="form-img row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-6 col-xl-5">
+        <div class="form-img row d-flex justify-content-around h-100">
+            <div class="col-12 col-md-6 col-xl-5 p-0">
                 <img src="images\loginicon.jpg"
                     class="img-fluid" alt="Sample image">
             </div>
             <div class="col-12 col-md-6 col-xl-4 offset-xl-1"
-                style="border: 1px solid gainsboro;border-radius:3px;padding:1%;margin-bottom: 2rem;">
+                 style="padding: 2%;margin-bottom: 2rem;">
+
+                <p style=" margin-bottom: 5rem;">
+
+                    <b style="color:dodgerblue;font-size:xx-large">|</b>
+                    <span class="mainTitle">
+
+                        <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
+
+                        تسجيل الدخول
+
+                    </span>
+
+                </p>
 
                 <EditForm Model="model" OnValidSubmit="HandleLogin"  Class="custom-form">
                     <DataAnnotationsValidator />
@@ -43,27 +56,26 @@
                         class="form-control form-control-lg" For="@(()=>model.Email)" @bind-Value="@model.Email"
                         Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
                     
-                    <br />
                     
                     <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر"
                         Variant="Variant.Text" For="@(()=>model.Password)" @bind-Value="@model.Password" />
                     
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-end mt-2">
                         <!-- Checkbox -->
-                        <div class="form-check mb-0">
+@*                         <div class="form-check mb-0">
                             <MudCheckBox Size="Size.Small" @bind-Value="@model.RemmberMe" Dense="true"
                                 Color="Color.Info" class="form-check-input me-2" id="form2Example3"></MudCheckBox>
                             <label class="form-check-label" for="form2Example3">
                                 تذكرني
                             </label>
-                        </div>
-                        <a href="#!" class="text-body">هل نسيت كلمة المرور؟</a>
-                        <a href="register" class="text-body">انشاء حساب</a>
+                        </div> *@
+                        <a href="#!" class="text-body" style="color: var(--color-custom) !important;font-weight: 400;">هل نسيت كلمة المرور؟</a>
+                        @* <a href="register" class="text-body">انشاء حساب</a> *@
                     </div>
                     <div class="text-center text-lg-start mt-4 pt-2">
 
                         @* <MudButton ButtonType="ButtonType.Submit" class="btn btn-primary btn-lg" id="LoginBtn" style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">تسجيل الدخول</MudButton> *@
-                        <MudButton ButtonType="ButtonType.Submit" class="d-block m-auto mud-button" id="LoginBtn" style="padding-left: 2.5rem; padding-right: 2.5rem;background-color:var(--color-custom);color :white">تسجيل الدخول</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" class="d-block m-auto mud-button" id="LoginBtn" style='    font-family: "Tajawal", sans-serif;'>تسجيل الدخول</MudButton>
                     </div>
                 </EditForm>
                 <div class="text-danger">
@@ -75,7 +87,7 @@
     <div class="login-footer d-flex bg-primary p-2 align-center justify-center">
         <!-- Copyright -->
         <div class="text-white ">
-            Copyright © 2020. All rights reserved.
+            Copyright © 2024. جميع الحقوق محفوظة لدى جمعية مكارم.
         </div>
         <!-- Copyright -->
         <!-- Right -->

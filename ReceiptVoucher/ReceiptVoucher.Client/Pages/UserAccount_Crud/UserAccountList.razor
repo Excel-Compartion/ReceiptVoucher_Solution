@@ -126,25 +126,43 @@
     private int totalItems;
     private string? searchString ;
 
-    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+    public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
+
+    public List<Branch> Branches { get; set; } = new List<Branch>();
 
     protected override async Task OnInitializedAsync()
     {
+
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch { }
+
+
         try
         {
             var response = await Http.GetFromJsonAsync<BaseResponse<List<IdentityRole>>>("api/Roles");
 
 
 
-            if (response != null && response.Data != null)
-            {
-                var RolesData = response.Data;
+            // if (response != null && response.Data != null)
+            // {
+            //     var RolesData = response.Data;
 
-                foreach (var roleData in RolesData)
-                {
-                    RolesList.Add(new RoleViewModel { RoleId = roleData.Id, RoleName = roleData.Name,IsSelected=false });
-                }
-            }
+            //     foreach (var roleData in RolesData)
+            //     {
+            //         Roles.Add(new RoleViewModel { RoleId = roleData.Id, RoleName = roleData.Name, IsSelected = false });
+            //     }
+            // }
 
 
         }
@@ -233,8 +251,11 @@
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
 
         parameters.Add("BtnName", "اضافه");
-        parameters.Add("RolesList", RolesList);
         parameters.Add("UserId", "0");
+
+        // parameters.Add("Roles", Roles);
+        parameters.Add("Branches", Branches);
+
         _DialogService.Show<_UserAccount_Add_Dialog>("اضافة حساب جديد", parameters);
     }
 
@@ -244,11 +265,12 @@
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
         parameters.Add("OriginalUserViewModel", UserViewModel);
 
-        parameters.Add("RolesList", RolesList);
+       
 
         parameters.Add("UserId", UserViewModel.Id);
 
-       
+        // parameters.Add("Roles", Roles);
+        parameters.Add("Branches", Branches);
 
         var options = new DialogOptions() { CloseButton = true };
 
