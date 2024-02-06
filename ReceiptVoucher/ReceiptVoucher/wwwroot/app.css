@@ -72,20 +72,50 @@ h1:focus {
 
 
 /* Start Login */
-.testBody .container-fluid.h-custom{
+.testBody .container-fluid.h-custom {
     display: flex;
     align-items: center;
-    min-height: 100vh!important;
+    min-height: calc(100vh - 101px ) !important;
 }
 @media (min-width:768px) {
     .testBody .form-img{
         flex-direction: row-reverse;
     }
 }
-.testBody .login-footer{
+@media (min-width: 992px) {
+    .testBody .form-img {
+        width: 80%;
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+.testBody .container-fluid.h-custom::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background: #d8d8d84d; */
+    z-index: -1;
+    right: 0;
+}
+.testBody .container-fluid.h-custom .form-img {
+    box-shadow: 0 0 7px 5px #8888886b;
+    border-radius: 0 10px 0 10px;
+    overflow: hidden;
+    /*background: #c5c5c540;*/
+}
+.testBody #LoginBtn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: var(--color-custom);
+    color: white;
+    font-family: " Tajawal", sans-serif;
+}
+.testBody .login-footer {
     position: absolute;
     left: 0;
     width: 100%;
+    height: 37px;
     background-color: var(--color-teal) !important;
 }
 /* End Login */
@@ -306,7 +336,7 @@ h1:focus {
 }
 .logOutBtn a {
     border: 2px solid var(--bs-danger) !important;
-    color: var(--bs-danger) ;
+    color: var(--bs-danger) !important;
     /*font-size: 17px;*/
     font-weight: bold;
 }
