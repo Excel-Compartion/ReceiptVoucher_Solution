@@ -25,6 +25,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [EmailAddress(ErrorMessage = "صيغة كتابة الأيميل غير صحيحه. مثال : example@gmail.com")]
         public string? Email { get; set; }
 
+        public int? BranchId { get; set; }
+
 
         [Required]
         [StringLength(100, ErrorMessage = "يجب أن يكون {0} على الأقل {2} و كحد أقصى {1} حرفًا.", MinimumLength = 4)]
@@ -36,7 +38,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Compare("Password", ErrorMessage = "كلمة المرور وكلمة التأكيد غير متطابقتان")]
         public string ConfirmPassword { get; set; } = null!;
 
-        public List<RoleViewModel>? Roles { get; set; }
+        [Required(ErrorMessage = "Please select a role.")]
+        public RoleViewModel? Role { get; set; }
 
 
     }

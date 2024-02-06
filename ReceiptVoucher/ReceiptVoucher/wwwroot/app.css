@@ -90,17 +90,7 @@ h1:focus {
 }
 /* End Login */
 
-/* Start Receipt */
-.testBody .receipt-dialog{
-    max-width: 91% !important;
-    width: 91% !important;
-}
-@media (min-width:992px) {
-    .testBody .receipt-dialog{
-        max-width: 75% !important;
-    }
-}
-/* Start End */
+
 
 /* start custom-btn */
 .testBody .custom-btn{
@@ -124,8 +114,21 @@ h1:focus {
     font-weight: bold;
     font-size: 24px;
 }
+.testBody .mud-dialog.mud-dialog-width-sm.mud-dialog-rtl.custom-modal{
+    margin: 0 2%;
+}
 /* End dialog */
-
+/* Start Receipt */
+.testBody .receipt-dialog{
+    max-width: 96% !important;
+    width: 96% !important;
+}
+@media (min-width:992px) {
+    .testBody .receipt-dialog{
+        max-width: 75% !important;
+    }
+}
+/* Start End */
 /* Start headrt */
 .testBody .main-header .mud-toolbar.mud-toolbar-gutters.mud-toolbar-appbar{
     display: flex;
@@ -222,7 +225,7 @@ h1:focus {
     font-family: "Tajawal", sans-serif;
 }
 
-.testBody .mud-input-control>.mud-input-control-input-container>div.mud-input.mud-input-text{
+.testBody .search.mud-input-control>.mud-input-control-input-container>div.mud-input.mud-input-text{
     color: var(--color-custom);
     font-weight: 600;
     /* font-weight: 500; */
@@ -270,3 +273,103 @@ h1:focus {
 }
 
 /* E Home ChartReports */
+
+/*S NavBar*/
+.mud-nav-link-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /*font-size: 17px;*/
+    /*font-weight: bold;*/
+}
+.mud-nav-link {
+    border-radius: 8px;
+}
+.navLinkBtn .active,
+.navLinkBtn:hover a {
+    background-color: var(--color-custom) !important;
+    color: white !important;
+    border-radius: 8px;
+    font-weight: bold !important;
+    padding: 8px !important;
+}
+.mud-nav-link.active:not(.mud-nav-link-disabled) {
+    font-weight: bold !important;
+}
+.mud-nav-link.active svg,
+.mud-nav-link:hover svg {
+    color: white !important;
+}
+
+.logOutBtn a:hover svg {
+    color: white !important;
+}
+.logOutBtn a {
+    border: 2px solid var(--bs-danger) !important;
+    color: var(--bs-danger) ;
+    /*font-size: 17px;*/
+    font-weight: bold;
+}
+.logOutBtn a svg {
+    color: var(--bs-danger) !important;
+}
+.logOutBtn a:hover {
+    background-color: var(--bs-danger) !important;
+    background-color: #dc3545 !important;
+    color: white !important;
+    /* font-size: 17px; */
+    font-weight: bold;
+}
+/*E NavBar*/
+
+/*S Profile page*/
+.profileContainer {
+    border: 1px solid #c5c5c5;
+    padding: 70px 20px 20px;
+    border-radius: 8px;
+    box-shadow: -1px 4px 5px 0px #8685856b;
+    margin-top: 60px;
+    position: relative;
+}
+.profileContainer img {
+        width: 120px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 2px solid #b4b4b4;
+}
+.continerPass {
+    border: 1px solid #c5c5c5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: -1px 4px 5px 0px #8685856b;
+    margin-top: 15px;
+    position: relative;
+    padding-bottom:0px
+}
+.continerPass h5 {
+    color: var(--color-custom);
+    font-weight: bold;
+        margin-bottom: 20px;
+}
+.continerPass label{
+        font-weight: 500;
+    font-size: 16px;
+}
+.continerPass button {
+        margin-right: auto;
+    margin-left: auto;
+    display: block;
+    background-color: var(--color-custom);
+}
+.continerPass p{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--mud-palette-success-darken);
+    margin-bottom: 10px;
+}
+/*E Profile page*/

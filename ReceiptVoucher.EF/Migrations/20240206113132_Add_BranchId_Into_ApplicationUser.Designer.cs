@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReceiptVoucher.EF;
 
@@ -11,9 +12,11 @@ using ReceiptVoucher.EF;
 namespace ReceiptVoucher.EF.Migrations
 {
     [DbContext(typeof(ReceiptVoucherDbContext))]
-    partial class ReceiptVoucherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240206113132_Add_BranchId_Into_ApplicationUser")]
+    partial class Add_BranchId_Into_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,8 +313,8 @@ namespace ReceiptVoucher.EF.Migrations
                         .HasColumnName("ProjectId");
 
                     b.Property<string>("ReceivedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ReceivedFrom")
                         .IsRequired()
@@ -330,8 +333,6 @@ namespace ReceiptVoucher.EF.Migrations
                     b.HasIndex("BranchId");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("ReceivedBy");
 
                     b.HasIndex("SubProjectId");
 
@@ -521,19 +522,11 @@ namespace ReceiptVoucher.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ReceiptVoucher.Core.Identity.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ReceivedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ReceiptVoucher.Core.Entities.SubProject", "SubProject")
                         .WithMany("Receipts")
                         .HasForeignKey("SubProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Branch");
 
