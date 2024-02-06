@@ -25,14 +25,20 @@
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
-            <MudSelect SelectAll="true" Style="width:100%" T="string" Label="الصلاحيات" MultiSelection="true" @bind-SelectedValues="RolesListIEnumerable">
+            <MudSelect Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
+                @{
+                    
+                        @foreach (var branch in Branches)
+                        {
+
+                            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
 
 
-                    @foreach (var role in RolesList)
-                    {
-                    <MudSelectItem T="string" Value="@role.RoleName">@role.RoleName</MudSelectItem>
-                    }
-                
+                        }
+                    
+
+                }
 
             </MudSelect>
 
@@ -84,8 +90,11 @@
     public string UserId { get; set; } = null!;
 
 
+    // [Parameter]
+    // public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
+
     [Parameter]
-    public List<RoleViewModel> RolesList { get; set; } = new List<RoleViewModel>();
+    public List<Branch> Branches { get; set; } = new List<Branch>();
 
  
 
@@ -117,7 +126,8 @@
                     Email = OriginalCreateUserModel.Email,
                     Password = OriginalCreateUserModel.Password,
                     ConfirmPassword = OriginalCreateUserModel.ConfirmPassword,
-                    Roles = OriginalCreateUserModel.Roles
+                    Role = OriginalCreateUserModel.Role,
+                    BranchId = OriginalCreateUserModel.BranchId
 
 
                 };
@@ -134,36 +144,36 @@
 
         if (UserId == "0")
         {
-            // The branch has no ID, so it's a new branch
+            // // The branch has no ID, so it's a new branch
 
-            List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
+            // List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
 
-            foreach (var RoleName in RolesListIEnumerable)
-            {
-                var Role = RolesList.Where(x => x.RoleName == RoleName).FirstOrDefault();
+            // foreach (var RoleName in RolesListIEnumerable)
+            // {
+            //     var Role = RolesList.Where(x => x.RoleName == RoleName).FirstOrDefault();
 
-                if(Role != null)
-                {
-                    RolesListFromIEn.Add(Role);
-                }
+            //     if(Role != null)
+            //     {
+            //         RolesListFromIEn.Add(Role);
+            //     }
 
                
 
-            }
+            // }
 
             
-            CreateUserModel.Roles = RolesListFromIEn;
+            // CreateUserModel.Role = RolesListFromIEn;
 
 
-            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
-            if (response.IsSuccessStatusCode)
-            {
-                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
-            }
-            else
-            {
-                _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
-            }
+            // var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            // }
+            // else
+            // {
+            //     _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
+            // }
 
 
         }
@@ -179,7 +189,9 @@
                     FirstName = CreateUserModel.FirstName,
                     LastName = CreateUserModel.LastName,
                     UserName = CreateUserModel.UserName,
-                    Email = CreateUserModel.Email
+                    Email = CreateUserModel.Email,
+                    BranchId = CreateUserModel.BranchId
+                    
                 };
 
 
