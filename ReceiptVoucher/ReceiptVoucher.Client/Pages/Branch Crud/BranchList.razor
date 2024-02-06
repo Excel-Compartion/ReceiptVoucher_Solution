@@ -1,11 +1,14 @@
 ﻿@page "/Branches"
+
 @rendermode InteractiveAuto
 
-@inject HttpClient Http
+@using ReceiptVoucher.Client.Services
 
+@inject HttpClient Http
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
-
+@inject NavigationManager NavigationManager
+@inject IAuthService _IAuthService
 
 <PageTitle>Makarim</PageTitle>
 
@@ -187,6 +190,11 @@
 
     @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+
+        await _IAuthService.CheckIfNotAdminRedirectToLoginAsync();
+    }
 
 
     //<!--==================     Add / Edit Dialog      =========================================-->

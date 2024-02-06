@@ -118,13 +118,14 @@
         {
             var userId = user.FindFirstValue("uid");
 
-            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
-
             var roleClaim = user.FindFirst("roles");
             if (roleClaim != null)
             {
                 userRole = roleClaim.Value;
             }
+
+            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+
         }
 
     }
