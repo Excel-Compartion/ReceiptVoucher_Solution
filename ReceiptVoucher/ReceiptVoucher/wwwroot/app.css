@@ -75,7 +75,7 @@ h1:focus {
 .testBody .container-fluid.h-custom {
     display: flex;
     align-items: center;
-    min-height: calc(100vh - 101px ) !important;
+    min-height: calc(100vh - 141px ) !important;
 }
 @media (min-width:768px) {
     .testBody .form-img{
@@ -333,6 +333,11 @@ h1:focus {
 .mud-nav-link:hover svg {
     color: white !important;
 }
+.mud-nav-link img {
+    width: 20px;
+    border-radius: 50%;
+    outline: 2px solid white;
+}
 
 .logOutBtn a:hover svg {
     color: white !important;
@@ -353,6 +358,27 @@ h1:focus {
     /* font-size: 17px; */
     font-weight: bold;
 }
+/*------*/
+.logInBtn a {
+    border: 2px solid var(--mud-palette-success-darken) !important;
+    color: var(--mud-palette-success-darken) !important;
+    /*font-size: 17px;*/
+    font-weight: bold;
+}
+.logInBtn a svg {
+    color: var(--mud-palette-success-darken) !important;
+}
+.logInBtn a:hover svg {
+    color: white !important;
+}
+.logInBtn a:hover {
+    background-color: var(--mud-palette-success-darken) !important;
+    background-color: #00a344 !important;
+    color: white !important;
+    /* font-size: 17px; */
+    font-weight: bold;
+}
+/*------*/
 /*E NavBar*/
 
 /*S Profile page*/
