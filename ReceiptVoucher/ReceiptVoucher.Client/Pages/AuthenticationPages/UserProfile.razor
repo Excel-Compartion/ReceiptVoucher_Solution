@@ -10,6 +10,7 @@
 @* @attribute [Authorize] *@
 
 @inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
+@inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 
 
@@ -35,19 +36,19 @@
     <img src="Images\avatar.webp" alt="Avatar"/>
     <MudGrid>
         <MudItem xs="12" sm="6">
-            <h4 class="">الاسم: <span>مرعي علي بن هلابي</span></h4>
+            <h4 class="">الاسم: <span>@ApplicationUser.FirstName @ApplicationUser.LastName</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">الفرع: <span>الرياض</span></h4>
+            <h4 class="">الفرع: <span>@(ApplicationUser?.Branch?.Name ?? "لم يتم تحديد الفرع")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">رقم الجوال: <span>0558678049</span></h4>
+            <h4 class="">رقم الجوال: <span>@(ApplicationUser?.PhoneNumber ?? "لم يتم تحديد رقم الهاتف")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">نوع الحساب: <span>مستخدم</span></h4>
+            <h4 class="">نوع الحساب: <span>@userRole</span></h4>
         </MudItem>
         <MudItem xs="12" Class="text-center">
-            <h4 class="">البريد الإلكتروني: <span>mrai.hlabi@gmail.com</span></h4>
+            <h4 class="">البريد الإلكتروني: <span>@ApplicationUser.Email</span></h4>
         </MudItem>
         <MudItem xs="12">
             <MudButton Class="custom-btn mx-auto" Variant="Variant.Filled" Color="Color.Primary" OnClick="ToggleContainerPass">
@@ -58,10 +59,7 @@
     </MudGrid>
 </div>
 
-<AuthorizeView>
-@*     <h3>Hi You Logged with  <i>@context.User.Identity.Name</i> .</h3>
-    <h3>Hi   <i>@userName</i> .</h3> *@
-</AuthorizeView>
+
 
 
 
@@ -95,11 +93,13 @@
 
 
 @code {
+    public ApplicationUser ApplicationUser { get; set; } = new();
+
     UserChangePassword request = new();
 
     string message = string.Empty;
 
-    private string userName;
+    private string userRole = string.Empty;
 
 
     private async Task ChangePassword()
@@ -110,9 +110,23 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        userName = user.FindFirstValue("roles"); // or "UserName"
+        var user = authState?.User;
+
+        if (user != null)
+        {
+            var userId = user.FindFirstValue("uid");
+
+            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+
+            var roleClaim = user.FindFirst("roles");
+            if (roleClaim != null)
+            {
+                userRole = roleClaim.Value;
+            }
+        }
+
     }
 
 

@@ -26,7 +26,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public decimal TotalAmount { get; set; }
 
 
-        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم الفرع  ---")]
+        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المركز  ---")]
         public int BranchId { get; set; }   // Foreign Key
 
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]

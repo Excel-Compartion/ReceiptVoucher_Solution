@@ -33,9 +33,9 @@ namespace ReceiptVoucher.EF
 
         }
 
-        public async Task<int> Complete()
+        public int Complete()
         {
-            return await _context.SaveChangesAsync();
+            return  _context.SaveChanges();
         }
 
 

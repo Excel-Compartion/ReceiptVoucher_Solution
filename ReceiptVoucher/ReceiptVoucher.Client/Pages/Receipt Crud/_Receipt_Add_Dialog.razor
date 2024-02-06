@@ -216,10 +216,35 @@
                 <MudItem sm="4" xs="12">
                     <MudSelect Label="المركز" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
-                        @foreach (var branch in Branches)
-                        {
-                            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                        @{
+                            if(UserBranchId!=null)
+                            {
+                                @foreach (var branch in Branches)
+                                {
+                                    if (branch.Id == UserBranchId)
+                                    {
+                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                                    }
+                                   
+                                }
+
+                            }
+
+                            else
+                            {
+                                @foreach (var branch in Branches)
+                                {
+                                    
+                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                                    
+
+                                }
+                            }
+
+
+
                         }
+                      
                     </MudSelect>
                 </MudItem>
 
@@ -304,6 +329,8 @@
     [Parameter]
     public string BtnName { get; set; } = null!;
 
+   
+
     string Icon = string.Empty;
 
 
@@ -332,6 +359,8 @@
 
     bool ReadOnlyStatus = false;
 
+    [Parameter]
+    public int? UserBranchId { get; set; } 
 
 
 

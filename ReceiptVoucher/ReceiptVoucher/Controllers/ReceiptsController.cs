@@ -167,7 +167,7 @@ namespace ReceiptVoucher.Server.Controllers
 
         [HttpPut]
         //[AutoValidateAntiforgeryToken]
-        public IActionResult Update(Receipt receipt /*, int id*/)
+        public IActionResult Update(Receipt receipt )
         {
             if (!ModelState.IsValid)
                 return BadRequest();
