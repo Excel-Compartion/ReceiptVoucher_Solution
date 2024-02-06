@@ -1,5 +1,55 @@
 ﻿@ReceiptVoucher.Server_HostAddress = https://localhost:7210
 
+
+
+### ------------ User Controller -----------------------------------------
+
+
+### GET All Users With Their Roles -------
+
+GET {{ReceiptVoucher.Server_HostAddress}}/api/users
+
+###
+
+### POST Create -------
+POST {{ReceiptVoucher.Server_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+   "FirstName" : "وليد2",
+  "LastName" : "2محمد",
+  "UserName": "w@w2",
+  "Email" : "w@w2",
+  "Password" : "1234",
+  "ConfirmPassword" : "1234",
+  "Role" : {
+      "RoleId" : "641c4c55-ab32-447c-affe-84423db03258",
+      "RoleName" : "Gest",
+      "IsSelected" : true
+  }
+}
+
+
+### PUT Update User -----
+PUT {{ReceiptVoucher.Server_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "UserId" : "6b0cb904-00e7-460b-86bf-df9f5e1f6684",
+  "FirstName" : "وليد11",
+  "LastName" : "11محمد",
+  "UserName": "w@w",
+  "Email" : "w@w",
+  "role" : {
+      
+      "RoleName" : "admin"
+    }
+    
+}
+
+###
+### ---------------------------------------------------------------#END
+
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
 
 ###
@@ -135,18 +185,7 @@ GET {{ReceiptVoucher.Server_HostAddress}}/api/roles
 
 ###
 
-POST {{ReceiptVoucher.Server_HostAddress}}/api/roles?roleName=Gest
 
-###
 
-GET {{ReceiptVoucher.Server_HostAddress}}/api/users
 
-###
 
-GET {{ReceiptVoucher.Server_HostAddress}}/api/users
-
-###
-
-GET {{ReceiptVoucher.Server_HostAddress}}/api/users
-
-###

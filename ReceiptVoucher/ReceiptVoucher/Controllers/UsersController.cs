@@ -52,19 +52,23 @@ namespace ReceiptVoucher.Server.Controllers
         public async Task<ActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // if no selected Roles
-            if (!model.Roles.Any(r => r.IsSelected))
             {
-                ModelState.AddModelError("Roles", "Please Select At Least One Role");
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 
-                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage ).ToList();
-
-                return BadRequest(new BaseResponse<string>(null, "Errors in Model" , errors: ModelErrors , success: false));
+                return BadRequest(new BaseResponse<string>(null, "Errors in Model", errors: ModelErrors, success: false));
             }
 
-            // check if Email Not Exists Before
+            // Check if role exists in the database
+            if (! await _roleManager.RoleExistsAsync(model.Role.RoleName))
+            {
+                ModelState.AddModelError("Role", "The role does not exist.");
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<string>(null, "خطاء متعلق بعدم وجود الصلاحيه من قبل", errors: ModelErrors, success: false));
+            }
+
+
+            // check if Email Not Exists Before , if = null means there no user have that email. and this ok.
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
                 ModelState.AddModelError("Email", "الأيميل مستخدم من قبل!");
@@ -82,7 +86,7 @@ namespace ReceiptVoucher.Server.Controllers
                 return BadRequest(new BaseResponse<string>(null, "خطاء متعلق بوجود اسم المستخدم من قبل", errors: ModelErrors, success: false));
             }
 
-            var user = new ApplicationUser()
+            var userToDB = new ApplicationUser()
             {
                 UserName = model.UserName,
                 Email = model.Email,
@@ -90,7 +94,7 @@ namespace ReceiptVoucher.Server.Controllers
                 LastName = model.LastName
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(userToDB, model.Password);
 
             if (!result.Succeeded)
             {
@@ -105,13 +109,27 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             // ok user is created but Assign Roles
-            await _userManager.AddToRolesAsync(user, model.Roles.Where(r => r.IsSelected).Select(r => r.RoleName));
+            await _userManager.AddToRoleAsync(userToDB, model.Role.RoleName);
 
-            return Ok(new BaseResponse<ApplicationUser>(user , "تم انشاء حساب المستخدم بنجاح", null , true));
+            // Create a new instance of ApplicationUser with the desired properties
+            var updatedUser = new UserResponse
+            {
+                FirstName = userToDB.FirstName,
+                LastName = userToDB.LastName,
+                UserName = userToDB.UserName,
+                Email = userToDB.Email,
+                RoleName = model.Role.RoleName
+            };
+
+
+            return Ok(new BaseResponse<UserResponse>(updatedUser, "تم انشاء حساب المستخدم بنجاح", null, true));
+
         }
 
+
+
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(EditProfileViewModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] EditProfileViewModel model)
         {
             ///<summary>
             /// 1 - check if user is in DB if not return not found.
@@ -119,101 +137,90 @@ namespace ReceiptVoucher.Server.Controllers
             ///       1. may Admin Editing user and put used Email or User Name And We Want To Prevent this 
             ///       2. Admin Editing User And put newly UserName Or Email This is OK.
             ///</summary>
+            
 
-            ApplicationUser userInDB = await _userManager.FindByIdAsync(model.UserId);
+            if (!ModelState.IsValid)
+            {
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 
-            // check if null
+                return BadRequest(new BaseResponse<string>(null, "Errors in Model", errors: ModelErrors, success: false));
+
+            }
+
+            // Check if role exists in the database
+            if (!await _roleManager.RoleExistsAsync(model.Role.RoleName))
+            {
+                ModelState.AddModelError("Role", "The role does not exist.");
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<string>(null, "خطاء متعلق بعدم وجود الصلاحيه في قاعدة البيانات", errors: ModelErrors, success: false));
+            }
+
+            // Check if user exists in the database
+            var userInDB = await _userManager.FindByIdAsync(model.UserId);
             if (userInDB == null)
-                return NotFound();
+                return NotFound(new BaseResponse<string>(null, "هذا المستخدم غير موجود في قاعدة البيانات", null, success: false));
 
-            // get user by Email of ViewModel
-            ApplicationUser userWithSameEmail = await _userManager.FindByEmailAsync(model.Email);
 
-            // now i want to check if that userWithSameEmail 
-            // this line means i have userInDB With Same Email && but Id Of User With Same Email Not like Id of User coming From ViewModel !
-            if (userWithSameEmail != null && userWithSameEmail.Id != model.UserId)
+            // Check if email is already in use by another user
+            var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUserByEmail != null && existingUserByEmail.Id != model.UserId)
             {
-                ModelState.AddModelError("Email", "هذا الأيميل مستخدم من قبل مع شخص أخر في النظام!");
-
-                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-
-                return BadRequest(new BaseResponse<string>(null, "خطاء في الأيميل", errors: ModelErrors, success: false));
+                ModelState.AddModelError("Email", "This email is already in use.");
+                return BadRequest(ModelState);
             }
 
-
-
-            // get user by UserName of ViewModel
-            ApplicationUser userWithSameUserName = await _userManager.FindByNameAsync(model.UserName);
-
-
-            if (userWithSameUserName != null && userWithSameUserName.Id != model.UserId)
+            // Check if username is already in use by another user
+            var existingUserByUsername = await _userManager.FindByNameAsync(model.UserName);
+            if (existingUserByUsername != null && existingUserByUsername.Id != model.UserId)
             {
-                ModelState.AddModelError("UserName", "اسم المستخدم هذا موجود من قبل مع شخص أخر في النظام");
-
-                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-
-                return BadRequest(new BaseResponse<string>(null, "خطاء في اسم المستخدم", errors: ModelErrors, success: false));
+                ModelState.AddModelError("UserName", "This username is already in use.");
+                return BadRequest(ModelState);
             }
 
-
-            // Now Every Thing Is OK, So Update Values, And Take Care Do not Change or Update the ID
+            // Update user information
             userInDB.FirstName = model.FirstName;
             userInDB.LastName = model.LastName;
             userInDB.UserName = model.UserName;
             userInDB.Email = model.Email;
-            await _userManager.UpdateAsync(userInDB);
+
+            var result = await _userManager.UpdateAsync(userInDB);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
+            // Get current roles of the user
+            IList<string> currentRoles = await _userManager.GetRolesAsync(userInDB);
+
+
+            // If the user's role has changed, update it
+            if (!currentRoles.Contains(model.Role.RoleName))
+            {
+                // Remove all current roles
+                await _userManager.RemoveFromRolesAsync(userInDB, currentRoles);
+
+                // Assign the new role
+                await _userManager.AddToRoleAsync(userInDB, model.Role.RoleName);
+            }
 
             // Create a new instance of ApplicationUser with the desired properties
-            var updatedUser = new UserResponse
+            var userResponse = new UserResponse
             {
                 FirstName = userInDB.FirstName,
                 LastName = userInDB.LastName,
                 UserName = userInDB.UserName,
-                Email = userInDB.Email
+                Email = userInDB.Email,
+                RoleName = model.Role.RoleName
             };
 
-
-            return Ok(new BaseResponse<UserResponse>(updatedUser, "تم تعديل بيانات حساب المستخدم بنجاح", null, true));
+            return Ok(new BaseResponse<UserResponse>(userResponse, "User updated successfully.", null, true));
         }
 
-        [HttpPost("ManageUserRoles")]
-        public async Task<IActionResult> ManageUserRoles(UserRolesViewModel model)
-        {
-
-            // Validate the model
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-
-            ApplicationUser user = await _userManager.FindByIdAsync(model.UserId);
-
-            // check if null
-            if (user == null)
-                return NotFound();
-
-            // Get the existing roles assigned to the user
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            // Compare the existing roles with the roles in the request
-            foreach (var role in model.Roles)
-            {
-                var roleExists = await _roleManager.RoleExistsAsync(role.RoleName);
-
-                // Case 1: If the role already exists in the userRoles and is not selected in the request, remove it from userRoles
-                if (roleExists && userRoles.Contains(role.RoleName) && !role.IsSelected)
-                {
-                    await _userManager.RemoveFromRoleAsync(user, role.RoleName);
-                }
-
-                // Case 2: If the role does not exist in userRoles and is selected in the request, add it to userRoles
-                if (roleExists && !userRoles.Contains(role.RoleName) && role.IsSelected)
-                {
-                    await _userManager.AddToRoleAsync(user, role.RoleName);
-                }
-            }
-
-            return Ok(new BaseResponse<string>(null, "تم تعديل صلاحيات حساب المستخدم بنجاح", null, true));
-        }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)

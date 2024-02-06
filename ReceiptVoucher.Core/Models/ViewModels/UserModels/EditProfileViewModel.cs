@@ -32,6 +32,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels.UserModels
         public string? Email { get; set; }
 
 
+        public RoleViewModel? Role { get; set; }
 
     }
 }

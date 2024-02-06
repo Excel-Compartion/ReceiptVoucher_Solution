@@ -36,7 +36,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Compare("Password", ErrorMessage = "كلمة المرور وكلمة التأكيد غير متطابقتان")]
         public string ConfirmPassword { get; set; } = null!;
 
-        public List<RoleViewModel>? Roles { get; set; }
+        [Required(ErrorMessage = "Please select a role.")]
+        public RoleViewModel? Role { get; set; }
 
 
     }
