@@ -3,6 +3,7 @@
 
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.WebUtilities
+@using ReceiptVoucher.Core.Consts
 @using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.Dtos.Auth
 
@@ -131,9 +132,19 @@
         {
             errorMessage = string.Empty;
             await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
-            await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var authState = await _AuthenticationStateProvider?.GetAuthenticationStateAsync();
+            var user = authState?.User;
+            var userRole = user?.FindFirst("roles")?.Value;
 
-            _NavigationManager.NavigateTo("home");
+            if (userRole.Equals(RolesNames.User))
+            {
+                _NavigationManager.NavigateTo("Receipt");
+
+            }
+            else
+            {
+                _NavigationManager.NavigateTo("home");
+            }
         }
         else
         {
