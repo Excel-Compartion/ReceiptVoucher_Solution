@@ -17,6 +17,8 @@ namespace ReceiptVoucher.Core.Models.ResponseModels
 
         public string Email { get; set; }
 
+        public int? BranchId { get; set; }
+
         public string? RoleName { get; set; }
 
     }

@@ -40,6 +40,7 @@ namespace ReceiptVoucher.Server.Controllers
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
+                    BranchId = user.BranchId,
                     UserName = user.UserName,
                     Roles = userRoles
                 });
@@ -91,7 +92,8 @@ namespace ReceiptVoucher.Server.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 FirstName = model.FirstName,
-                LastName = model.LastName
+                LastName = model.LastName,
+                BranchId = model.BranchId
             };
 
             var result = await _userManager.CreateAsync(userToDB, model.Password);
@@ -118,7 +120,8 @@ namespace ReceiptVoucher.Server.Controllers
                 LastName = userToDB.LastName,
                 UserName = userToDB.UserName,
                 Email = userToDB.Email,
-                RoleName = model.Role.RoleName
+                RoleName = model.Role.RoleName,
+                BranchId = userToDB.BranchId
             };
 
 
@@ -183,6 +186,7 @@ namespace ReceiptVoucher.Server.Controllers
             userInDB.LastName = model.LastName;
             userInDB.UserName = model.UserName;
             userInDB.Email = model.Email;
+            userInDB.BranchId = model.BranchId;
 
             var result = await _userManager.UpdateAsync(userInDB);
             if (!result.Succeeded)
@@ -215,27 +219,35 @@ namespace ReceiptVoucher.Server.Controllers
                 LastName = userInDB.LastName,
                 UserName = userInDB.UserName,
                 Email = userInDB.Email,
-                RoleName = model.Role.RoleName
+                RoleName = currentRoles.FirstOrDefault(),
+                BranchId = userInDB.BranchId,
             };
 
             return Ok(new BaseResponse<UserResponse>(userResponse, "User updated successfully.", null, true));
         }
 
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            var userInDB = await _userManager.FindByIdAsync(userId);
-            if (userInDB == null)
-                return NotFound();
+            // Find the user by id
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new BaseResponse<string>(null , "User not found." ,null ,false));
+            }
 
-            var result = await _userManager.DeleteAsync(userInDB);
+            // Delete the user
+            var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
-                throw new Exception();
+            {
+                var errors = result.Errors.Select( e => e.Description).ToList();
+                return BadRequest(new BaseResponse<string>(null, "Error deleting user.", errors, false));
+            }
 
-            // Good
-            return Ok(new BaseResponse<string>(null, "تم حذف حساب المستخدم بنجاح", null, true));
+            return Ok(new BaseResponse<string>(null, "User deleted successfully.", null, true));
         }
+
     }
-    
+
 }

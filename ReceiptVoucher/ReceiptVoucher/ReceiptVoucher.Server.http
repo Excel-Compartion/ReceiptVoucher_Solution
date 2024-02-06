@@ -16,10 +16,11 @@ POST {{ReceiptVoucher.Server_HostAddress}}/api/users
 Content-Type: application/json
 
 {
-   "FirstName" : "وليد2",
-  "LastName" : "2محمد",
-  "UserName": "w@w2",
-  "Email" : "w@w2",
+   "FirstName" : "ولي32",
+  "LastName" : "3محمد",
+  "UserName": "w@w3",
+  "Email" : "w@w3",
+  "BranchId" : 35,
   "Password" : "1234",
   "ConfirmPassword" : "1234",
   "Role" : {
@@ -35,19 +36,23 @@ PUT {{ReceiptVoucher.Server_HostAddress}}/api/users
 Content-Type: application/json
 
 {
-  "UserId" : "6b0cb904-00e7-460b-86bf-df9f5e1f6684",
-  "FirstName" : "وليد11",
-  "LastName" : "11محمد",
-  "UserName": "w@w",
-  "Email" : "w@w",
+  "UserId" : "225c1da8-b651-4863-acdb-f592988812ec",
+  "FirstName" : "ولي32",
+  "LastName" : "3محمد",
+  "UserName": "w@w3",
+  "Email" : "w@w3",
+  "BranchId" : 20,
   "role" : {
       
-      "RoleName" : "admin"
+      "RoleName" : "User"
     }
     
 }
 
-###
+### Delete User -----
+
+DELETE {{ReceiptVoucher.Server_HostAddress}}/api/users/20aa30a0-cef9-4e0d-b9a5-3ac63f45f23b
+
 ### ---------------------------------------------------------------#END
 
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
@@ -184,6 +189,7 @@ GET {{ReceiptVoucher.Server_HostAddress}}/api/roles
 GET {{ReceiptVoucher.Server_HostAddress}}/api/roles
 
 ###
+
 
 
 
