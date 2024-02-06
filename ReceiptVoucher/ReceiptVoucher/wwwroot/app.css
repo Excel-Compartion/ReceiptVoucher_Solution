@@ -81,6 +81,9 @@ h1:focus {
     .testBody .form-img{
         flex-direction: row-reverse;
     }
+    .testBody .container-fluid.h-custom {
+        margin: 20px 0;
+    }
 }
 @media (min-width: 992px) {
     .testBody .form-img {
