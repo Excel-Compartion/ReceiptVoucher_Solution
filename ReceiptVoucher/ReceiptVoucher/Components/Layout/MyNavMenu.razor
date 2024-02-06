@@ -1,5 +1,9 @@
-﻿
+﻿@rendermode InteractiveServer
 
+@using ReceiptVoucher.Core.Consts
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
 
 
 <MudNavMenu Color="Color.Info" Bordered="true">
@@ -8,13 +12,13 @@
 
     <hr style="color: var(--color-custom); ;margin-top:0%" />
 
+    @if (UserRole.Equals(RolesNames.Admin))
+    {
 
-    <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right navLinkBtn">
-        <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
-        الصفحة الرئيسية
-    </MudNavLink>
-
-    <AuthorizeView>
+        <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
+            الصفحة الرئيسية
+        </MudNavLink>
         <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
             المراكز الاعلامية
@@ -40,14 +44,39 @@
             <MudIcon Icon="@Icons.Material.Filled.SupervisorAccount" Class="icon-color" />
             الحسابات
         </MudNavLink>
-    </AuthorizeView>
+
+    }
+    else if (UserRole.Equals(RolesNames.User))
+    {
+        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
+            السندات
+        </MudNavLink>
+        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
+            التقارير
+        </MudNavLink>
+    }
+
+   @*  <AuthorizeView>
+        <NotAuthorized>
+            <MudNavLink Href="/login" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+                <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
+                تسجيل الدخول
+            </MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView> *@
+
+
+    
+   
 
     <hr style="color: var(--color-custom); ;margin-top:4%" />
     <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
         <MudIcon Icon="@Icons.Material.Filled.AccountBox" Class="icon-color" />
         الصفحة الشخصية
     </MudNavLink>
-    <MudNavLink Href="/Accounts" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+    <MudNavLink OnClick="Logout"  Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
         <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
         تسجيل خروج
     </MudNavLink>
@@ -100,3 +129,29 @@
 </MudNavMenu>
  *@
 
+@code{
+    public string UserRole  = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState?.User;
+
+        if (user != null)
+        {
+            var roleClaim = user.FindFirst("roles");
+            if (roleClaim != null)
+            {
+                UserRole = roleClaim.Value;
+            }
+        }
+
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/Login");
+    }
+}
