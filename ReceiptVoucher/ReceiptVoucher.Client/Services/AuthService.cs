@@ -1,7 +1,9 @@
 ﻿
 using System.Net.Http;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components;
 using ReceiptVoucher.Client.Services;
+using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
 using ReceiptVoucher.Core.Models.ResponseModels;
 
@@ -10,9 +12,13 @@ namespace ReceiptVoucher.Client.Services
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
-        public AuthService( HttpClient httpClient )
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly NavigationManager _navigationManager;
+        public AuthService(HttpClient httpClient, NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
             _httpClient = httpClient;
+            _navigationManager = navigationManager;
+            _authenticationStateProvider = authenticationStateProvider;
         }
 
 
@@ -34,5 +40,24 @@ namespace ReceiptVoucher.Client.Services
             return await result.Content.ReadFromJsonAsync<BaseResponse<bool>>();
         }
 
+        public async Task CheckIfNotAdminRedirectToLoginAsync()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var role = user.FindFirst("roles")?.Value;
+
+            if (role.Equals(RolesNames.User))
+            {
+                _navigationManager.NavigateTo("Receipt");
+                return;
+            }
+
+            else if (!user.Identity.IsAuthenticated || !role.Equals(RolesNames.Admin))
+            {
+                _navigationManager.NavigateTo("login");
+                _navigationManager.Refresh();
+
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@
 
 @inject IDialogService _DialogService 
 @inject ISnackbar _Snackbar
+@inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
+
 
 <PageTitle>Makarim</PageTitle>
 
@@ -181,8 +183,11 @@
 
 
     @code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _IAuthService.CheckIfNotAdminRedirectToLoginAsync();
 
-
+    }
 
     //<!--==================     Add / Edit Dialog      =========================================-->
 

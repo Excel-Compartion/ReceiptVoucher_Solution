@@ -5,8 +5,8 @@
 
 
 @* @attribute [Authorize] *@
-@inject AuthenticationStateProvider _AuthenticationStateProvider
-@inject NavigationManager _NavigationManager
+
+@inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
 
 <PageTitle>Makarim</PageTitle>
 
@@ -21,7 +21,6 @@
     </span>
 </p>
 
-<ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
 
 <ChartReports/>
     
@@ -35,17 +34,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        // var user = authState.User;
-
-        // List<string> userRoles = user.FindAll(c => c.Type == "roles").Select(c => c.Value).ToList(); // Get all roles
-
-        // if (!userRoles.Any(a=> a.Contains(RolesNames.Admin)))
-        // {
-        //     _NavigationManager.NavigateTo("/login");
-        //     _NavigationManager.Refresh();
-        // }
-        
+        await _IAuthService.CheckIfNotAdminRedirectToLoginAsync();
     }
 
 
