@@ -18,8 +18,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string ReceivedFrom { get; set; } = null!;
 
 
-        [StringLength(10)]
-        public string? ReceivedBy { get; set; } = "default";     // Foreign Key From User
+        public string ReceivedBy { get; set; }      // Foreign Key From User
 
 
         [Range(1.0, 9999999999999999.0, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ بشكل صحيح ---")]

@@ -31,7 +31,9 @@ namespace ReceiptVoucher.Core.Models.ViewModels.UserModels
         
         public string? Email { get; set; }
 
+        public int? BranchId { get; set; }
 
+        public RoleViewModel? Role { get; set; }
 
     }
 }
