@@ -8,6 +8,7 @@
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
 
+
 <PageTitle>Makarim</PageTitle>
 
 <style>
@@ -15,13 +16,13 @@
         --color-custom: #3090C7;
     }
 
-.ReceiptTable {
-    width: 100%;
-    height: auto;
-    margin-right: auto;
-    margin-left: auto;
-    overflow-x: auto;
-}
+    .ReceiptTable {
+        width: 100%;
+        height: auto;
+        margin-right: auto;
+        margin-left: auto;
+        overflow-x: auto;
+    }
 
 </style>
 
@@ -38,7 +39,7 @@
 <p style=" margin-bottom:2% ;">
 
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
     <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
@@ -51,13 +52,13 @@
 
 </p>
 
-<MudTable  Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
-    Dense="true" Hover="true" @ref="table">
+<MudTable Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
         @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
         <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
             <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
-            
+
             <span>إضافة</span>
         </MudButton>
         <MudSpacer />
@@ -69,19 +70,30 @@
         <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+
+        @if (UserBranchId == null)
+        {
+            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+        }
+
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="رقم السند">@context.Id</MudTd>
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+
+            @if (UserBranchId == null)
+        {
             <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
-            <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+        }
+
+
+        <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
@@ -92,12 +104,15 @@
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
                     <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" @onclick="@(() => SendSMSMessage(context))" StartIcon="@Icons.Material.Filled.SendToMobile">ارسال</MudButton>
+
 
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+
                 </MudButtonGroup>
 
 
-        
+
 
             </MudTd>
         </RowTemplate>
@@ -112,15 +127,15 @@
         </PagerContent>
     </MudTable>
 
-  
+
     <br />
 
 
-   
-   
 
 
- 
+
+
+
 
 
 
@@ -144,12 +159,31 @@
     public bool PrintActive = false;
 
     public string ResponseMessage = "لم يتم العثور على سجلات";
-   
+
+
+    public int? UserBranchId { get; set; } = 42;
+
     void PrintReceipt(int id)
     {
         var url = $"api/Receipts/GetReceiptRdcl/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
+
+
+    async void SendSMSMessage(Receipt receipt)
+    {
+        var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
+        if (response.IsSuccessStatusCode)
+        {
+            _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
+        }
+        else
+        {
+            _Snackbar.Add($"فشل في ارسال رسالة ال SMS : {response.Content}", Severity.Error);
+        }
+    }
+
+
 
 
     // private async Task PrintReceipt(int ReceiptId)
@@ -168,6 +202,7 @@
     protected override async Task OnInitializedAsync()
     {
 
+
         try
         {
             var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
@@ -179,7 +214,7 @@
 
 
         }
-        catch {  }
+        catch { }
 
         try
         {
@@ -232,7 +267,7 @@
         }
         catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
 
-       
+
 
         data = data.Where(receipt =>
         {
@@ -247,7 +282,7 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-       
+
             case "id_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Id);
                 break;
@@ -256,20 +291,20 @@
                 break;
 
             case "receivedFrom_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
+                break;
 
             case "grantDestinations_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.GrantDestinations.GetDisplayName());
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.GrantDestinations.GetDisplayName());
+                break;
 
             case "totalAmount_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.TotalAmount);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.TotalAmount);
+                break;
 
             case "Branch_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
+                break;
 
             case "SubProject_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.SubProject.Name);
@@ -293,7 +328,7 @@
         searchString = text;
 
         if (table != null) { table.ReloadServerData(); }
-       
+
     }
 }
 
@@ -317,6 +352,8 @@
         parameters.Add("Projects", Projects);
 
         parameters.Add("SubProjects", SubProjects);
+
+        parameters.Add("UserBranchId", UserBranchId);
 
         var options = new DialogOptions() { CloseButton = true };
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
@@ -370,6 +407,8 @@
         parameters.Add("Projects", Projects);
 
         parameters.Add("SubProjects", SubProjects);
+
+        parameters.Add("UserBranchId", UserBranchId);
 
         var options = new DialogOptions() { CloseButton = true };
 
@@ -430,7 +469,7 @@
                     _Snackbar.Add("تم حذف بيانات السند بنجاح", Severity.Success);
 
                     // Reload the table data
-                    if (table != null) {await table.ReloadServerData(); }
+                    if (table != null) { await table.ReloadServerData(); }
                 }
                 else
                 {
