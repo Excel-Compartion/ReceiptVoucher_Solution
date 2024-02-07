@@ -49,7 +49,7 @@ namespace ReceiptVoucher.Server.Controllers
                     BranchId = user.BranchId,
                     UserName = user.UserName,
                     Roles = userRoles,
-
+                    Mobile=user.PhoneNumber
                     
                 });
             }
