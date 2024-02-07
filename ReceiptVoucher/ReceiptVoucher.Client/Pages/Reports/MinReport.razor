@@ -3,11 +3,14 @@
 
 @using System.Net.Http.Json
 @using ReceiptVoucher.Client.Pages.Receipt_Crud
+@using System.Security.Claims
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> _UserManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 
 <PageTitle>Makarim</PageTitle>
 
@@ -286,7 +289,7 @@
 
     private List<string> SelectSubProjectList = new List<string>();
 
-    public int? UserBranchId { get; set; } = 42;
+    public int? UserBranchId { get; set; } 
 
     void UnCheckedChange()
     {
@@ -335,8 +338,26 @@
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
+    public ApplicationUser ApplicationUser { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
+        //-------------------------
+
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState?.User;
+
+        if (user != null)
+        {
+            var userId = user.FindFirstValue("uid");
+
+
+            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+        }
+
+        UserBranchId = ApplicationUser.BranchId;
+
+        //-------------------------
         RadioDateType = Day;
 
 
