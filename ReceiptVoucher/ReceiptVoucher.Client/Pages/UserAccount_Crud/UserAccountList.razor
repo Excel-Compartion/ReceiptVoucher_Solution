@@ -76,22 +76,9 @@
 
             <MudTd DataLabel="الصلاحية">
 
-                @{
-                var Roles = "";
+               @context.Role.RoleName
 
-                if (context.Roles != null &&context.Roles.Count()!=0)
-                {
-                    foreach (var role in context.Roles)
-                    {
-                        Roles += role + " ";
-                    }
-
-                }
-                
-            }
-
-            @Roles
-
+            
             </MudTd>
 
 
@@ -154,15 +141,15 @@
 
 
 
-            // if (response != null && response.Data != null)
-            // {
-            //     var RolesData = response.Data;
+            if (response != null && response.Data != null)
+            {
+                var RolesData = response.Data;
 
-            //     foreach (var roleData in RolesData)
-            //     {
-            //         Roles.Add(new RoleViewModel { RoleId = roleData.Id, RoleName = roleData.Name, IsSelected = false });
-            //     }
-            // }
+                foreach (var roleData in RolesData)
+                {
+                    Roles.Add(new RoleViewModel { RoleId = roleData.Id, RoleName = roleData.Name, IsSelected = false });
+                }
+            }
 
 
         }
@@ -253,7 +240,7 @@
         parameters.Add("BtnName", "اضافه");
         parameters.Add("UserId", "0");
 
-        // parameters.Add("Roles", Roles);
+        parameters.Add("Roles", Roles);
         parameters.Add("Branches", Branches);
 
         _DialogService.Show<_UserAccount_Add_Dialog>("اضافة حساب جديد", parameters);
@@ -269,7 +256,7 @@
 
         parameters.Add("UserId", UserViewModel.Id);
 
-        // parameters.Add("Roles", Roles);
+        parameters.Add("Roles", Roles);
         parameters.Add("Branches", Branches);
 
         var options = new DialogOptions() { CloseButton = true };

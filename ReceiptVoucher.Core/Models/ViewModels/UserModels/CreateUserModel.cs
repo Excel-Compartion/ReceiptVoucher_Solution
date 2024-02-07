@@ -25,6 +25,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [EmailAddress(ErrorMessage = "صيغة كتابة الأيميل غير صحيحه. مثال : example@gmail.com")]
         public string? Email { get; set; }
 
+        [Required(ErrorMessage = "--- يرجى اختيار اسم المركز  ---")]
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المركز  ---")]
         public int? BranchId { get; set; }
 

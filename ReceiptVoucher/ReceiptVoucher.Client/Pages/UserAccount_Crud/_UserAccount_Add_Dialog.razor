@@ -20,10 +20,15 @@
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالكتروني" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
-            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
+            @if (BtnName != ButtonTypes.Edit)
+            {
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
-            <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
+            }
+
+          
 
             <MudSelect Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId" ReadOnly="@ReadOnlyStatus">
                 <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
@@ -45,7 +50,22 @@
 
 
 
+              <MudSelect Label="الصلاحيات" For="@(()=>CreateUserModel.Role)" @bind-Value="@CreateUserModel.Role" ReadOnly="@ReadOnlyStatus">
             
+            @{
+
+            @foreach (var role in Roles)
+            {
+
+                        <MudSelectItem Value="@role">@role.RoleName</MudSelectItem>
+
+
+            }
+
+
+            }
+
+            </MudSelect>
 
 
 
@@ -80,7 +100,7 @@
     public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
-    public CreateUserModel? OriginalCreateUserModel { get; set; }
+    public UserViewModel? OriginalCreateUserModel { get; set; }
 
 
     [Parameter]
@@ -90,8 +110,8 @@
     public string UserId { get; set; } = null!;
 
 
-    // [Parameter]
-    // public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
+    [Parameter]
+    public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
 
     [Parameter]
     public List<Branch> Branches { get; set; } = new List<Branch>();
@@ -124,8 +144,8 @@
                     LastName = OriginalCreateUserModel.LastName,
                     UserName = OriginalCreateUserModel.UserName,
                     Email = OriginalCreateUserModel.Email,
-                    Password = OriginalCreateUserModel.Password,
-                    ConfirmPassword = OriginalCreateUserModel.ConfirmPassword,
+                    Password = "########",
+                    ConfirmPassword = "########",
                     Role = OriginalCreateUserModel.Role,
                     BranchId = OriginalCreateUserModel.BranchId
 
@@ -146,34 +166,18 @@
         {
             // // The branch has no ID, so it's a new branch
 
-            // List<RoleViewModel> RolesListFromIEn = new List<RoleViewModel>();
-
-            // foreach (var RoleName in RolesListIEnumerable)
-            // {
-            //     var Role = RolesList.Where(x => x.RoleName == RoleName).FirstOrDefault();
-
-            //     if(Role != null)
-            //     {
-            //         RolesListFromIEn.Add(Role);
-            //     }
-
-               
-
-            // }
-
-            
-            // CreateUserModel.Role = RolesListFromIEn;
+           
 
 
-            // var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
-            // if (response.IsSuccessStatusCode)
-            // {
-            //     _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
-            // }
-            // else
-            // {
-            //     _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
-            // }
+            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"لم يتم اضافه الحساب. Error: {response.StatusCode}", Severity.Error);
+            }
 
 
         }
@@ -190,14 +194,17 @@
                     LastName = CreateUserModel.LastName,
                     UserName = CreateUserModel.UserName,
                     Email = CreateUserModel.Email,
-                    BranchId = CreateUserModel.BranchId
+                    BranchId = CreateUserModel.BranchId,
+                    Role = CreateUserModel.Role
+                    
+                   
                     
                 };
 
 
 
 
-            var response = await Http.PutAsJsonAsync("api/Users", CreateUserModel);
+            var response = await Http.PutAsJsonAsync("api/Users", editProfileViewModel);
             if (response.IsSuccessStatusCode)
             {
                 _Snackbar.Add("تم تعديل الحساب بنجاح!", Severity.Success);

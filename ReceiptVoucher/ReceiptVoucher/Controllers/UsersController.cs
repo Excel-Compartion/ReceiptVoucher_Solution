@@ -10,6 +10,7 @@ using ReceiptVoucher.Core.Models;
 using ReceiptVoucher.Core.Models.ResponseModels;
 using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 
+
 namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
@@ -29,25 +30,28 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersWithRoles()
         {
-            var users = await _userManager.Users.ToListAsync();
-            var userViewModels = new List<UserViewModel>();
+            //var users = await _userManager.Users.ToListAsync();
+            //var userViewModels = new List<UserViewModel>();
 
-            foreach (var user in users)
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                userViewModels.Add(new UserViewModel
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    BranchId = user.BranchId,
-                    UserName = user.UserName,
-                    Roles = userRoles
-                });
-            }
+            //foreach (var user in users)
+            //{
+            //    var userRoles = await _userManager.GetRolesAsync(user);
+            //    userViewModels.Add(new UserViewModel
+            //    {
+            //        Id = user.Id,
+            //        FirstName = user.FirstName,
+            //        LastName = user.LastName,
+            //        Email = user.Email,
+            //        BranchId = user.BranchId,
+            //        UserName = user.UserName,
+            //        Role = userRoles
+            //    });
+            //}
 
-            return Ok(userViewModels);
+            //return Ok(userViewModels);
+
+            return Ok();
+
         }
 
         [HttpPost]
