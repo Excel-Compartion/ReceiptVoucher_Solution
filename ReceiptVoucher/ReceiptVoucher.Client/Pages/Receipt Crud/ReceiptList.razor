@@ -7,7 +7,8 @@
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
-
+@inject UserManager<ApplicationUser> _UserManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 
 <PageTitle>Makarim</PageTitle>
 
@@ -161,7 +162,9 @@
     public string ResponseMessage = "لم يتم العثور على سجلات";
 
 
-    public int? UserBranchId { get; set; } = 42;
+    public int? UserBranchId { get; set; } 
+
+    public ApplicationUser ApplicationUser { get; set; } = new();
 
     void PrintReceipt(int id)
     {
@@ -199,9 +202,22 @@
 
     // }
 
+
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState?.User;
 
+        if (user != null)
+        {
+            var userId = user.FindFirstValue("uid");
+
+
+            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+        }
+
+        UserBranchId = ApplicationUser.BranchId;
 
         try
         {
