@@ -3,6 +3,9 @@
 
 @using System.Net.Http.Json
 @using Microsoft.AspNetCore.Identity
+@using ReceiptVoucher.Client.Services
+@using System.Security.Claims
+
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
@@ -10,6 +13,7 @@
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IAuthService _IAuthservice
 
 <PageTitle>Makarim</PageTitle>
 
@@ -165,7 +169,7 @@
 
     public int? UserBranchId { get; set; } 
 
-    public ApplicationUser ApplicationUser { get; set; } = new();
+    public UserViewModel currentUser { get; set; } = new();
 
     public string UserId { get; set; } = null!;
 
@@ -210,20 +214,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState?.User;
 
+        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
 
-
-        if (user != null)
+        if (currentUser != null)
         {
-            var userId = user.FindFirstValue("uid");
-
-            
-            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+            UserBranchId = currentUser.BranchId;
         }
 
-        UserBranchId = ApplicationUser.BranchId;
 
         try
         {

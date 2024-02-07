@@ -1,5 +1,6 @@
 ﻿using ReceiptVoucher.Core.Models.Dtos.Auth;
 using ReceiptVoucher.Core.Models.ResponseModels;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 
 namespace ReceiptVoucher.Client.Services
 {
@@ -10,6 +11,8 @@ namespace ReceiptVoucher.Client.Services
         Task<BaseResponse<bool>> ChangePassword(UserChangePassword userChangePasswordModel);
 
         Task CheckIfNotAdminRedirectToLoginAsync();
+
+        Task<UserViewModel?> GetCurrentUserDetailsAsync();
 
         //Task<string> AddRoleAsync(AddRoleModel roleModel);
         //Task<AuthModel> RefreshTokenAsync(string token);
