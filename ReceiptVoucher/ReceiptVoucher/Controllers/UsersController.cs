@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Models;
@@ -20,11 +21,14 @@ namespace ReceiptVoucher.Server.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+
+        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -239,19 +243,27 @@ namespace ReceiptVoucher.Server.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return NotFound(new BaseResponse<string>(null , "User not found." ,null ,false));
+                return NotFound(new BaseResponse<string>(null, "User not found.", null, false));
+            }
+
+            // Check if the user has any Receipt records
+            var hasReceipts = await _unitOfWork.Receipts.AnyAsync(r => r.ReceivedBy == user.Id);
+            if (hasReceipts)
+            {
+                return BadRequest(new BaseResponse<string>(null, "Cannot delete user. User has associated Receipt records.", null, false));
             }
 
             // Delete the user
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
             {
-                var errors = result.Errors.Select( e => e.Description).ToList();
+                var errors = result.Errors.Select(e => e.Description).ToList();
                 return BadRequest(new BaseResponse<string>(null, "Error deleting user.", errors, false));
             }
 
             return Ok(new BaseResponse<string>(null, "User deleted successfully.", null, true));
         }
+
 
     }
 

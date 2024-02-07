@@ -30,5 +30,6 @@ namespace ReceiptVoucher.Core.Interfaces
         int Count();
         int Count(Expression<Func<T, bool>> match);
 
+        Task<bool> AnyAsync(Expression<Func<T, bool>> match);
     }
 }
