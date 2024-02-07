@@ -48,7 +48,9 @@ namespace ReceiptVoucher.Server.Controllers
                     Email = user.Email,
                     BranchId = user.BranchId,
                     UserName = user.UserName,
-                    Roles = userRoles
+                    Roles = userRoles,
+
+                    
                 });
             }
 

@@ -69,9 +69,11 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستخدم</MudTableSortLabel></MudTh>
 
         @if (UserBranchId == null)
         {
@@ -85,9 +87,11 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="رقم السند">@context.Id</MudTd>
-            <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+
+            <MudTd DataLabel=" المستخدم">@context.ReceivedBy</MudTd>
 
             @if (UserBranchId == null)
         {
@@ -338,6 +342,10 @@
 
             case "PaymentType_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.PaymentType.GetDisplayName());
+                break;
+
+            case "receivedBy_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.ReceivedBy);
                 break;
         }
 
