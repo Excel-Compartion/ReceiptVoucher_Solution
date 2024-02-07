@@ -219,11 +219,14 @@
                         @{
                             if(UserBranchId!=null)
                             {
+                               
                                 @foreach (var branch in Branches)
                                 {
                                     if (branch.Id == UserBranchId)
                                     {
+                                       
                                         <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                                    
                                     }
                                    
                                 }
@@ -329,7 +332,7 @@
     [Parameter]
     public string BtnName { get; set; } = null!;
 
-   
+
 
     string Icon = string.Empty;
 
@@ -374,6 +377,17 @@
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentTypes.Cash;
 
+
+            if(UserBranchId!=null && Branches != null)
+            {
+                var branch = Branches.Where(x => x.Id == UserBranchId).FirstOrDefault();
+
+                if (branch != null)
+                {
+                    ReceiptViewModel.BranchId = branch.Id;
+                }
+
+            }
 
 
 

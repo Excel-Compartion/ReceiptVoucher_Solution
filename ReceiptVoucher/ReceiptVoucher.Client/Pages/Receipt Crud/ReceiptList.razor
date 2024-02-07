@@ -209,11 +209,13 @@
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState?.User;
 
+
+
         if (user != null)
         {
             var userId = user.FindFirstValue("uid");
 
-
+            
             ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
         }
 
