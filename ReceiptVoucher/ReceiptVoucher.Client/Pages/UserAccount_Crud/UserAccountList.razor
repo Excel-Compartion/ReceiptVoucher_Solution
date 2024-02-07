@@ -1,12 +1,11 @@
-﻿
-@page "/Accounts"
+﻿@page "/Accounts"
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Core.Models.ResponseModels
 @rendermode InteractiveAuto
 
 @inject HttpClient Http
 
-@inject IDialogService _DialogService 
+@inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 
 
@@ -53,55 +52,68 @@
 
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
     </ToolBarContent>
 
     <HeaderContent>
-        <MudTh><MudTableSortLabel  T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
 
         <MudTh><MudTableSortLabel T="UserViewModel"> الصلاحية</MudTableSortLabel></MudTh>
 
-       
-        <MudTh><MudTableSortLabel  T="UserViewModel">الاجراءت</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel T="UserViewModel">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
 
     <RowTemplate>
 
-        
-           <MudTd DataLabel="اسم المستخدم">@(context.FirstName + context.LastName)</MudTd>
+
+        <MudTd DataLabel="اسم المستخدم">@(context.FirstName + context.LastName)</MudTd>
 
         <MudTd DataLabel="البريد  الالكتروني">@context.Email</MudTd>
 
             <MudTd DataLabel="الصلاحية">
 
-               @context.Role.RoleName
+                @{
+                var Roles = "";
 
-            
-            </MudTd>
+                if (context.Roles != null && context.Roles.Count() != 0)
+                {
+                    foreach (var role in context.Roles)
+                    {
+                        Roles += role + " ";
+                    }
+
+                }
+
+            }
+
+            @Roles
+
+        </MudTd>
 
 
-            <MudTd DataLabel="الاجراءت">
+        <MudTd DataLabel="الاجراءت">
 
-                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+            <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                 <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
                 <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                    <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteUserViewModelId(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
-                </MudButtonGroup>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteUserViewModelId(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+            </MudButtonGroup>
 
-            </MudTd>
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
-            <MudText class="NotFound">@ResponseMessage</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText class="LodingNow">جاري التحميل...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+        <MudText class="NotFound">@ResponseMessage</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText class="LodingNow">جاري التحميل...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 
 
 
@@ -111,7 +123,7 @@
     private MudTable<UserViewModel>? table;
 
     private int totalItems;
-    private string? searchString ;
+    private string? searchString;
 
     public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
 
@@ -182,8 +194,8 @@
         }
         catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
 
-        
-       
+
+
         data = data.Where(UserViewModel =>
         {
             if (string.IsNullOrWhiteSpace(searchString))
@@ -200,11 +212,11 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-            
+
             case "email_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Email);
                 break;
-          
+
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
@@ -215,7 +227,7 @@
     {
         searchString = text;
 
-        if (table != null) {  table.ReloadServerData(); }
+        if (table != null) { table.ReloadServerData(); }
     }
 
 
@@ -250,79 +262,97 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
-        parameters.Add("OriginalUserViewModel", UserViewModel);
-
        
 
-        parameters.Add("UserId", UserViewModel.Id);
+        var rolesNames = UserViewModel.Roles.ToList();
 
-        parameters.Add("Roles", Roles);
-        parameters.Add("Branches", Branches);
+        var role = Roles.Where(x => x.RoleName == rolesNames[0]).FirstOrDefault();
 
-        var options = new DialogOptions() { CloseButton = true };
+        EditProfileViewModel editProfileViewModel = new EditProfileViewModel()
 
-        if (optionalParameter == ButtonTypes.Details)
-        {
-            parameters.Add("BtnName", ButtonTypes.Details);
-            _DialogService.Show<_UserAccount_Add_Dialog>("تفاصيل الحساب", parameters, options);
-        }
-        else
-        {
-            parameters.Add("BtnName", "تعديل");
-            _DialogService.Show<_UserAccount_Add_Dialog>("تعديل الحساب", parameters, options);
-        }
+    {
+                UserId = UserViewModel.Id,
+                FirstName = UserViewModel.FirstName,
+                UserName = UserViewModel.UserName,
+                Email = UserViewModel.Email,
+                BranchId = UserViewModel.BranchId,
+                Role = role
+               
+       
+
+    };
+
+
+        parameters.Add("UserId", editProfileViewModel.UserId);
+    
+        parameters.Add("OriginalEditProfileViewModel", editProfileViewModel);
+    parameters.Add("Roles", Roles);
+    parameters.Add("Branches", Branches);
+
+    var options = new DialogOptions() { CloseButton = true };
+
+    if (optionalParameter == ButtonTypes.Details)
+    {
+        parameters.Add("BtnName", ButtonTypes.Details);
+        _DialogService.Show<_UserAccount_Add_Dialog>("تفاصيل الحساب", parameters, options);
+    }
+    else
+    {
+        parameters.Add("BtnName", "تعديل");
+        _DialogService.Show<_UserAccount_Add_Dialog>("تعديل الحساب", parameters, options);
+    }
 
     }
 
     private async void RefreshData(bool dialogResult)
+{
+    if (dialogResult)
     {
-        if (dialogResult)
+    // Reload the table data
+    if (table != null) { await table.ReloadServerData(); }
+
+    }
+}
+
+
+
+
+private async Task DeleteUserViewModelId(string UserViewModelId)
+{
+    UserViewModel? selectedUserViewModelId = data.SingleOrDefault(b => b.Id == UserViewModelId);
+
+    if (selectedUserViewModelId != null)
+    {
+    var parameters = new DialogParameters() { { "UserAccountName", selectedUserViewModelId.FirstName + " " + selectedUserViewModelId.LastName } };
+    var dialog = _DialogService.Show<_UserAccountConfirmDeleteDialog>("الرجاء التأكيد", parameters);
+
+    var result = await dialog.Result;
+
+    if (!result.Cancelled && result.Data is bool data && data)
+    {
+        // User confirmed deletion, proceed with deletion
+
+        // Try to delete the branch using the API controller
+        var response = await Http.DeleteAsync($"api/Users/{selectedUserViewModelId.Id}"); // قم باالاستبدال هنا
+
+        if (response.IsSuccessStatusCode)
         {
+            // Show a success message
+            _Snackbar.Add("تم حذف بيانات الحساب بنجاح", Severity.Success);
+
             // Reload the table data
             if (table != null) { await table.ReloadServerData(); }
-          
         }
-    }
-
-
-
-
-    private async Task DeleteUserViewModelId(string UserViewModelId)
-    {
-        UserViewModel? selectedUserViewModelId = data.SingleOrDefault(b => b.Id == UserViewModelId);
-
-        if (selectedUserViewModelId != null)
+        else
         {
-            var parameters = new DialogParameters() { { "UserAccountName", selectedUserViewModelId.FirstName + " " + selectedUserViewModelId.LastName } };
-            var dialog = _DialogService.Show<_UserAccountConfirmDeleteDialog>("الرجاء التأكيد", parameters);
-
-            var result = await dialog.Result;
-
-            if (!result.Cancelled && result.Data is bool data && data)
-            {
-                // User confirmed deletion, proceed with deletion
-
-                // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"api/Users/{selectedUserViewModelId.Id}"); // قم باالاستبدال هنا
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Show a success message
-                    _Snackbar.Add("تم حذف بيانات الحساب بنجاح", Severity.Success);
-
-                    // Reload the table data
-                    if (table != null) { await table.ReloadServerData(); }
-                }
-                else
-                {
-                    // Deletion failed
-                    _Snackbar.Add("فشل حذف بيانات الحساب!", Severity.Error);
-                }
-
-                StateHasChanged();
-            }
+            // Deletion failed
+            _Snackbar.Add("فشل حذف بيانات الحساب!", Severity.Error);
         }
+
+        StateHasChanged();
     }
+    }
+}
 
 
 

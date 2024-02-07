@@ -28,31 +28,26 @@
 
             }
 
-          
 
-            <MudSelect Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId" ReadOnly="@ReadOnlyStatus">
-                <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
+
+            <MudSelect T="int?" Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                <MudSelectItem T="int?" Value="0">--- اختيار المركز ---</MudSelectItem>
                 @{
-                    
-                        @foreach (var branch in Branches)
-                        {
-
-                            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
-
-
-                        }
-                    
-
+                    @foreach (var branch in Branches)
+                    {
+                        int? branchId = branch.Id;
+                        <MudSelectItem T="int?" Value="@branchId">@branch.Name</MudSelectItem>
+                    }
                 }
-
             </MudSelect>
+
 
 
 
 
               <MudSelect Label="الصلاحيات" For="@(()=>CreateUserModel.Role)" @bind-Value="@CreateUserModel.Role" ReadOnly="@ReadOnlyStatus">
             
-            @{
+           
 
             @foreach (var role in Roles)
             {
@@ -63,7 +58,7 @@
             }
 
 
-            }
+          
 
             </MudSelect>
 
@@ -100,7 +95,7 @@
     public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
-    public UserViewModel? OriginalCreateUserModel { get; set; }
+    public EditProfileViewModel? OriginalEditProfileViewModel { get; set; }
 
 
     [Parameter]
@@ -130,7 +125,7 @@
 
     protected override void OnParametersSet()
     {
-        if (OriginalCreateUserModel == null)
+        if (OriginalEditProfileViewModel == null)
         {
             CreateUserModel = new CreateUserModel();
 
@@ -140,14 +135,14 @@
 
             CreateUserModel = new CreateUserModel
                 {
-                    FirstName = OriginalCreateUserModel.FirstName,
-                    LastName = OriginalCreateUserModel.LastName,
-                    UserName = OriginalCreateUserModel.UserName,
-                    Email = OriginalCreateUserModel.Email,
+                    FirstName = OriginalEditProfileViewModel.FirstName,
+                    LastName = OriginalEditProfileViewModel.LastName,
+                    UserName = OriginalEditProfileViewModel.UserName,
+                    Email = OriginalEditProfileViewModel.Email,
                     Password = "########",
                     ConfirmPassword = "########",
-                    Role = OriginalCreateUserModel.Role,
-                    BranchId = OriginalCreateUserModel.BranchId
+                    Role = OriginalEditProfileViewModel.Role,
+                    BranchId = OriginalEditProfileViewModel.BranchId
 
 
                 };

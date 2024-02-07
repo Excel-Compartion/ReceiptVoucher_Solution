@@ -30,25 +30,25 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersWithRoles()
         {
-            //var users = await _userManager.Users.ToListAsync();
-            //var userViewModels = new List<UserViewModel>();
+            var users = await _userManager.Users.ToListAsync();
+            var userViewModels = new List<UserViewModel>();
 
-            //foreach (var user in users)
-            //{
-            //    var userRoles = await _userManager.GetRolesAsync(user);
-            //    userViewModels.Add(new UserViewModel
-            //    {
-            //        Id = user.Id,
-            //        FirstName = user.FirstName,
-            //        LastName = user.LastName,
-            //        Email = user.Email,
-            //        BranchId = user.BranchId,
-            //        UserName = user.UserName,
-            //        Role = userRoles
-            //    });
-            //}
+            foreach (var user in users)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                userViewModels.Add(new UserViewModel
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    BranchId = user.BranchId,
+                    UserName = user.UserName,
+                    Roles = userRoles
+                });
+            }
 
-            //return Ok(userViewModels);
+            return Ok(userViewModels);
 
             return Ok();
 
