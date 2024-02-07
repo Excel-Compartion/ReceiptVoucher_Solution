@@ -363,7 +363,10 @@
     bool ReadOnlyStatus = false;
 
     [Parameter]
-    public int? UserBranchId { get; set; } 
+    public int? UserBranchId { get; set; }
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
 
 
 
@@ -464,6 +467,7 @@
             receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
             receipt.Mobile = ReceiptViewModel.Mobile;
             receipt.ProjectId = ReceiptViewModel.ProjectId;
+            
 
 
 

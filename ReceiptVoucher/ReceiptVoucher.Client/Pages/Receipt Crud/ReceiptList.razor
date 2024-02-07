@@ -167,6 +167,9 @@
 
     public ApplicationUser ApplicationUser { get; set; } = new();
 
+    public string UserId { get; set; } = null!;
+
+
     void PrintReceipt(int id)
     {
         var url = $"api/Receipts/GetReceiptRdcl/{id}";
