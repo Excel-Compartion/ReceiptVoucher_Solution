@@ -9,6 +9,7 @@ namespace ReceiptVoucher.Client.Services
 		Task<BaseResponse<AuthModel>> LoginAsync(LoginModel loginModel);
         Task<BaseResponse<bool>> ChangePassword(UserChangePassword userChangePasswordModel);
 
+        Task CheckIfNotAdminRedirectToLoginAsync();
 
         //Task<string> AddRoleAsync(AddRoleModel roleModel);
         //Task<AuthModel> RefreshTokenAsync(string token);
