@@ -1,9 +1,13 @@
 ﻿@rendermode InteractiveServer
 
+@using ReceiptVoucher.Client.Services
 @using ReceiptVoucher.Core.Consts
+@using ReceiptVoucher.Core.Models.ViewModels.UserModels
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
+@inject IAuthService _IAuthservice
+
 
 
 <MudNavMenu Color="Color.Info" Bordered="true">
@@ -74,7 +78,7 @@
     <hr style="color: var(--color-custom); ;margin-top:4%" />
     <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
         <img src="Images\avatar.webp" alt="Avatar" style="width:14px;"/>
-        مرعي علي بن هلابي
+        @currentUser.FirstName @currentUser.LastName
     </MudNavLink>
     <MudNavLink OnClick="Logout"  Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
         <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
@@ -131,6 +135,7 @@
 
 @code{
     public string UserRole  = string.Empty;
+    public UserViewModel currentUser { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -146,6 +151,9 @@
             }
         }
 
+        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+
+        
     }
 
     private async Task Logout()
