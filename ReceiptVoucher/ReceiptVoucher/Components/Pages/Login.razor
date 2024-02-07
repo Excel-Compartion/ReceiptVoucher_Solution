@@ -58,8 +58,10 @@
                         Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
                     
                     
-                    <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر"
-                        Variant="Variant.Text" For="@(()=>model.Password)" @bind-Value="@model.Password" />
+@*                     <MudTextField T="string" id="form3Example4" class="form-control form-control-lg" Label="كلمة السر"
+                        Variant="Variant.Text" For="@(()=>model.Password)" @bind-Value="@model.Password" /> *@
+
+                    <MudTextField id="form3Example4" For="@(()=>model.Password)" @bind-Value="@model.Password" Label="كلمة السر" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
                     
                     <div class="d-flex justify-content-end mt-2">
                         <!-- Checkbox -->
@@ -149,6 +151,27 @@
         else
         {
             errorMessage = result.Message + " -- \n";
+        }
+    }
+
+    // show and hide password
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
         }
     }
 
