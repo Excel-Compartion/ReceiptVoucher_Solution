@@ -69,7 +69,7 @@
         </MudButton>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
@@ -97,8 +97,8 @@
 
             <MudTd DataLabel="المستلم">
 
-               
-            @{
+
+                @{
                 string ReceivedBy = "";
                 try
                 {
@@ -108,16 +108,16 @@
                     {
                         ReceivedBy = UserName.FirstName + " " + UserName.LastName;
                     }
-                   
+
                 }
-                    catch{}
-                }
+                catch { }
+            }
 
             @ReceivedBy
-            
-            </MudTd>
 
-            @if (UserBranchId == null)
+        </MudTd>
+
+        @if (UserBranchId == null)
         {
             <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
         }
@@ -163,12 +163,6 @@
 
 
 
-
-
-
-
-
-
     @code {
     public IEnumerable<Receipt>? pagedData;
     private MudTable<Receipt>? table;
@@ -190,7 +184,7 @@
     public string ResponseMessage = "لم يتم العثور على سجلات";
 
 
-    public int? UserBranchId { get; set; } 
+    public int? UserBranchId { get; set; }
 
     public UserViewModel currentUser { get; set; } = new();
 
@@ -205,7 +199,7 @@
     }
 
 
-   
+
 
 
     // private async Task PrintReceipt(int ReceiptId)
@@ -317,15 +311,18 @@
 
 
         data = data.Where(receipt =>
-        {
-            if (string.IsNullOrWhiteSpace(searchString))
-                return true;
-            if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-            if ($"{receipt.Id}".Contains(searchString))
-                return true;
-            return false;
-        }).ToArray();
+     {
+         if (string.IsNullOrWhiteSpace(searchString))
+             return true;
+         if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+             return true;
+         if ($"{receipt.Id}".Contains(searchString))
+             return true;
+         if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+             return true;
+         return false;
+     }).ToArray();
+
         totalItems = data.Count();
         switch (state.SortLabel)
         {
