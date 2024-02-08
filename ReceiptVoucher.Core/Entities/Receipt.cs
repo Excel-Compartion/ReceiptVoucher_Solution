@@ -70,7 +70,7 @@ public class Receipt
 
     //-------- Navigation Properties ---
     [ForeignKey(nameof(ReceivedBy))]
-    public ApplicationUser ApplicationUser { get; set; }
+    public ApplicationUser? ApplicationUser { get; set; }
 
 
     [ForeignKey("BranchId")]

@@ -42,24 +42,36 @@ namespace ReceiptVoucher.Server.Controllers
             // التحقق مما إذا كانت القيمة المتبقية هي عبارة عن أرقام فقط
             bool isDigitsOnly = mobileWithoutSpaces.All(char.IsDigit);
 
-            if (isDigitsOnly==false)
+            if (isDigitsOnly == false && !mobileWithoutSpaces.Contains("+"))
             {
                 return BadRequest("الرقم غير صالح");
             }
-         
 
 
-            String sendingResult;
-            String username = "966535155222";
-            String apiKey = "5a3eca644e8b0ba493e7d58ff6064fee09e66492";
-            String numbers = receipt.Mobile; // in a comma seperated list
-            String message = HttpUtility.UrlEncode("xxxxxxxxxxxxxx");
-            String sender = HttpUtility.UrlEncode("xxxxxxxxxxxxxxx");
+            try
+            {
+                String sendingResult;
+                String username = "966535155222";
+                String apiKey = "5a3eca644e8b0ba493e7d58ff6064fee09e66492";
+                String numbers = receipt.Mobile; // in a comma seperated list
+                String message = HttpUtility.UrlEncode("xxxxxxxxxxxxxx");
+                String sender = HttpUtility.UrlEncode("966535155222");
 
-            sendingResult = _sMSMessage.send(apiKey, username, numbers, message, sender);
+                sendingResult = _sMSMessage.send(apiKey, username, numbers, message, sender);
+
+                if (sendingResult != "106")
+                {
+                    return BadRequest("فشل الارسال");
+                }
 
 
-            return Ok(sendingResult);
+                return Ok(sendingResult);
+            }
+
+            catch { BadRequest("Error"); }
+
+
+            return Ok();
         }
 
 

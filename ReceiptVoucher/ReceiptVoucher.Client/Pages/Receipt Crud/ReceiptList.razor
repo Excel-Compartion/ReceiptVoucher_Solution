@@ -77,7 +77,7 @@
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
 
-        <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستخدم</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستلم</MudTableSortLabel></MudTh>
 
         @if (UserBranchId == null)
         {
@@ -95,7 +95,27 @@
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
 
-            <MudTd DataLabel=" المستخدم">@context.ReceivedBy</MudTd>
+            <MudTd DataLabel="المستلم">
+
+               
+            @{
+                string ReceivedBy = "";
+                try
+                {
+
+                    var UserName = UsersInfo.Where(x => x.Id == context.ReceivedBy).FirstOrDefault();
+                    if (UserName != null)
+                    {
+                        ReceivedBy = UserName.FirstName + " " + UserName.LastName;
+                    }
+                   
+                }
+                    catch{}
+                }
+
+            @ReceivedBy
+            
+            </MudTd>
 
             @if (UserBranchId == null)
         {
@@ -114,7 +134,6 @@
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
                     <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
-                    <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" @onclick="@(() => SendSMSMessage(context))" StartIcon="@Icons.Material.Filled.SendToMobile">ارسال</MudButton>
 
 
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
@@ -177,6 +196,7 @@
 
     public string UserId { get; set; } = null!;
 
+    public List<UserViewModel> UsersInfo = new List<UserViewModel>();
 
     void PrintReceipt(int id)
     {
@@ -185,20 +205,7 @@
     }
 
 
-    async void SendSMSMessage(Receipt receipt)
-    {
-        var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
-        if (response.IsSuccessStatusCode)
-        {
-            _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
-        }
-        else
-        {
-            _Snackbar.Add($"فشل في ارسال رسالة ال SMS : {response.Content}", Severity.Error);
-        }
-    }
-
-
+   
 
 
     // private async Task PrintReceipt(int ReceiptId)
@@ -224,7 +231,23 @@
         if (currentUser != null)
         {
             UserBranchId = currentUser.BranchId;
+            UserId = currentUser.Id;
         }
+
+
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<UserViewModel>>("api/Users");
+
+            if (response != null)
+            {
+                UsersInfo = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
 
 
         try
@@ -383,6 +406,8 @@
 
         parameters.Add("UserBranchId", UserBranchId);
 
+        parameters.Add("UserId", UserId);
+
         var options = new DialogOptions() { CloseButton = true };
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
     }
@@ -437,6 +462,7 @@
         parameters.Add("SubProjects", SubProjects);
 
         parameters.Add("UserBranchId", UserBranchId);
+        parameters.Add("UserId", UserId);
 
         var options = new DialogOptions() { CloseButton = true };
 

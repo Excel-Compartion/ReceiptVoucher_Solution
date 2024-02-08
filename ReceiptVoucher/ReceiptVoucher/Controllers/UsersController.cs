@@ -31,7 +31,41 @@ namespace ReceiptVoucher.Server.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
+
+
+
+        //[HttpGet("GetUserById")]
+        //public async Task<IActionResult> GetUserById(string Id)
+        //{
+
+        //    var user = await _userManager.Users.Where(x=>x.Id==Id).FirstOrDefaultAsync();
+
+          
+            
+
+        //    if (user == null)
+        //    {
+        //        return (BadRequest("user Not Found"));
+        //    }
+
+        //    var userViewModels = new UserViewModel()
+        //    {
+        //        Id = user.Id,
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        Email = user.Email,
+        //        BranchId = user.BranchId,
+        //        UserName = user.UserName,
+               
+
+        //    };
+
+        //    return Ok(userViewModels);
+        
+        //}
+
+
+            [HttpGet]
         public async Task<IActionResult> GetUsersWithRoles()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -56,12 +90,12 @@ namespace ReceiptVoucher.Server.Controllers
 
             return Ok(userViewModels);
 
-            return Ok();
+        
 
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser(CreateUserModel model)
+        public async Task<ActionResult> CreateUser(  CreateUserModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -143,7 +177,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] EditProfileViewModel model)
+        public async Task<IActionResult> UpdateUser( EditProfileViewModel model)
         {
             ///<summary>
             /// 1 - check if user is in DB if not return not found.

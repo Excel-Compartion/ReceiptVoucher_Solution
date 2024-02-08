@@ -16,7 +16,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels.UserModels
 
         public string? FirstName { get; set; }
 
-        public string? Mobile { get; set; }
+    
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]

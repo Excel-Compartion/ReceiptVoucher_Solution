@@ -101,7 +101,6 @@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                 <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
-                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
                 <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteUserViewModelId(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
             </MudButtonGroup>
 
@@ -277,6 +276,7 @@
     {
                 UserId = UserViewModel.Id,
                 FirstName = UserViewModel.FirstName,
+                LastName = UserViewModel.LastName,
                 UserName = UserViewModel.UserName,
                 Email = UserViewModel.Email,
                 BranchId = UserViewModel.BranchId,
@@ -295,16 +295,10 @@
 
     var options = new DialogOptions() { CloseButton = true };
 
-    if (optionalParameter == ButtonTypes.Details)
-    {
-        parameters.Add("BtnName", ButtonTypes.Details);
-        _DialogService.Show<_UserAccount_Add_Dialog>("تفاصيل الحساب", parameters, options);
-    }
-    else
-    {
-        parameters.Add("BtnName", "تعديل");
+   
+     parameters.Add("BtnName", "تعديل");
         _DialogService.Show<_UserAccount_Add_Dialog>("تعديل الحساب", parameters, options);
-    }
+  
 
     }
 
