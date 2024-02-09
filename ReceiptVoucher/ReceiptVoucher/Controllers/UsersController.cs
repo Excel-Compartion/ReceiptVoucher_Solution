@@ -215,7 +215,9 @@ namespace ReceiptVoucher.Server.Controllers
             if (existingUserByEmail != null && existingUserByEmail.Id != model.UserId)
             {
                 ModelState.AddModelError("Email", "This email is already in use.");
-                return BadRequest(ModelState);
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<string>(null, "This email is already in use.", errors: ModelErrors, success: false));
             }
 
             // Check if username is already in use by another user
@@ -223,7 +225,10 @@ namespace ReceiptVoucher.Server.Controllers
             if (existingUserByUsername != null && existingUserByUsername.Id != model.UserId)
             {
                 ModelState.AddModelError("UserName", "This username is already in use.");
-                return BadRequest(ModelState);
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<string>(null, "", errors: ModelErrors, success: false));
+
             }
 
             // Update user information
@@ -240,7 +245,11 @@ namespace ReceiptVoucher.Server.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-                return BadRequest(ModelState);
+
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<string>(null, "حدث خطاء اثناء عملية التعديل", errors: ModelErrors, success: false));
+
             }
 
             // Get current roles of the user
@@ -279,14 +288,14 @@ namespace ReceiptVoucher.Server.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return NotFound(new BaseResponse<string>(null, "User not found.", null, false));
+                return NotFound(new BaseResponse<string>(null, ".المستخدم الذي تريد حذفه غير موجود", null, false));
             }
 
             // Check if the user has any Receipt records
             var hasReceipts = await _unitOfWork.Receipts.AnyAsync(r => r.ReceivedBy == user.Id);
             if (hasReceipts)
             {
-                return BadRequest(new BaseResponse<string>(null, "Cannot delete user. User has associated Receipt records.", null, false));
+                return BadRequest(new BaseResponse<string>(null, "لايمكن حذف هذا المستخدم, لأن المستخدم مرتبط بسندات قام بأنشائها", null, false));
             }
 
             // Delete the user
@@ -294,10 +303,10 @@ namespace ReceiptVoucher.Server.Controllers
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return BadRequest(new BaseResponse<string>(null, "Error deleting user.", errors, false));
+                return BadRequest(new BaseResponse<string>(null, "حدث خطاء اثناء حذف المستخدم.", errors, false));
             }
 
-            return Ok(new BaseResponse<string>(null, "User deleted successfully.", null, true));
+            return Ok(new BaseResponse<string>(null, "تم حذف المستخدم بنجاح.", null, true));
         }
 
 
