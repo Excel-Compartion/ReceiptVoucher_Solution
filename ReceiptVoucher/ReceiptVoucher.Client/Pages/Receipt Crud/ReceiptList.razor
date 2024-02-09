@@ -301,7 +301,22 @@
 
             if (response != null)
             {
-                data = response;
+
+                if (currentUser!=null  )
+                {
+                    var roles = currentUser.Roles.ToList();
+                    if (roles[0] != RolesNames.Admin)
+                    {
+                        data = response.Where(x => x.BranchId == currentUser.BranchId).ToList();
+                    }
+                    
+                    else
+                    {
+                        data = response;
+                    }
+                }
+               
+               
             }
 
 
