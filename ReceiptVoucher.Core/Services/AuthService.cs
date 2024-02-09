@@ -40,7 +40,7 @@ namespace ReceiptVoucher.Core.Services
 			
 			if(user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
 			{
-				authModel.Message = "Email Or Password is incorrect!";
+				authModel.Message = "البريد الالكتروني او كلمة المرور خاطئه !";
 				return authModel;
 			}
 
@@ -86,11 +86,11 @@ namespace ReceiptVoucher.Core.Services
 		{
 			// find user by email
 			if (await _userManager.FindByEmailAsync(registerModel.Email) is not null ) // means its has been  used.
-				return new AuthModel { Message = "Email Already Registered! " };
+				return new AuthModel { Message = "البريد الالكتروني موجود بالفعل !" };
 
 			// find user by UserName
 			if (await _userManager.FindByNameAsync(registerModel.UserName) is not null) // means its has been  used.
-				return new AuthModel { Message = "UserName Already Registered! " };
+				return new AuthModel { Message = "اسم المستخدم موجود بالفعل ! " };
 
 
 			var user = new ApplicationUser
