@@ -8,7 +8,7 @@
     <DialogContent>
 
         <EditForm Model="@CreateUserModel" OnValidSubmit="Submit" Class="custom-form">
-
+            <DataAnnotationsValidator />
 
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.FirstName)" @bind-Value="@CreateUserModel.FirstName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاول"  ></MudTextField>
@@ -17,7 +17,7 @@
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.LastName)" @bind-Value="@CreateUserModel.LastName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاخير"  ></MudTextField>
 
 
-            <MudTextField Immediate="true" For="@(()=>CreateUserModel.UserName)" @bind-Value="@CreateUserModel.UserName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="اسم المستخدم"  ></MudTextField>
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Mobile)" @bind-Value="@CreateUserModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="رقم الجوال"  ></MudTextField>
 
             <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالكتروني"  ></MudTextField>
 
@@ -30,40 +30,41 @@
             }
 
 
+            <MudSelect Label="الصلاحية" For="@(()=>CreateUserModel.Role)" @bind-Value="@CreateUserModel.Role">
 
-            <MudSelect T="int?" Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId"  >
-                <MudSelectItem T="int?" Value="0">--- اختيار المركز ---</MudSelectItem>
-                @{
-                    @foreach (var branch in Branches)
-                    {
-                        int? branchId = branch.Id;
-                        <MudSelectItem T="int?" Value="@branchId">@branch.Name</MudSelectItem>
-                    }
+
+
+                @foreach (var role in Roles)
+                {
+
+                    <MudSelectItem Value="@role">@role.RoleName</MudSelectItem>
+
+
                 }
+
+
             </MudSelect>
 
 
-
-
-
-              <MudSelect Label="الصلاحيات" For="@(()=>CreateUserModel.Role)" @bind-Value="@CreateUserModel.Role"  >
-            
-           
-
-            @foreach (var role in Roles)
+            @if (CreateUserModel.Role.RoleName != RolesNames.Admin)
             {
+                if (CreateUserModel.BranchId == null && Branches.Count()!=0)
+                {
+                    CreateUserModel.BranchId = Branches[0].Id;
+                }
 
-                        <MudSelectItem Value="@role">@role.RoleName</MudSelectItem>
-
-
+                <MudSelect T="int?" Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId">
+       
+                    @{
+                        @foreach (var branch in Branches)
+                        {
+                            int? branchId = branch.Id;
+                            <MudSelectItem T="int?" Value="@branchId">@branch.Name</MudSelectItem>
+                        }
+                    }
+                </MudSelect>
             }
-
-
-          
-
-            </MudSelect>
-
-
+           
 
          
                 <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
@@ -129,6 +130,15 @@
         {
             CreateUserModel = new CreateUserModel();
 
+            var role = Roles.Where(x => x.RoleName == RolesNames.Admin).FirstOrDefault();
+
+            if (role != null)
+            {
+                CreateUserModel.Role = role;
+            }
+
+            CreateUserModel.UserName = "xxxxxxxxx";
+
         }
         else
         {
@@ -142,8 +152,9 @@
                     Password = "########",
                     ConfirmPassword = "########",
                     Role = OriginalEditProfileViewModel.Role,
-                    BranchId = OriginalEditProfileViewModel.BranchId
-
+                    BranchId = OriginalEditProfileViewModel.BranchId,
+                    Mobile = OriginalEditProfileViewModel.Mobile
+                    
 
                 };
 
@@ -154,10 +165,48 @@
     async void Submit()
     {
 
+        if (CreateUserModel.Role.RoleName == RolesNames.Admin)
+        {
+            CreateUserModel.BranchId = null;
+        }
+
+
+        /// اسناد اسم المستخدم حسب البريد الالكتروني
+        string Email = CreateUserModel.Email;
+
+        // Find the index of the "@" symbol.
+        int atIndex = Email.IndexOf('@');
+
+        // If the "@" symbol was found, extract the substring before it.
+        if (atIndex > 0)
+        {
+            string username = Email.Substring(0, atIndex);
+
+            // Convert the username to lowercase.
+            username = username.ToLower();
+
+            int n = username.Length;
+            if (n < 2)
+            {
+                CreateUserModel.UserName = username+"xxxxx";
+            }
+
+            else
+            {
+                CreateUserModel.UserName = username;
+            }
+
+        }
+        /////////
+
+
+
         if (UserId == "0")
         {
             // // The branch has no ID, so it's a new branch
 
+
+            // CreateUserModel.UserName = CreateUserModel.FirstName + " " + CreateUserModel.LastName;
 
 
 
@@ -172,19 +221,27 @@
 
             else
             {
-                BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
-
-                var messageErrors = content.Errors;
-
-                string allMessages = string.Empty;
-
-                if (messageErrors is not null)
+                try
                 {
-                    
-                     allMessages = string.Join("\n", messageErrors );
+                    BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+
+                    var messageErrors = content.Errors;
+
+                    string allMessages = string.Empty;
+
+                    if (messageErrors is not null)
+                    {
+
+                        allMessages = string.Join("\n", messageErrors);
+                    }
+
+                    _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+                }
+                catch
+                {
+                    _Snackbar.Add($"حدث خطاء", Severity.Error);
                 }
 
-                _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error );
             }
 
 
@@ -203,7 +260,8 @@
                     UserName = CreateUserModel.UserName,
                     Email = CreateUserModel.Email,
                     BranchId = CreateUserModel.BranchId,
-                    Role = CreateUserModel.Role
+                    Role = CreateUserModel.Role,
+                    Mobile = CreateUserModel.Mobile
                     
                    
                     

@@ -58,10 +58,11 @@
     </ToolBarContent>
 
     <HeaderContent>
-        <MudTh><MudTableSortLabel T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
-
-        <MudTh><MudTableSortLabel T="UserViewModel"> الصلاحية</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="username_field" T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="email_field" T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="UserViewModel"> رقم الجوال</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="UserViewModel"> المركز</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="UserViewModel"> الصلاحية</MudTableSortLabel></MudTh>
 
 
         <MudTh><MudTableSortLabel T="UserViewModel">الاجراءت</MudTableSortLabel></MudTh>
@@ -70,11 +71,42 @@
     <RowTemplate>
 
 
-        <MudTd DataLabel="اسم المستخدم">@(context.FirstName + context.LastName)</MudTd>
+        <MudTd DataLabel="اسم المستخدم">@(context.FirstName +" "+ context.LastName)</MudTd>
 
         <MudTd DataLabel="البريد  الالكتروني">@context.Email</MudTd>
 
+            <MudTd DataLabel="رقم الجوال">
+                
+                @{
+                string mobile = "---";
 
+                if (context.Mobile != null)
+                {
+                    mobile = context.Mobile;
+                }
+            }
+
+            @mobile
+                
+            </MudTd>
+
+            <MudTd DataLabel="المركز">
+
+                @{
+                string branchName = "---";
+
+                var branch = context.BranchId != null ? Branches.Find(branch => branch.Id == context.BranchId) : null;
+
+                if (branch != null)
+                {
+                    branchName = branch.Name;
+                }
+
+               }
+
+               @branchName
+
+            </MudTd>
 
             <MudTd DataLabel="الصلاحية">
 
@@ -215,10 +247,14 @@
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-
+            case "username_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.FirstName);
+                break;
             case "email_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Email);
                 break;
+
+            
 
         }
 
@@ -280,7 +316,8 @@
                 UserName = UserViewModel.UserName,
                 Email = UserViewModel.Email,
                 BranchId = UserViewModel.BranchId,
-                Role = role
+                Role = role,
+               Mobile=UserViewModel.Mobile
 
 
 

@@ -138,7 +138,8 @@ namespace ReceiptVoucher.Server.Controllers
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                BranchId = model.BranchId
+                BranchId = model.BranchId,
+                PhoneNumber=model.Mobile
             };
 
             var result = await _userManager.CreateAsync(userToDB, model.Password);
@@ -237,6 +238,7 @@ namespace ReceiptVoucher.Server.Controllers
             userInDB.UserName = model.UserName;
             userInDB.Email = model.Email;
             userInDB.BranchId = model.BranchId;
+            userInDB.PhoneNumber = model.Mobile;
 
             var result = await _userManager.UpdateAsync(userInDB);
             if (!result.Succeeded)
@@ -275,6 +277,8 @@ namespace ReceiptVoucher.Server.Controllers
                 Email = userInDB.Email,
                 RoleName = currentRoles.FirstOrDefault(),
                 BranchId = userInDB.BranchId,
+                
+                
             };
 
             return Ok(new BaseResponse<UserResponse>(userResponse, "User updated successfully.", null, true));
