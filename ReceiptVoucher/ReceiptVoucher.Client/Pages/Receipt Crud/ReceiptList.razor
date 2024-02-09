@@ -192,6 +192,8 @@
 
     public List<UserViewModel> UsersInfo = new List<UserViewModel>();
 
+    string? role;
+
     void PrintReceipt(int id)
     {
         var url = $"api/Receipts/GetReceiptRdcl/{id}";
@@ -226,6 +228,10 @@
         {
             UserBranchId = currentUser.BranchId;
             UserId = currentUser.Id;
+
+            var roles = currentUser.Roles.ToList();
+
+            role = roles[0];
         }
 
 
@@ -304,8 +310,8 @@
 
                 if (currentUser!=null  )
                 {
-                    var roles = currentUser.Roles.ToList();
-                    if (roles[0] != RolesNames.Admin)
+                    
+                    if (role!=null && role!= RolesNames.Admin)
                     {
                         data = response.Where(x => x.BranchId == currentUser.BranchId).ToList();
                     }
