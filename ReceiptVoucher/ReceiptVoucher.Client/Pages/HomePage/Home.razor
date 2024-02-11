@@ -1,12 +1,15 @@
 ﻿@page "/home"
-@rendermode InteractiveAuto
-@* @rendermode @(new InteractiveServerRenderMode(false) ) *@
+@using System.Security.Claims
+@* @rendermode InteractiveAuto *@
+@rendermode @(new InteractiveServerRenderMode(false) )
 
 
-@attribute [Authorize]
+@* @attribute [Authorize] *@
 
+@inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
 
 <PageTitle>Makarim</PageTitle>
+
 
 <br />
 <!--اسم الصفحه-->
@@ -18,6 +21,21 @@
     </span>
 </p>
 
-<ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
 
 <ChartReports/>
+    
+
+
+
+@code {
+
+    private string userRole = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _IAuthService.CheckIfNotAdminRedirectToLoginAsync();
+    }
+
+
+}

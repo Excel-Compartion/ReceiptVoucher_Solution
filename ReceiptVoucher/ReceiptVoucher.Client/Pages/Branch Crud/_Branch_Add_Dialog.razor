@@ -45,16 +45,16 @@
     public EventCallback<bool> OnClose {get; set; }
 
     [Parameter]
-    public Branch OriginalBranch { get; set; }
+    public Branch? OriginalBranch { get; set; }
 
 
     [Parameter]
-    public string BtnName { get; set; }
+    public string BtnName { get; set; } = null!;
 
     string Icon = string.Empty;
 
 
-    public Branch Branch {get; set; }
+    public Branch Branch { get; set; } = new Branch();
 
   
 

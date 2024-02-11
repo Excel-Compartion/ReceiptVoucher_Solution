@@ -1,4 +1,5 @@
-﻿using ReceiptVoucher.Core.Consts;
+﻿using Microsoft.EntityFrameworkCore;
+using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -144,6 +145,9 @@ namespace ReceiptVoucher.EF.Repositories
             return _context.Set<T>().Count(match);
         }
 
-        
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
+        {
+            return await _context.Set<T>().AnyAsync(match);
+        }
     }
 }

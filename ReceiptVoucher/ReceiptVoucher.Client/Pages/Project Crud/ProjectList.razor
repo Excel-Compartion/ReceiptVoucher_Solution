@@ -6,6 +6,8 @@
 
 @inject IDialogService _DialogService 
 @inject ISnackbar _Snackbar
+@inject ReceiptVoucher.Client.Services.IAuthService _IAuthService
+
 
 <PageTitle>Makarim</PageTitle>
 
@@ -38,7 +40,7 @@
 
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Project>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table">
+            Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
 
         <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
@@ -61,16 +63,16 @@
         <MudTh><MudTableSortLabel  T="Project">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
 
-    <RowTemplate>
+    <RowTemplate Context="MudContext">
 
         
-           <MudTd DataLabel="اسم المشروع">@context.Name</MudTd>
+            <MudTd DataLabel="اسم المشروع">@MudContext.Name</MudTd>
 
             
             <MudTd DataLabel="حاله التفعيل">
                 
                 @{
-                var isActive = @context.IsActive;
+                var isActive = @MudContext.IsActive;
 
                 if (isActive)
                 {
@@ -86,13 +88,13 @@
 
             </MudTd>
 
-        <MudTd DataLabel="اسم المشروع">@context.Date</MudTd>
+        <MudTd DataLabel="اسم المشروع">@MudContext.Date</MudTd>
             <MudTd DataLabel="الاجراءت">
 
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
-                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(MudContext, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteBranch(MudContext.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
                 </MudButtonGroup>
 
             </MudTd>
@@ -107,6 +109,7 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+
 
 
 
@@ -180,8 +183,11 @@
 
 
     @code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _IAuthService.CheckIfNotAdminRedirectToLoginAsync();
 
-
+    }
 
     //<!--==================     Add / Edit Dialog      =========================================-->
 

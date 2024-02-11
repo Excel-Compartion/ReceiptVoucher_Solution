@@ -310,8 +310,8 @@ namespace ReceiptVoucher.EF.Migrations
                         .HasColumnName("ProjectId");
 
                     b.Property<string>("ReceivedBy")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ReceivedFrom")
                         .IsRequired()
@@ -330,6 +330,8 @@ namespace ReceiptVoucher.EF.Migrations
                     b.HasIndex("BranchId");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ReceivedBy");
 
                     b.HasIndex("SubProjectId");
 
@@ -380,6 +382,9 @@ namespace ReceiptVoucher.EF.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -437,6 +442,8 @@ namespace ReceiptVoucher.EF.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -514,11 +521,19 @@ namespace ReceiptVoucher.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ReceiptVoucher.Core.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ReceivedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ReceiptVoucher.Core.Entities.SubProject", "SubProject")
                         .WithMany("Receipts")
                         .HasForeignKey("SubProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Branch");
 
@@ -540,6 +555,10 @@ namespace ReceiptVoucher.EF.Migrations
 
             modelBuilder.Entity("ReceiptVoucher.Core.Identity.ApplicationUser", b =>
                 {
+                    b.HasOne("ReceiptVoucher.Core.Entities.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId");
+
                     b.OwnsMany("ReceiptVoucher.Core.Identity.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
@@ -571,6 +590,8 @@ namespace ReceiptVoucher.EF.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
                         });
+
+                    b.Navigation("Branch");
 
                     b.Navigation("RefreshTokens");
                 });

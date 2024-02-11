@@ -1,6 +1,7 @@
 ﻿
 
 using ReceiptVoucher.Core.Enums;
+using ReceiptVoucher.Core.Identity;
 
 
 namespace ReceiptVoucher.Core.Entities;
@@ -15,8 +16,8 @@ public class Receipt
     public string ReceivedFrom { get; set; } = null!;
 
 
-    [StringLength(250)]
-    public string? ReceivedBy { get; set; } = "default";    // Foreign Key From User
+    [Required]
+    public string ReceivedBy { get; set; }     // Foreign Key From User
 
   
     [Column(TypeName = "decimal(18, 2)")]
@@ -39,9 +40,6 @@ public class Receipt
 
     public DateOnly Date { get; set; }
 
-
-
-
   
     public GrantDest GrantDestinations { get; set; }
 
@@ -52,19 +50,11 @@ public class Receipt
 
     public string? Mobile { get; set; }
 
-    
-
-
-    
-
-
     // Payment Type  Prop Related
 
     public PaymentTypes PaymentType { get; set; }
 
 
-    
- 
     public int? CheckNumber { get; set; }
 
 
@@ -79,6 +69,10 @@ public class Receipt
 
 
     //-------- Navigation Properties ---
+    [ForeignKey(nameof(ReceivedBy))]
+    public ApplicationUser? ApplicationUser { get; set; }
+
+
     [ForeignKey("BranchId")]
     public Branch? Branch { get; set; } = null!;
 

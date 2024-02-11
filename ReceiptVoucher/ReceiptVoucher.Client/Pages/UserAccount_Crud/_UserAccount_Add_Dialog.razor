@@ -1,0 +1,308 @@
+﻿@using ReceiptVoucher.Core.Models.ResponseModels
+@inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+
+
+<MudDialog Class="custom-modal" Style="width: 100vw; height: auto">
+    <DialogContent>
+
+        <EditForm Model="@CreateUserModel" OnValidSubmit="Submit" Class="custom-form">
+            <DataAnnotationsValidator />
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.FirstName)" @bind-Value="@CreateUserModel.FirstName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاول"  ></MudTextField>
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.LastName)" @bind-Value="@CreateUserModel.LastName" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="الاسم الاخير"  ></MudTextField>
+
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Mobile)" @bind-Value="@CreateUserModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="رقم الجوال"  ></MudTextField>
+
+            <MudTextField Immediate="true" For="@(()=>CreateUserModel.Email)" @bind-Value="@CreateUserModel.Email" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="البريد الالكتروني"  ></MudTextField>
+
+            @if (BtnName != ButtonTypes.Edit)
+            {
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور"  ></MudTextField>
+
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور"  ></MudTextField>
+
+            }
+
+
+            <MudSelect Label="الصلاحية" For="@(()=>CreateUserModel.Role)" @bind-Value="@CreateUserModel.Role">
+
+
+
+                @foreach (var role in Roles)
+                {
+
+                    <MudSelectItem Value="@role">@role.RoleName</MudSelectItem>
+
+
+                }
+
+
+            </MudSelect>
+
+
+            @if (CreateUserModel.Role.RoleName != RolesNames.Admin)
+            {
+                if (CreateUserModel.BranchId == null && Branches.Count()!=0)
+                {
+                    CreateUserModel.BranchId = Branches[0].Id;
+                }
+
+                <MudSelect T="int?" Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId">
+       
+                    @{
+                        @foreach (var branch in Branches)
+                        {
+                            int? branchId = branch.Id;
+                            <MudSelectItem T="int?" Value="@branchId">@branch.Name</MudSelectItem>
+                        }
+                    }
+                </MudSelect>
+            }
+           
+
+         
+                <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                        <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                    </div>
+
+            
+
+
+
+
+        </EditForm>
+
+    </DialogContent>
+</MudDialog>
+
+    @code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public EditProfileViewModel? OriginalEditProfileViewModel { get; set; }
+
+
+    [Parameter]
+    public string BtnName { get; set; } = null!;
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
+
+
+    [Parameter]
+    public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
+
+    [Parameter]
+    public List<Branch> Branches { get; set; } = new List<Branch>();
+
+
+
+    public CreateUserModel CreateUserModel { get; set; } = new CreateUserModel();
+
+
+
+
+
+
+
+
+
+    protected override void OnParametersSet()
+    {
+        if (OriginalEditProfileViewModel == null)
+        {
+            CreateUserModel = new CreateUserModel();
+
+            var role = Roles.Where(x => x.RoleName == RolesNames.Admin).FirstOrDefault();
+
+            if (role != null)
+            {
+                CreateUserModel.Role = role;
+            }
+
+            CreateUserModel.UserName = "xxxxxxxxx";
+
+        }
+        else
+        {
+
+            CreateUserModel = new CreateUserModel
+                {
+                    FirstName = OriginalEditProfileViewModel.FirstName,
+                    LastName = OriginalEditProfileViewModel.LastName,
+                    UserName = OriginalEditProfileViewModel.UserName,
+                    Email = OriginalEditProfileViewModel.Email,
+                    Password = "########",
+                    ConfirmPassword = "########",
+                    Role = OriginalEditProfileViewModel.Role,
+                    BranchId = OriginalEditProfileViewModel.BranchId,
+                    Mobile = OriginalEditProfileViewModel.Mobile
+                    
+
+                };
+
+
+        }
+    }
+
+    async void Submit()
+    {
+
+        if (CreateUserModel.Role.RoleName == RolesNames.Admin)
+        {
+            CreateUserModel.BranchId = null;
+        }
+
+
+        /// اسناد اسم المستخدم حسب البريد الالكتروني
+        string Email = CreateUserModel.Email;
+
+        // Find the index of the "@" symbol.
+        int atIndex = Email.IndexOf('@');
+
+        // If the "@" symbol was found, extract the substring before it.
+        if (atIndex > 0)
+        {
+            string username = Email.Substring(0, atIndex);
+
+            // Convert the username to lowercase.
+            username = username.ToLower();
+
+            int n = username.Length;
+            if (n < 2)
+            {
+                CreateUserModel.UserName = username+"xxxxx";
+            }
+
+            else
+            {
+                CreateUserModel.UserName = username;
+            }
+
+        }
+        /////////
+
+
+
+        if (UserId == "0")
+        {
+            // // The branch has no ID, so it's a new branch
+
+
+            // CreateUserModel.UserName = CreateUserModel.FirstName + " " + CreateUserModel.LastName;
+
+
+
+            var response = await Http.PostAsJsonAsync("api/Users", CreateUserModel);
+
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+            }
+
+            else
+            {
+                try
+                {
+                    BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+
+                    var messageErrors = content.Errors;
+
+                    string allMessages = string.Empty;
+
+                    if (messageErrors is not null)
+                    {
+
+                        allMessages = string.Join("\n", messageErrors);
+                    }
+
+                    _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+                }
+                catch
+                {
+                    _Snackbar.Add($"حدث خطاء", Severity.Error);
+                }
+
+            }
+
+
+        }
+
+        else
+        {
+
+            EditProfileViewModel editProfileViewModel = new EditProfileViewModel()
+
+                {
+
+                    UserId = UserId,
+                    FirstName = CreateUserModel.FirstName,
+                    LastName = CreateUserModel.LastName,
+                    UserName = CreateUserModel.UserName,
+                    Email = CreateUserModel.Email,
+                    BranchId = CreateUserModel.BranchId,
+                    Role = CreateUserModel.Role,
+                    Mobile = CreateUserModel.Mobile
+                    
+                   
+                    
+                };
+
+
+
+
+            var response = await Http.PutAsJsonAsync("api/Users", editProfileViewModel);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم تعديل الحساب بنجاح!", Severity.Success);
+            }
+            else
+            {
+                BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+
+                var messageErrors = content.Errors;
+
+                string allMessages = string.Empty;
+
+                if (messageErrors is not null)
+                {
+
+                    allMessages = string.Join("\n", messageErrors);
+                }
+
+                _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+            }
+
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+
+        // Trigger the OnClose event
+        OnClose.InvokeAsync(true);
+
+    }
+
+
+    void Cancel() => MudDialog.Cancel();
+
+
+}

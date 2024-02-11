@@ -10,6 +10,8 @@ using System.Reflection;
 using Humanizer;
 using System.Globalization;
 using SU.StudentServices.Data.Helpers;
+using Microsoft.AspNetCore.Identity;
+using ReceiptVoucher.Core.Identity;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -20,12 +22,17 @@ namespace ReceiptVoucher.Server.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReceiptRepository _receiptRepository;
 
+
+        private readonly UserManager<ApplicationUser> _userManager;
+
         IWebHostEnvironment webHostEnvironment;
 
-        public ReceiptsController(IUnitOfWork unitOfWork, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi)
+        public ReceiptsController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi)
         {
             _unitOfWork = unitOfWork;
             _receiptRepository = receiptRepository;
+
+            _userManager = userManager; 
 
             webHostEnvironment = WebHostEnvi;
         }
@@ -52,16 +59,24 @@ namespace ReceiptVoucher.Server.Controllers
         {
             var Receipt = await _receiptRepository.GetReceiptRdclById(id);
 
+            var users = await _userManager.Users.ToListAsync();
+
             ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
 
             receiptRdclViewModel.Id = Receipt.Id;
             receiptRdclViewModel.ReceivedFrom = Receipt.ReceivedFrom;
-            receiptRdclViewModel.ReceivedBy = Receipt.ReceivedBy;
+
+           var userName=users.Where(x=>x.Id==Receipt.ReceivedBy).FirstOrDefault();
+       
+
+            receiptRdclViewModel.ReceivedBy = userName.FirstName +" "+ userName.LastName;
+            
+            
             receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
             receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
             receiptRdclViewModel.SubProject = Receipt.SubProject.Name + "";
             receiptRdclViewModel.ForPurpose = Receipt.ForPurpose;
-            receiptRdclViewModel.Date = Receipt.Date + "";
+            receiptRdclViewModel.Date = Receipt.Date.ToString("yyyy-MM-dd") + "";
             receiptRdclViewModel.PaymentType = Receipt.PaymentType.GetDisplayName();
             receiptRdclViewModel.CheckNumber = Receipt.CheckNumber + "";
 
@@ -132,8 +147,9 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-        [HttpPost("AddOneAsync")]
-        public async Task<IActionResult> AddOne(Receipt receipt)
+        [HttpPost]
+        [Route("AddReceipt")]
+        public async Task<IActionResult> AddReceipt([FromBody] Receipt receipt)
         {
             
             receipt.Date=DateOnly.FromDateTime(DateTime.Now);
@@ -147,6 +163,14 @@ namespace ReceiptVoucher.Server.Controllers
 
             return Ok("receipt Created Succesfully.");
         }
+
+
+
+
+
+       
+
+
 
         [HttpPost("GetFilteredData")]
         public async Task<IActionResult> GetFilteredData(FilterData filterData)
@@ -167,7 +191,7 @@ namespace ReceiptVoucher.Server.Controllers
 
         [HttpPut]
         //[AutoValidateAntiforgeryToken]
-        public IActionResult Update(Receipt receipt /*, int id*/)
+        public IActionResult Update(Receipt receipt )
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -180,7 +204,7 @@ namespace ReceiptVoucher.Server.Controllers
             if (editedReceipt is null)
                 return BadRequest();
 
-            _unitOfWork.Complete();
+            _unitOfWork.Complete(); 
             return Ok(editedReceipt);
         }
 

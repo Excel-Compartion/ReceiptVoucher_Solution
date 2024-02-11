@@ -72,20 +72,53 @@ h1:focus {
 
 
 /* Start Login */
-.testBody .container-fluid.h-custom{
+.testBody .container-fluid.h-custom {
     display: flex;
     align-items: center;
-    min-height: 100vh!important;
+    min-height: calc(100vh - 141px ) !important;
 }
 @media (min-width:768px) {
     .testBody .form-img{
         flex-direction: row-reverse;
     }
+    .testBody .container-fluid.h-custom {
+        margin: 20px 0;
+    }
 }
-.testBody .login-footer{
+@media (min-width: 992px) {
+    .testBody .form-img {
+        width: 80%;
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+.testBody .container-fluid.h-custom::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background: #d8d8d84d; */
+    z-index: -1;
+    right: 0;
+}
+.testBody .container-fluid.h-custom .form-img {
+    box-shadow: 0 0 7px 5px #8888886b;
+    border-radius: 0 10px 0 10px;
+    overflow: hidden;
+    /*background: #c5c5c540;*/
+}
+.testBody #LoginBtn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: var(--color-custom);
+    color: white;
+    font-family: " Tajawal", sans-serif;
+}
+.testBody .login-footer {
     position: absolute;
     left: 0;
     width: 100%;
+    height: 37px;
     background-color: var(--color-teal) !important;
 }
 /* End Login */
@@ -273,3 +306,129 @@ h1:focus {
 }
 
 /* E Home ChartReports */
+
+/*S NavBar*/
+.mud-nav-link-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /*font-size: 17px;*/
+    /*font-weight: bold;*/
+}
+.mud-nav-link {
+    border-radius: 8px;
+}
+.navLinkBtn .active,
+.navLinkBtn:hover a {
+    background-color: var(--color-custom) !important;
+    color: white !important;
+    border-radius: 8px;
+    font-weight: bold !important;
+    padding: 8px !important;
+}
+.mud-nav-link.active:not(.mud-nav-link-disabled) {
+    font-weight: bold !important;
+}
+.mud-nav-link.active svg,
+.mud-nav-link:hover svg {
+    color: white !important;
+}
+.mud-nav-link img {
+    width: 20px;
+    border-radius: 50%;
+    outline: 2px solid white;
+}
+
+.logOutBtn a:hover svg {
+    color: white !important;
+}
+.logOutBtn a {
+    border: 2px solid var(--bs-danger) !important;
+    color: var(--bs-danger) !important;
+    /*font-size: 17px;*/
+    font-weight: bold;
+}
+.logOutBtn a svg {
+    color: var(--bs-danger) !important;
+}
+.logOutBtn a:hover {
+    background-color: var(--bs-danger) !important;
+    background-color: #dc3545 !important;
+    color: white !important;
+    /* font-size: 17px; */
+    font-weight: bold;
+}
+/*------*/
+.logInBtn a {
+    border: 2px solid var(--mud-palette-success-darken) !important;
+    color: var(--mud-palette-success-darken) !important;
+    /*font-size: 17px;*/
+    font-weight: bold;
+}
+.logInBtn a svg {
+    color: var(--mud-palette-success-darken) !important;
+}
+.logInBtn a:hover svg {
+    color: white !important;
+}
+.logInBtn a:hover {
+    background-color: var(--mud-palette-success-darken) !important;
+    background-color: #00a344 !important;
+    color: white !important;
+    /* font-size: 17px; */
+    font-weight: bold;
+}
+/*------*/
+/*E NavBar*/
+
+/*S Profile page*/
+.profileContainer {
+    border: 1px solid #c5c5c5;
+    padding: 70px 20px 20px;
+    border-radius: 8px;
+    box-shadow: -1px 4px 5px 0px #8685856b;
+    margin-top: 60px;
+    position: relative;
+}
+.profileContainer img {
+        width: 120px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 2px solid #b4b4b4;
+}
+.continerPass {
+    border: 1px solid #c5c5c5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: -1px 4px 5px 0px #8685856b;
+    margin-top: 15px;
+    position: relative;
+    padding-bottom:0px
+}
+.continerPass h5 {
+    color: var(--color-custom);
+    font-weight: bold;
+        margin-bottom: 20px;
+}
+.continerPass label{
+        font-weight: 500;
+    font-size: 16px;
+}
+.continerPass button {
+        margin-right: auto;
+    margin-left: auto;
+    display: block;
+    background-color: var(--color-custom);
+}
+.continerPass p{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--mud-palette-success-darken);
+    margin-bottom: 10px;
+}
+/*E Profile page*/

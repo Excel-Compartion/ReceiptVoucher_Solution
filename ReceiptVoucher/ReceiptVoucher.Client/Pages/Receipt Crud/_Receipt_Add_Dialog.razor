@@ -216,10 +216,38 @@
                 <MudItem sm="4" xs="12">
                     <MudSelect Label="المركز" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
-                        @foreach (var branch in Branches)
-                        {
-                            <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                        @{
+                            if(UserBranchId!=null)
+                            {
+                               
+                                @foreach (var branch in Branches)
+                                {
+                                    if (branch.Id == UserBranchId)
+                                    {
+                                       
+                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                                    
+                                    }
+                                   
+                                }
+
+                            }
+
+                            else
+                            {
+                                @foreach (var branch in Branches)
+                                {
+                                    
+                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+                                    
+
+                                }
+                            }
+
+
+
                         }
+                      
                     </MudSelect>
                 </MudItem>
 
@@ -298,25 +326,27 @@
     public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
-    public ReceiptViewModel OriginalReceiptViewModel { get; set; }
+    public ReceiptViewModel? OriginalReceiptViewModel { get; set; }
 
 
     [Parameter]
-    public string BtnName { get; set; }
+    public string BtnName { get; set; } = null!;
+
+
 
     string Icon = string.Empty;
 
 
     [Parameter]
-    public List<Branch> Branches { get; set; }
+    public List<Branch> Branches { get; set; } = new List<Branch>();
 
     [Parameter]
-    public List<Project> Projects { get; set; }
+    public List<Project> Projects { get; set; } = new List<Project>();
 
     [Parameter]
-    public List<SubProject> SubProjects { get; set; }
+    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
 
-    public ReceiptViewModel ReceiptViewModel { get; set; }
+    public ReceiptViewModel ReceiptViewModel { get; set; } = new ReceiptViewModel();
 
 
     bool isCheckNumberCleared = false;
@@ -332,6 +362,11 @@
 
     bool ReadOnlyStatus = false;
 
+    [Parameter]
+    public int? UserBranchId { get; set; }
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
 
 
 
@@ -345,6 +380,17 @@
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentTypes.Cash;
 
+
+            if(UserBranchId!=null && Branches != null)
+            {
+                var branch = Branches.Where(x => x.Id == UserBranchId).FirstOrDefault();
+
+                if (branch != null)
+                {
+                    ReceiptViewModel.BranchId = branch.Id;
+                }
+
+            }
 
 
 
@@ -398,6 +444,18 @@
         }
     }
 
+    async void SendSMSMessage(Receipt receipt)
+    {
+        var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
+        if (response.IsSuccessStatusCode)
+        {
+            _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
+        }
+        else
+        {
+            _Snackbar.Add($"فشل في ارسال رسالة ال SMS : {response.Content}", Severity.Error);
+        }
+    }
 
 
 
@@ -407,60 +465,65 @@
 
 
 
-            Receipt receipt = new Receipt();
+        Receipt receipt = new Receipt();
 
 
-            receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
-            receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
-            receipt.TotalAmount = ReceiptViewModel.TotalAmount;
-            receipt.BranchId = ReceiptViewModel.BranchId;
-            receipt.SubProjectId = ReceiptViewModel.SubProjectId;
-            receipt.ForPurpose = ReceiptViewModel.ForPurpose;
-            receipt.Date = ReceiptViewModel.Date;
-            receipt.PaymentType = ReceiptViewModel.PaymentType;
-            receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
-            receipt.Mobile = ReceiptViewModel.Mobile;
-            receipt.ProjectId = ReceiptViewModel.ProjectId;
-
-
-
-            if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
+        receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
+        receipt.TotalAmount = ReceiptViewModel.TotalAmount;
+        receipt.BranchId = ReceiptViewModel.BranchId;
+        receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+        receipt.ForPurpose = ReceiptViewModel.ForPurpose;
+        receipt.Date = ReceiptViewModel.Date;
+        receipt.PaymentType = ReceiptViewModel.PaymentType;
+        receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
+        receipt.Mobile = ReceiptViewModel.Mobile;
+        receipt.ProjectId = ReceiptViewModel.ProjectId;
+       
 
 
 
 
 
-            switch (ReceiptViewModel.PaymentType)
+        if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
+
+
+
+
+
+        switch (ReceiptViewModel.PaymentType)
+        {
+            case PaymentTypes.Check:
+                receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+
+
+
+                // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
+                // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
+                receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+
+                break;
+            case PaymentTypes.Account:
+                receipt.AccountNumber = ReceiptViewModel.AccountNumber;
+                break;
+            case PaymentTypes.Bank:
+                receipt.Bank = ReceiptViewModel.Bank;
+                break;
+
+        }
+
+
+        if (ReceiptViewModel.Id == 0)
+        {
+            receipt.ReceivedBy = UserId;
+
+            var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
+            if (response.IsSuccessStatusCode)
             {
-                case PaymentTypes.Check:
-                    receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+                _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
 
-
-
-                    // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
-                    // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
-                    receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
-
-
-                    break;
-                case PaymentTypes.Account:
-                    receipt.AccountNumber = ReceiptViewModel.AccountNumber;
-                    break;
-                case PaymentTypes.Bank:
-                    receipt.Bank = ReceiptViewModel.Bank;
-                    break;
-
+                SendSMSMessage(receipt);
             }
-
-
-            if (ReceiptViewModel.Id == 0)
-            {
-
-                var response = await Http.PostAsJsonAsync("api/Receipts/AddOneAsync", receipt);
-                if (response.IsSuccessStatusCode)
-                {
-                    _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
-                }
                 else
                 {
                     _Snackbar.Add($"فشل في اضافه السند : {response.StatusCode}", Severity.Error);
@@ -471,6 +534,8 @@
             else
             {
                 receipt.Id = ReceiptViewModel.Id;
+
+               receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
 
                 var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
                 if (response.IsSuccessStatusCode)

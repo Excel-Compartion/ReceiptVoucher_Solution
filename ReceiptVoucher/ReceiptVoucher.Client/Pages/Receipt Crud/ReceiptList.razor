@@ -2,11 +2,18 @@
 @rendermode InteractiveAuto
 
 @using System.Net.Http.Json
+@using Microsoft.AspNetCore.Identity
+@using ReceiptVoucher.Client.Services
+@using System.Security.Claims
+
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> _UserManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IAuthService _IAuthservice
 
 <PageTitle>Makarim</PageTitle>
 
@@ -15,13 +22,13 @@
         --color-custom: #3090C7;
     }
 
-.ReceiptTable {
-    width: 100%;
-    height: auto;
-    margin-right: auto;
-    margin-left: auto;
-    overflow-x: auto;
-}
+    .ReceiptTable {
+        width: 100%;
+        height: auto;
+        margin-right: auto;
+        margin-left: auto;
+        overflow-x: auto;
+    }
 
 </style>
 
@@ -38,7 +45,7 @@
 <p style=" margin-bottom:2% ;">
 
 
-        <b style="color:dodgerblue;font-size:xx-large">|</b>
+    <b style="color:dodgerblue;font-size:xx-large">|</b>
     <span class="mainTitle">
 
         <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
@@ -51,37 +58,72 @@
 
 </p>
 
-<MudTable  Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
-    Dense="true" Hover="true" @ref="table">
+<MudTable Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
         @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
         <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
             <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
-            
+
             <span>إضافة</span>
         </MudButton>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">المودع</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+
+        <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستلم</MudTableSortLabel></MudTh>
+
+        @if (UserBranchId == null)
+        {
+            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+        }
+
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="رقم السند">@context.Id</MudTd>
-            <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+
+            <MudTd DataLabel="المستلم">
+
+
+                @{
+                string ReceivedBy = "";
+                try
+                {
+
+                    var UserName = UsersInfo.Where(x => x.Id == context.ReceivedBy).FirstOrDefault();
+                    if (UserName != null)
+                    {
+                        ReceivedBy = UserName.FirstName + " " + UserName.LastName;
+                    }
+
+                }
+                catch { }
+            }
+
+            @ReceivedBy
+
+        </MudTd>
+
+        @if (UserBranchId == null)
+        {
             <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
-            <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+        }
+
+
+        <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
@@ -93,11 +135,13 @@
 
                     <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
 
+
                     <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+
                 </MudButtonGroup>
 
 
-        
+
 
             </MudTd>
         </RowTemplate>
@@ -112,15 +156,9 @@
         </PagerContent>
     </MudTable>
 
-  
+
     <br />
 
-
-   
-   
-
-
- 
 
 
 
@@ -144,12 +182,26 @@
     public bool PrintActive = false;
 
     public string ResponseMessage = "لم يتم العثور على سجلات";
-   
+
+
+    public int? UserBranchId { get; set; }
+
+    public UserViewModel currentUser { get; set; } = new();
+
+    public string UserId { get; set; } = null!;
+
+    public List<UserViewModel> UsersInfo = new List<UserViewModel>();
+
+    string? role;
+
     void PrintReceipt(int id)
     {
         var url = $"api/Receipts/GetReceiptRdcl/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
+
+
+
 
 
     // private async Task PrintReceipt(int ReceiptId)
@@ -165,8 +217,38 @@
 
     // }
 
+
+
     protected override async Task OnInitializedAsync()
     {
+
+        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+
+        if (currentUser != null)
+        {
+            UserBranchId = currentUser.BranchId;
+            UserId = currentUser.Id;
+
+            var roles = currentUser.Roles.ToList();
+
+            role = roles[0];
+        }
+
+
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<UserViewModel>>("api/Users");
+
+            if (response != null)
+            {
+                UsersInfo = response;
+            }
+
+
+        }
+        catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
+
 
         try
         {
@@ -179,7 +261,7 @@
 
 
         }
-        catch {  }
+        catch { }
 
         try
         {
@@ -225,29 +307,47 @@
 
             if (response != null)
             {
-                data = response;
+
+                if (currentUser!=null  )
+                {
+                    
+                    if (role!=null && role!= RolesNames.Admin)
+                    {
+                        data = response.Where(x => x.BranchId == currentUser.BranchId).ToList();
+                    }
+                    
+                    else
+                    {
+                        data = response;
+                    }
+                }
+               
+               
             }
 
 
         }
         catch { ResponseMessage = "حدث خطاء اثناء تحميل البيانات"; }
 
-       
+
 
         data = data.Where(receipt =>
-        {
-            if (string.IsNullOrWhiteSpace(searchString))
-                return true;
-            if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-            if ($"{receipt.Id}".Contains(searchString))
-                return true;
-            return false;
-        }).ToArray();
+     {
+         if (string.IsNullOrWhiteSpace(searchString))
+             return true;
+         if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+             return true;
+         if ($"{receipt.Id}".Contains(searchString))
+             return true;
+         if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+             return true;
+         return false;
+     }).ToArray();
+
         totalItems = data.Count();
         switch (state.SortLabel)
         {
-       
+
             case "id_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Id);
                 break;
@@ -256,20 +356,20 @@
                 break;
 
             case "receivedFrom_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
+                break;
 
             case "grantDestinations_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.GrantDestinations.GetDisplayName());
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.GrantDestinations.GetDisplayName());
+                break;
 
             case "totalAmount_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.TotalAmount);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.TotalAmount);
+                break;
 
             case "Branch_field":
-            data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
-            break;
+                data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
+                break;
 
             case "SubProject_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.SubProject.Name);
@@ -282,6 +382,10 @@
             case "PaymentType_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.PaymentType.GetDisplayName());
                 break;
+
+            case "receivedBy_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.ReceivedBy);
+                break;
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
@@ -293,7 +397,7 @@
         searchString = text;
 
         if (table != null) { table.ReloadServerData(); }
-       
+
     }
 }
 
@@ -317,6 +421,10 @@
         parameters.Add("Projects", Projects);
 
         parameters.Add("SubProjects", SubProjects);
+
+        parameters.Add("UserBranchId", UserBranchId);
+
+        parameters.Add("UserId", UserId);
 
         var options = new DialogOptions() { CloseButton = true };
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
@@ -370,6 +478,9 @@
         parameters.Add("Projects", Projects);
 
         parameters.Add("SubProjects", SubProjects);
+
+        parameters.Add("UserBranchId", UserBranchId);
+        parameters.Add("UserId", UserId);
 
         var options = new DialogOptions() { CloseButton = true };
 
@@ -430,7 +541,7 @@
                     _Snackbar.Add("تم حذف بيانات السند بنجاح", Severity.Success);
 
                     // Reload the table data
-                    if (table != null) {await table.ReloadServerData(); }
+                    if (table != null) { await table.ReloadServerData(); }
                 }
                 else
                 {

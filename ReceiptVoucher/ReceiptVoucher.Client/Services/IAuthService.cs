@@ -1,16 +1,18 @@
-﻿
-
-using ReceiptVoucher.Core.Models;
-using ReceiptVoucher.Core.Models.Dtos.Auth;
+﻿using ReceiptVoucher.Core.Models.Dtos.Auth;
+using ReceiptVoucher.Core.Models.ResponseModels;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 
 namespace ReceiptVoucher.Client.Services
 {
-	public interface IAuthService
+    public interface IAuthService
 	{
 		Task<BaseResponse<AuthModel>> RegisterAsync(RegisterModel registerModel);
 		Task<BaseResponse<AuthModel>> LoginAsync(LoginModel loginModel);
         Task<BaseResponse<bool>> ChangePassword(UserChangePassword userChangePasswordModel);
 
+        Task CheckIfNotAdminRedirectToLoginAsync();
+
+        Task<UserViewModel?> GetCurrentUserDetailsAsync();
 
         //Task<string> AddRoleAsync(AddRoleModel roleModel);
         //Task<AuthModel> RefreshTokenAsync(string token);

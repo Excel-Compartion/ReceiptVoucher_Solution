@@ -11,5 +11,6 @@ builder.Services.AddBlazoredLocalStorage(); // added local storage for jwt
 builder.Services.AddScoped<ReceiptVoucher.Client.Services.IAuthService, ReceiptVoucher.Client.Services.AuthService>();
 builder.Services.AddOptions();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+//builder.Services.AddAuthorizationCore();
 
 await builder.Build().RunAsync();

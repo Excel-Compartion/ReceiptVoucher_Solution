@@ -1,48 +1,95 @@
-﻿
+﻿@rendermode InteractiveServer
+
+@using ReceiptVoucher.Client.Services
+@using ReceiptVoucher.Core.Consts
+@using ReceiptVoucher.Core.Models.ViewModels.UserModels
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject IAuthService _IAuthservice
 
 
 
 <MudNavMenu Color="Color.Info" Bordered="true">
 
     <MudImage Src="images\logo.svg" Style="margin-top:-2%;margin-right:10px" Width="200" Height="100" Alt="Icon" />
-    <hr style="color:deepskyblue ;margin-top:0%" />
-    <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
-        الصفحة الرئيسية
-    </MudNavLink>
 
-    <AuthorizeView>
-        <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+    <hr style="color: var(--color-custom); ;margin-top:0%" />
+
+    @if (UserRole.Equals(RolesNames.Admin))
+    {
+
+        <MudNavLink Href="home" Match="NavLinkMatch.All" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.Home" Class="icon-color" />
+            الصفحة الرئيسية
+        </MudNavLink>
+        <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
             المراكز الاعلامية
         </MudNavLink>
-        <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.FileCopy" Class="icon-color" />
-            المشاريع
+            المشاريع الرئيسية
         </MudNavLink>
-        <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/SubProject" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.InsertDriveFile" Class="icon-color" />
             المشاريع الفرعية
         </MudNavLink>
-        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
             السندات
         </MudNavLink>
-        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
             التقارير
         </MudNavLink>
-    </AuthorizeView>
+
+        <MudNavLink Href="/Accounts" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.SupervisorAccount" Class="icon-color" />
+            الحسابات
+        </MudNavLink>
+
+    }
+    else if (UserRole.Equals(RolesNames.User))
+    {
+        <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
+            السندات
+        </MudNavLink>
+        <MudNavLink Href="/MinReports" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+            <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
+            التقارير
+        </MudNavLink>
+    }
+
+   @*  <AuthorizeView>
+        <NotAuthorized>
+            <MudNavLink Href="/login" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+                <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
+                تسجيل الدخول
+            </MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView> *@
+
 
     
-    <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="icon-color" />
-        UserProfile
-    </MudNavLink> 
-    <MudNavLink   Class="mud-nav-link-right">
+   
+
+    <hr style="color: var(--color-custom); ;margin-top:4%" />
+    <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+        <img src="Images\avatar.webp" alt="Avatar" style="width:14px;"/>
+        @currentUser.FirstName @currentUser.LastName
+    </MudNavLink>
+    <MudNavLink OnClick="Logout"  Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+        <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
+        تسجيل خروج
+    </MudNavLink>
+
+@*     <MudNavLink   Class="mud-nav-link-right">
+
         <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
         
-    </MudNavLink>
+    </MudNavLink> *@
 
 
 
@@ -86,3 +133,33 @@
 </MudNavMenu>
  *@
 
+@code{
+    public string UserRole  = string.Empty;
+    public UserViewModel currentUser { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState?.User;
+
+        if (user != null)
+        {
+            var roleClaim = user.FindFirst("roles");
+            if (roleClaim != null)
+            {
+                UserRole = roleClaim.Value;
+            }
+        }
+
+        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+
+        
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/Login");
+    }
+}
