@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Interfaces;
@@ -7,6 +8,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SubProjectsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

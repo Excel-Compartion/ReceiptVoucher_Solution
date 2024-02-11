@@ -12,11 +12,13 @@ using System.Globalization;
 using SU.StudentServices.Data.Helpers;
 using Microsoft.AspNetCore.Identity;
 using ReceiptVoucher.Core.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReceiptsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -59,17 +61,16 @@ namespace ReceiptVoucher.Server.Controllers
         {
             var Receipt = await _receiptRepository.GetReceiptRdclById(id);
 
-            var users = await _userManager.Users.ToListAsync();
+            var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy ).FirstOrDefaultAsync();
 
             ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
 
             receiptRdclViewModel.Id = Receipt.Id;
             receiptRdclViewModel.ReceivedFrom = Receipt.ReceivedFrom;
 
-           var userName=users.Where(x=>x.Id==Receipt.ReceivedBy).FirstOrDefault();
        
 
-            receiptRdclViewModel.ReceivedBy = userName.FirstName +" "+ userName.LastName;
+            receiptRdclViewModel.ReceivedBy = user.FirstName +" "+ user.LastName;
             
             
             receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";

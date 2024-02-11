@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Interfaces;
 using ReceiptVoucher.Server.Components;
@@ -10,6 +11,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SMSMessageController : ControllerBase
     {
         private readonly ISMSMessage _sMSMessage;

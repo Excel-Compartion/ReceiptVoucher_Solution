@@ -11,7 +11,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = RolesNames.Admin)]
+    [Authorize(Roles = RolesNames.Admin)]
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;

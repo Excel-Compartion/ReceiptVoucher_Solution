@@ -1,4 +1,5 @@
 ﻿using AspNetCore.ReportingServices.ReportProcessing.OnDemandReportObjectModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReceiptVoucher.Core.Enums;
@@ -8,6 +9,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

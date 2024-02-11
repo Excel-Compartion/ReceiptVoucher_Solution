@@ -8,7 +8,7 @@
 ### GET All Users With Their Roles -------
 
 GET {{ReceiptVoucher.Server_HostAddress}}/api/users
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwianRpIjoiZDdmOGIzMTQtYjJjMC00N2JmLWFlMmQtNTQ4YTBiYWQwYjQwIiwiZW1haWwiOiJqb2huQGUiLCJ1aWQiOiI4NTcwNGZmNy0zMzYyLTRhMjctYjM2MS1kZTNlMTA5NDBmZGMiLCJyb2xlcyI6IkFkbWluIiwiZXhwIjoxNzA4Mjg4Mjc0LCJpc3MiOiJSZWNlaXB0Vm91Y2hlclNlcnZlciIsImF1ZCI6IlJlY2VpcHRWb3VjaGVyQ2xpZW50In0.G-EIMei1371FHEaoMfFxcpOxQe9ROxo7-k5aCQ8fE_U
 ###
 
 ### POST Create -------
@@ -56,6 +56,7 @@ DELETE {{ReceiptVoucher.Server_HostAddress}}/api/users/20aa30a0-cef9-4e0d-b9a5-3
 ### ---------------------------------------------------------------#END
 
 GET {{ReceiptVoucher.Server_HostAddress}}/api/branches/GetAllAsync
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwianRpIjoiZDdmOGIzMTQtYjJjMC00N2JmLWFlMmQtNTQ4YTBiYWQwYjQwIiwiZW1haWwiOiJqb2huQGUiLCJ1aWQiOiI4NTcwNGZmNy0zMzYyLTRhMjctYjM2MS1kZTNlMTA5NDBmZGMiLCJyb2xlcyI6IkFkbWluIiwiZXhwIjoxNzA4Mjg4Mjc0LCJpc3MiOiJSZWNlaXB0Vm91Y2hlclNlcnZlciIsImF1ZCI6IlJlY2VpcHRWb3VjaGVyQ2xpZW50In0.G-EIMei1371FHEaoMfFxcpOxQe9ROxo7-k5aCQ8fE_U
 
 ###
 
