@@ -13,12 +13,13 @@ using SU.StudentServices.Data.Helpers;
 using Microsoft.AspNetCore.Identity;
 using ReceiptVoucher.Core.Identity;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
 
 namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ReceiptsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -61,18 +62,19 @@ namespace ReceiptVoucher.Server.Controllers
         {
             var Receipt = await _receiptRepository.GetReceiptRdclById(id);
 
-            var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy ).FirstOrDefaultAsync();
+            //var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy ).FirstOrDefaultAsync();
 
             ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
 
             receiptRdclViewModel.Id = Receipt.Id;
             receiptRdclViewModel.ReceivedFrom = Receipt.ReceivedFrom;
 
-       
 
-            receiptRdclViewModel.ReceivedBy = user.FirstName +" "+ user.LastName;
-            
-            
+
+            //receiptRdclViewModel.ReceivedBy = user.FirstName +" "+ user.LastName;
+
+            receiptRdclViewModel.ReceivedBy = "";
+
             receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
             receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
             receiptRdclViewModel.SubProject = Receipt.SubProject.Name + "";
