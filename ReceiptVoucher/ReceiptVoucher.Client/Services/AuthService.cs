@@ -66,7 +66,7 @@ namespace ReceiptVoucher.Client.Services
             {
                 _navigationManager?.NavigateTo("login");
                 _navigationManager?.Refresh();
-                _snackbar?.Add("انت لست مسجل الدخول اصلا لكي تصل الى هذه الصفحه,النظام محمي بقوه", Severity.Error);
+                _snackbar?.Add("انت لست مسجل الدخول لكي تصل الى هذه الصفحه", Severity.Error);
             }
         }
 
