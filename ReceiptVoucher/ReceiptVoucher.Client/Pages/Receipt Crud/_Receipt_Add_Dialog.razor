@@ -1,4 +1,5 @@
-﻿@inject ISnackbar _Snackbar
+﻿@using ReceiptVoucher.Core.Models.ResponseModels
+@inject ISnackbar _Snackbar
 @rendermode InteractiveAuto
 @inject HttpClient Http
 
@@ -453,7 +454,13 @@
         }
         else
         {
-            _Snackbar.Add($"فشل في ارسال رسالة ال SMS : {response.Content}", Severity.Error);
+            BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+
+            var messageErrors = content.Errors;
+
+          
+
+            _Snackbar.Add($"{content.Message} \n {content.Data} ", Severity.Error);
         }
     }
 

@@ -19,7 +19,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ReceiptsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -57,6 +57,7 @@ namespace ReceiptVoucher.Server.Controllers
             return dt;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetReceiptRdcl/{id}")]
         public async Task<IActionResult> GetReceiptRdcl(int id)
         {
