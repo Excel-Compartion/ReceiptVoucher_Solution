@@ -454,13 +454,25 @@
         }
         else
         {
-            BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+            try
+            {
+                BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
 
-            var messageErrors = content.Errors;
 
-          
 
-            _Snackbar.Add($"{content.Message} \n {content.Data} ", Severity.Error);
+
+
+                _Snackbar.Add($"{content.Message} \n {content.Data} ", Severity.Error);
+            }
+            catch
+            {
+                _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
+            }
+            
+
+       
+
+            
         }
     }
 
@@ -525,15 +537,37 @@
             receipt.ReceivedBy = UserId;
 
             var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
-            if (response.IsSuccessStatusCode)
+
+            BaseResponse<Receipt> content = await response.Content.ReadFromJsonAsync<BaseResponse<Receipt>>();
+
+            if (content.Success)
             {
                 _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
 
-                SendSMSMessage(receipt);
+                SendSMSMessage(content.Data);
             }
                 else
                 {
-                    _Snackbar.Add($"فشل في اضافه السند : {response.StatusCode}", Severity.Error);
+                try
+                {
+                   
+
+                    var messageErrors = content.Errors;
+
+                    string allMessages = string.Empty;
+
+                    if (messageErrors is not null)
+                    {
+
+                        allMessages = string.Join("\n", messageErrors);
+                    }
+
+                    _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+                }
+                catch
+                {
+                    _Snackbar.Add($"حدث خطاء", Severity.Error);
+                }
                 }
 
 

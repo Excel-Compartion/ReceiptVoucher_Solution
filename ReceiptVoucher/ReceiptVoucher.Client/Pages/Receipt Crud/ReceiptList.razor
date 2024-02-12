@@ -303,12 +303,16 @@
                     
                     if (role!=null && role!= RolesNames.Admin)
                     {
-                        data = response.Where(x => x.BranchId == currentUser.BranchId).ToList();
+                        data = response
+      .Where(x => x.BranchId == currentUser.BranchId)
+      .OrderByDescending(x => x.Date)
+      .ToList();
+
                     }
                     
                     else
                     {
-                        data = response;
+                        data = response.OrderByDescending(x => x.Date);
                     }
                 }
                

@@ -137,7 +137,7 @@
 
             if (response != null)
             {
-                data = response;
+                data = response.OrderByDescending(x => x.Date);
             }
 
 
