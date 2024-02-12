@@ -65,7 +65,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         //[Authorize(Roles = RolesNames.Admin)]
-        [Authorize]
+      
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ReceiptVoucher.Core.Enums;
 using ReceiptVoucher.Core.Interfaces;
+using ReceiptVoucher.Core.Models.ResponseModels;
 using ReceiptVoucher.Server.Components;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -49,31 +52,89 @@ namespace ReceiptVoucher.Server.Controllers
                 return BadRequest("الرقم غير صالح");
             }
 
+           
+
+         
+
+
 
             try
             {
                 String sendingResult;
                 String username = "966535155222";
                 String apiKey = "5a3eca644e8b0ba493e7d58ff6064fee09e66492";
-                String numbers = receipt.Mobile; // in a comma seperated list
-                String message = HttpUtility.UrlEncode("xxxxxxxxxxxxxx");
-                String sender = HttpUtility.UrlEncode("966535155222");
+                String number = mobileWithoutSpaces; // in a comma seperated list
+                String message = HttpUtility.UrlEncode($"نشكر لكم دعمكم مشاريع جمعية اكرام للتفاصيل:\n https://receiptvoucher/api/Receipts/GetReceiptRdcl/{receipt.Id}");
+                String sender = HttpUtility.UrlEncode("MAKARIM");
 
-                sendingResult = _sMSMessage.send(apiKey, username, numbers, message, sender);
+                sendingResult = _sMSMessage.send(apiKey, username, number, message, sender);
 
-                if (sendingResult != "106")
+                string Message="خطاء";
+
+                if (sendingResult != "100")
                 {
-                    return BadRequest("فشل الارسال");
+                    
+                    switch (sendingResult)
+                    {
+                        case "105":
+                            Message = "الرصيد لايكفي";
+                            break;
+
+                        case "106":
+                            Message = "اسم المرسل غير متاح";
+                            break;
+
+                        case "107":
+                            Message = "اسم المرسل محجوب";
+                            break;
+
+                        case "108":
+                            Message = "لايوحد ارقام صالحة للارسال";
+                            break;
+
+                        case "112":
+                            Message = "الرسالة تحتوي على كلمة محظورة";
+                            break;
+
+                        case "114":
+                            Message = "الحساب موقوف";
+                            break;
+
+                        case "115":
+                            Message = "جوال غير مفعل";
+                            break;
+                        case "116":
+                            Message = "بريد الكتروني غير مفعل";
+                            break;
+
+                        case "117":
+                            Message = "الرسالة فارغة ولايمكن ارسالها";
+                            break;
+
+                        case "118":
+                            Message = "اسم المرسل فارغ";
+                            break;
+
+                        case "119":
+                            Message = "لم يتم وضع رقم مستقبل";
+                            break;
+                        case "121":
+                            Message = "حظر على الرسائل الاعلانية (-AD)";
+                            break;
+
+                    }
+
+                    return BadRequest(new BaseResponse<string>(null, Message, errors: null, success: false)); 
                 }
 
 
-                return Ok(sendingResult);
+                return Ok(new BaseResponse<string>(sendingResult, "تم ارسال الرسالة بنجاح", errors: null, success:true));
             }
 
-            catch { BadRequest("Error"); }
+            catch{return BadRequest(new BaseResponse<string>(null, "حدث خطاء ", errors: null, success: false)); }
 
 
-            return Ok();
+           
         }
 
 

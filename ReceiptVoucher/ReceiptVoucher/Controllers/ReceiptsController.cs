@@ -14,12 +14,14 @@ using Microsoft.AspNetCore.Identity;
 using ReceiptVoucher.Core.Identity;
 using Microsoft.AspNetCore.Authorization;
 using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
+using ReceiptVoucher.EF.Repositories;
+using ReceiptVoucher.Core.Models.ResponseModels;
 
 namespace ReceiptVoucher.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ReceiptsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -57,12 +59,13 @@ namespace ReceiptVoucher.Server.Controllers
             return dt;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetReceiptRdcl/{id}")]
         public async Task<IActionResult> GetReceiptRdcl(int id)
         {
             var Receipt = await _receiptRepository.GetReceiptRdclById(id);
 
-            //var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy ).FirstOrDefaultAsync();
+            var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy).FirstOrDefaultAsync();
 
             ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
 
@@ -71,9 +74,9 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-            //receiptRdclViewModel.ReceivedBy = user.FirstName +" "+ user.LastName;
+            receiptRdclViewModel.ReceivedBy = user.FirstName + " " + user.LastName;
 
-            receiptRdclViewModel.ReceivedBy = "";
+           
 
             receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
             receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
@@ -157,14 +160,26 @@ namespace ReceiptVoucher.Server.Controllers
             
             receipt.Date=DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest(new BaseResponse<Receipt>(receipt, "خطاء في البيانات المدخله", errors: ModelErrors, success: false));
+            }
 
             // let UnitOfWork  do creating and saving to database
 
-            await _unitOfWork.Receipts.AddOneAsync(receipt);
-            
+         Receipt response=   await _unitOfWork.Receipts.AddOneAsync(receipt);
 
-            return Ok("receipt Created Succesfully.");
+
+            if (receipt.Id == 0)
+            {
+                return BadRequest(new BaseResponse<Receipt>(receipt, "حدث خطاء اثناء الاضافة", errors: null, success: false));
+            }
+                
+            
+       
+
+            return Ok(new BaseResponse<Receipt>(receipt, "تمت الاضافة بنجاح", errors: null, success: true));
         }
 
 
