@@ -339,19 +339,19 @@ h1:focus {
     outline: 2px solid white;
 }
 
-.logOutBtn a:hover svg {
+.testBody .mud-nav-item.logOutBtn .mud-nav-link:hover svg {
     color: white !important;
 }
-.logOutBtn a {
+.testBody .mud-nav-item.logOutBtn .mud-nav-link {
     border: 2px solid var(--bs-danger) !important;
     color: var(--bs-danger) !important;
     /*font-size: 17px;*/
     font-weight: bold;
 }
-.logOutBtn a svg {
+.testBody .mud-nav-item.logOutBtn .mud-nav-link svg {
     color: var(--bs-danger) !important;
 }
-.logOutBtn a:hover {
+.testBody .mud-nav-item.logOutBtn .mud-nav-link:hover {
     background-color: var(--bs-danger) !important;
     background-color: #dc3545 !important;
     color: white !important;
