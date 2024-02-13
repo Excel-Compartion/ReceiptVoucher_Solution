@@ -23,9 +23,9 @@
 
             @if (BtnName != ButtonTypes.Edit)
             {
-                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" Adornment="Adornment.End" AdornmentColor="Color.Success" Label="كلمه المرور"  ></MudTextField>
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" AdornmentColor="Color.Success" Label="كلمه المرور" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password"></MudTextField>
 
-                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" Adornment="Adornment.End" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور"  ></MudTextField>
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" InputType="@PasswordInput2" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon2" OnAdornmentClick="ButtonTestclick2" AdornmentAriaLabel="Show Password"></MudTextField>
 
             }
 
@@ -303,6 +303,52 @@
 
 
     void Cancel() => MudDialog.Cancel();
+
+
+
+
+
+
+    // show and hide password
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }  
+    
+    bool isShow2;
+    InputType PasswordInput2 = InputType.Password;
+    string PasswordInputIcon2 = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick2()
+    {
+        @if (isShow2)
+        {
+            isShow2 = false;
+            PasswordInputIcon2 = Icons.Material.Filled.VisibilityOff;
+            PasswordInput2 = InputType.Password;
+        }
+        else
+        {
+            isShow2 = true;
+            PasswordInputIcon2 = Icons.Material.Filled.Visibility;
+            PasswordInput2 = InputType.Text;
+        }
+    }
 
 
 }
