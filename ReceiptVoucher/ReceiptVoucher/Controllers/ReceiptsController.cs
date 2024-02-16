@@ -112,7 +112,8 @@ namespace ReceiptVoucher.Server.Controllers
 
             NumberToWord numberToWord=new (Convert.ToDecimal(Receipt.TotalAmount) ,new CurrencyInfo(CurrencyInfo.Currencies.SaudiArabia));
 
-            receiptRdclViewModel.TotalAmountWord = numberToWord.ConvertToArabic();
+            string Text= numberToWord.ConvertToArabic();
+            receiptRdclViewModel.TotalAmountWord = Text.Replace(".", "");
 
             //تحويل تاريخ السند الى تاريخ هجري
             DateOnly gregDate = Receipt.Date; 
