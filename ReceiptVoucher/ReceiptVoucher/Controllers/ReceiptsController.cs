@@ -60,7 +60,8 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetReceiptRdcl/{id}")]
+  
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetReceiptRdcl(int id)
         {
             var Receipt = await _receiptRepository.GetReceiptRdclById(id);
