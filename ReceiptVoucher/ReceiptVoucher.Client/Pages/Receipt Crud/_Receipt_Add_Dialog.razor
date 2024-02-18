@@ -290,11 +290,6 @@
 
 
 
-
-
-
-            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
-
             @{
                 if (BtnName == ButtonTypes.Details)
                 {
@@ -307,6 +302,11 @@
                 }
 
             }
+
+
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
+
+         
 
 
 
