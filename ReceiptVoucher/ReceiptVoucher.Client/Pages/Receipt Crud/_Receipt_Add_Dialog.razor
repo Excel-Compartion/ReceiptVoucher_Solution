@@ -2,7 +2,7 @@
 @inject ISnackbar _Snackbar
 @rendermode InteractiveAuto
 @inject HttpClient Http
-
+@inject UserManager<ApplicationUser> _UserManager
 
 
 
@@ -16,30 +16,30 @@
 
 
             <MudGrid>
-                <MudItem  sm="6" xs="12">
+                <MudItem sm="6" xs="12">
                     <MudTextField Label="المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Info" ReadOnly="@ReadOnlyStatus"></MudTextField>
                 </MudItem>
-                <MudItem  sm="3" xs="6">
+                <MudItem sm="3" xs="6">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
 
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem  sm="3" xs="6">
-                        <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
-                    </MudItem>
-                </MudGrid>
-
-
+                    </MudSelect>
+                </MudItem>
+                <MudItem sm="3" xs="6">
+                    <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                </MudItem>
+            </MudGrid>
 
 
 
 
 
-                @{
+
+
+            @{
 
                 if (ReceiptViewModel.PaymentType == PaymentTypes.Cash)
                 {
@@ -144,18 +144,18 @@
                 <MudItem xs="6">
                     <MudSelect Label="الجهة المانحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@GrantDest.Association">@GrantDest.Association.GetDisplayName()</MudSelectItem>
-                            <MudSelectItem Value="@GrantDest.Foundation">@GrantDest.Foundation.GetDisplayName()</MudSelectItem>
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
-                    </MudItem>
-                </MudGrid>
+                        <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Association">@GrantDest.Association.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Foundation">@GrantDest.Foundation.GetDisplayName()</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                </MudItem>
+            </MudGrid>
 
-                @if (ReceiptViewModel.GrantDestinations == GrantDest.Individual)
+            @if (ReceiptViewModel.GrantDestinations == GrantDest.Individual)
             {
 
                 <br />
@@ -169,24 +169,24 @@
                         <MudSelect Label="العمر" For="@(()=>ReceiptViewModel.Age)" @bind-Value="@ReceiptViewModel.Age" ReadOnly="@ReadOnlyStatus">
                             <MudSelectItem Value="@Age.Message">@Age.Message.GetDisplayName()</MudSelectItem>
 
-                                <MudSelectItem Value="@Age.TwentyYounger">@Age.TwentyYounger.GetDisplayName()</MudSelectItem>
-                                <MudSelectItem Value="@Age.OverTwenty">@Age.OverTwenty.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.TwentyYounger">@Age.TwentyYounger.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.OverTwenty">@Age.OverTwenty.GetDisplayName()</MudSelectItem>
 
-                                <MudSelectItem Value="@Age.OverThirty">@Age.OverThirty.GetDisplayName()</MudSelectItem>
-                                <MudSelectItem Value="@Age.OverForty">@Age.OverForty.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.OverThirty">@Age.OverThirty.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.OverForty">@Age.OverForty.GetDisplayName()</MudSelectItem>
 
-                            </MudSelect>
-                        </MudItem>
-                        <MudItem xs="6">
-                            <div>الجنس</div>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <div>الجنس</div>
 
-                            <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
-                                <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
-                                <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
-                            </MudRadioGroup>
+                        <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
+                            <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
+                            <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
+                        </MudRadioGroup>
 
-                        </MudItem>
-                    </MudGrid>
+                    </MudItem>
+                </MudGrid>
 
 
 
@@ -208,7 +208,7 @@
 
 
 
-      
+
             <br />
 
 
@@ -218,18 +218,18 @@
                     <MudSelect Label="المركز" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
                         @{
-                            if(UserBranchId!=null)
+                            if (UserBranchId != null)
                             {
-                               
+
                                 @foreach (var branch in Branches)
                                 {
                                     if (branch.Id == UserBranchId)
                                     {
-                                       
+
                                         <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
-                                    
+
                                     }
-                                   
+
                                 }
 
                             }
@@ -238,9 +238,9 @@
                             {
                                 @foreach (var branch in Branches)
                                 {
-                                    
-                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
-                                    
+
+                                    <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+
 
                                 }
                             }
@@ -248,7 +248,7 @@
 
 
                         }
-                      
+
                     </MudSelect>
                 </MudItem>
 
@@ -262,7 +262,7 @@
                     </MudSelect>
                 </MudItem>
 
-                @if (ReceiptViewModel.ProjectId == 0 )
+                @if (ReceiptViewModel.ProjectId == 0)
                 {
                     ReceiptViewModel.SubProjectId = 0;
                 }
@@ -295,14 +295,32 @@
 
             <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
 
+            @{
+                if (BtnName == ButtonTypes.Details)
+                {
+
+
+                    <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
+
+                }
+
+            }
+
+
+
+
+
+
             @if (BtnName != ButtonTypes.Details)
             {
                 <div class="mt-5 d-flex" style="gap: 10px;">
-                                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
     font-family: "Tajawal", sans-serif;
     font-weight: 700;
     padding: 5px 0px;'>@BtnName</MudButton>
-                <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+                    <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
     font-family: "Tajawal", sans-serif;
     font-weight: 700;
     padding: 5px 0px;'>الغاء</MudButton>
@@ -382,7 +400,7 @@
             ReceiptViewModel.PaymentType = PaymentTypes.Cash;
 
 
-            if(UserBranchId!=null && Branches != null)
+            if (UserBranchId != null && Branches != null)
             {
                 var branch = Branches.Where(x => x.Id == UserBranchId).FirstOrDefault();
 
@@ -468,11 +486,11 @@
             {
                 _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
             }
-            
 
-       
 
-            
+
+
+
         }
     }
 
@@ -497,7 +515,7 @@
         receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
         receipt.Mobile = ReceiptViewModel.Mobile;
         receipt.ProjectId = ReceiptViewModel.ProjectId;
-       
+
 
 
 
@@ -546,11 +564,11 @@
 
                 SendSMSMessage(content.Data);
             }
-                else
-                {
+            else
+            {
                 try
                 {
-                   
+
 
                     var messageErrors = content.Errors;
 
@@ -568,34 +586,34 @@
                 {
                     _Snackbar.Add($"حدث خطاء", Severity.Error);
                 }
-                }
+            }
 
 
+        }
+        else
+        {
+            receipt.Id = ReceiptViewModel.Id;
+
+            receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+
+            var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
             }
             else
             {
-                receipt.Id = ReceiptViewModel.Id;
-
-               receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
-
-                var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
-                if (response.IsSuccessStatusCode)
-                {
-                    _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
-                }
-                else
-                {
-                    _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
-                }
-
-
-
+                _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
             }
 
-            MudDialog.Close(DialogResult.Ok(true));
-            // Trigger the OnClose event
-            OnClose.InvokeAsync(true);
-        
+
+
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+        // Trigger the OnClose event
+        OnClose.InvokeAsync(true);
+
     }
 
 
