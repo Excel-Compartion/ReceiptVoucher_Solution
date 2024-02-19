@@ -43,7 +43,7 @@ namespace ReceiptVoucher.Server.Controllers
             string mobileWithoutSpaces = receiptMobile.Replace(" ", "");
 
 
-
+            
             // التحقق مما إذا كانت القيمة المتبقية هي عبارة عن أرقام فقط
             bool isDigitsOnly = mobileWithoutSpaces.All(char.IsDigit);
 

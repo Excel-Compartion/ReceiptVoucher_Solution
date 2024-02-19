@@ -66,7 +66,9 @@ public class Receipt
     [MinLength(2)]
     public string? Bank { get; set; }
 
-
+    public string Code { get; set; } = null!;
+    
+    public int Number { get;set; }
 
 
     //-------- Navigation Properties ---
