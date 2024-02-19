@@ -23,9 +23,9 @@
 
             @if (BtnName != ButtonTypes.Edit)
             {
-                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" AdornmentColor="Color.Success" Label="كلمه المرور" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password"></MudTextField>
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.Password)" @bind-Value="@CreateUserModel.Password" AdornmentColor="Color.Success" Label="كلمه المرور" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" Class="inputPassAndShow"></MudTextField>
 
-                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" InputType="@PasswordInput2" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon2" OnAdornmentClick="ButtonTestclick2" AdornmentAriaLabel="Show Password"></MudTextField>
+                <MudTextField Immediate="true" For="@(()=>CreateUserModel.ConfirmPassword)" @bind-Value="@CreateUserModel.ConfirmPassword" AdornmentColor="Color.Success" Label=" تاكيد كلمه المرور" InputType="@PasswordInput2" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon2" OnAdornmentClick="ButtonTestclick2" AdornmentAriaLabel="Show Password" Class="inputPassAndShow"></MudTextField>
 
             }
 
