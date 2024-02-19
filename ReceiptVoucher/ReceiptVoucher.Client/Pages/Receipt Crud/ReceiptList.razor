@@ -197,7 +197,7 @@
 
     void PrintReceipt(int id)
     {
-        var url = $"api/Receipts/{id}";
+        var url = $"ReceiptPrints/{id}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
