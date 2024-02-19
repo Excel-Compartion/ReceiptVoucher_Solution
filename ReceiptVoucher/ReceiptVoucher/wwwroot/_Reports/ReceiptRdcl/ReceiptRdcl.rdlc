@@ -58,7 +58,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!Id.Value</Value>
+                <Value>=Fields!Number.Value</Value>
                 <Style>
                   <FontFamily>Tajawal</FontFamily>
                   <FontSize>9pt</FontSize>
@@ -623,6 +623,10 @@
         </Field>
         <Field Name="TotalAmountWord">
           <DataField>TotalAmountWord</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Number">
+          <DataField>Number</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

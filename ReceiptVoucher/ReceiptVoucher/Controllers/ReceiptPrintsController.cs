@@ -55,10 +55,10 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetReceiptRdcl(int id)
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetReceiptRdcl(string code)
         {
-            var Receipt = await _receiptRepository.GetReceiptRdclById(id);
+            var Receipt = await _receiptRepository.GetReceiptRdclById(code);
 
             var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy).FirstOrDefaultAsync();
 
@@ -80,6 +80,7 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Date = Receipt.Date.ToString("yyyy-MM-dd") + "";
             receiptRdclViewModel.PaymentType = Receipt.PaymentType.GetDisplayName();
             receiptRdclViewModel.CheckNumber = Receipt.CheckNumber + "";
+            receiptRdclViewModel.Number = Receipt.Number + "";
 
 
             //تحويل تاريخ الشيك الى تاريخ هجري

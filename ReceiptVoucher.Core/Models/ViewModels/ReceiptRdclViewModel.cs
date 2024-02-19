@@ -68,5 +68,6 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
         public string? TotalAmountWord { get; set; }
 
+        public string? Number { get; set; }
     }
 }

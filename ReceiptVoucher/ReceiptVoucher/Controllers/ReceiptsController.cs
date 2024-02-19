@@ -156,8 +156,17 @@ namespace ReceiptVoucher.Server.Controllers
         [Route("AddReceipt")]
         public async Task<IActionResult> AddReceipt([FromBody] Receipt receipt)
         {
-            
-            receipt.Date=DateOnly.FromDateTime(DateTime.Now);
+            // Generate a unique code
+            //receipt.Code = Guid.NewGuid().ToString();
+
+            receipt.Code = Guid.NewGuid().ToString("N").Substring(0, 12);
+
+
+            // Get the last receipt and increment the number
+            var lastReceipt = await _receiptRepository.GetLastAsync();
+            receipt.Number = (lastReceipt?.Number ?? 0) + 1;
+
+            receipt.Date = DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
             {
                 var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
@@ -166,17 +175,12 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             // let UnitOfWork  do creating and saving to database
-
-         Receipt response=   await _unitOfWork.Receipts.AddOneAsync(receipt);
-
+            Receipt response = await _unitOfWork.Receipts.AddOneAsync(receipt);
 
             if (receipt.Id == 0)
             {
                 return BadRequest(new BaseResponse<Receipt>(receipt, "حدث خطاء اثناء الاضافة", errors: null, success: false));
             }
-                
-            
-       
 
             return Ok(new BaseResponse<Receipt>(receipt, "تمت الاضافة بنجاح", errors: null, success: true));
         }
@@ -185,7 +189,8 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-       
+
+
 
 
 

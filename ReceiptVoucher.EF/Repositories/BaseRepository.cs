@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReceiptVoucher.Core.Consts;
+using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace ReceiptVoucher.EF.Repositories
         {
             return await _context.Set<T>().ToListAsync();
         }
+
+       
 
         public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> match, string[] includes = null)
         {

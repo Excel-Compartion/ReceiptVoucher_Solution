@@ -317,6 +317,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             private global::System.Data.DataColumn columnTotalAmountWord;
             
+            private global::System.Data.DataColumn columnNumber;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public ReceiptRdclViewModelDataTable() {
@@ -504,6 +506,14 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn NumberColumn {
+                get {
+                    return this.columnNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -558,7 +568,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         string Age, 
                         string Mobile, 
                         string DateArabic, 
-                        string TotalAmountWord) {
+                        string TotalAmountWord, 
+                        string Number) {
                 ReceiptRdclViewModelRow rowReceiptRdclViewModelRow = ((ReceiptRdclViewModelRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
@@ -579,7 +590,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         Age,
                         Mobile,
                         DateArabic,
-                        TotalAmountWord};
+                        TotalAmountWord,
+                        Number};
                 rowReceiptRdclViewModelRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowReceiptRdclViewModelRow);
                 return rowReceiptRdclViewModelRow;
@@ -621,6 +633,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 this.columnMobile = base.Columns["Mobile"];
                 this.columnDateArabic = base.Columns["DateArabic"];
                 this.columnTotalAmountWord = base.Columns["TotalAmountWord"];
+                this.columnNumber = base.Columns["Number"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -664,6 +677,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 base.Columns.Add(this.columnDateArabic);
                 this.columnTotalAmountWord = new global::System.Data.DataColumn("TotalAmountWord", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalAmountWord);
+                this.columnNumber = new global::System.Data.DataColumn("Number", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumber);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1112,6 +1127,22 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Number {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptRdclViewModel.NumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Number\' in table \'ReceiptRdclViewModel\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptRdclViewModel.NumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsIdNull() {
                 return this.IsNull(this.tableReceiptRdclViewModel.IdColumn);
             }
@@ -1336,6 +1367,18 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetTotalAmountWordNull() {
                 this[this.tableReceiptRdclViewModel.TotalAmountWordColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsNumberNull() {
+                return this.IsNull(this.tableReceiptRdclViewModel.NumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetNumberNull() {
+                this[this.tableReceiptRdclViewModel.NumberColumn] = global::System.Convert.DBNull;
             }
         }
         

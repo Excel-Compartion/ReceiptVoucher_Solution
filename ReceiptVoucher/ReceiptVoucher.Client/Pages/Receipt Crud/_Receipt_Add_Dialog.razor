@@ -554,6 +554,8 @@
         {
             receipt.ReceivedBy = UserId;
 
+            receipt.Code = "";
+
             var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
 
             BaseResponse<Receipt> content = await response.Content.ReadFromJsonAsync<BaseResponse<Receipt>>();

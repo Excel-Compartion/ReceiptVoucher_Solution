@@ -32,8 +32,9 @@
               <xs:element name="Gender" msprop:Generator_ColumnPropNameInTable="GenderColumn" msprop:Generator_ColumnPropNameInRow="Gender" msprop:Generator_UserColumnName="Gender" msprop:Generator_ColumnVarNameInTable="columnGender" type="xs:string" minOccurs="0" />
               <xs:element name="Age" msprop:Generator_ColumnPropNameInTable="AgeColumn" msprop:Generator_ColumnPropNameInRow="Age" msprop:Generator_UserColumnName="Age" msprop:Generator_ColumnVarNameInTable="columnAge" type="xs:string" minOccurs="0" />
               <xs:element name="Mobile" msprop:Generator_ColumnPropNameInTable="MobileColumn" msprop:Generator_ColumnPropNameInRow="Mobile" msprop:Generator_UserColumnName="Mobile" msprop:Generator_ColumnVarNameInTable="columnMobile" type="xs:string" minOccurs="0" />
-              <xs:element name="DateArabic" msprop:Generator_ColumnPropNameInRow="DateArabic" msprop:Generator_ColumnPropNameInTable="DateArabicColumn" msprop:Generator_ColumnVarNameInTable="columnDateArabic" msprop:Generator_UserColumnName="DateArabic" type="xs:string" minOccurs="0" />
-              <xs:element name="TotalAmountWord" msprop:Generator_ColumnPropNameInRow="TotalAmountWord" msprop:Generator_ColumnPropNameInTable="TotalAmountWordColumn" msprop:Generator_ColumnVarNameInTable="columnTotalAmountWord" msprop:Generator_UserColumnName="TotalAmountWord" type="xs:string" minOccurs="0" />
+              <xs:element name="DateArabic" msprop:Generator_UserColumnName="DateArabic" msprop:Generator_ColumnPropNameInTable="DateArabicColumn" msprop:Generator_ColumnPropNameInRow="DateArabic" msprop:Generator_ColumnVarNameInTable="columnDateArabic" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalAmountWord" msprop:Generator_UserColumnName="TotalAmountWord" msprop:Generator_ColumnPropNameInTable="TotalAmountWordColumn" msprop:Generator_ColumnPropNameInRow="TotalAmountWord" msprop:Generator_ColumnVarNameInTable="columnTotalAmountWord" type="xs:string" minOccurs="0" />
+              <xs:element name="Number" msprop:Generator_ColumnPropNameInRow="Number" msprop:Generator_ColumnPropNameInTable="NumberColumn" msprop:Generator_ColumnVarNameInTable="columnNumber" msprop:Generator_UserColumnName="Number" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

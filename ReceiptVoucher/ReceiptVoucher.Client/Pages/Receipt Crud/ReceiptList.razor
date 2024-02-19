@@ -90,7 +90,7 @@
         <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="رقم السند">@context.Id</MudTd>
+        <MudTd DataLabel="رقم السند">@context.Number</MudTd>
             <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
@@ -134,7 +134,7 @@
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
   
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
 
 
                 <MudButton Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
@@ -195,9 +195,9 @@
 
     string? role;
 
-    void PrintReceipt(int id)
+    void PrintReceipt(string code)
     {
-        var url = $"ReceiptPrints/{id}";
+        var url = $"ReceiptPrints/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 

@@ -64,7 +64,7 @@ namespace ReceiptVoucher.Server.Controllers
                 String username = "966535155222";
                 String apiKey = "5a3eca644e8b0ba493e7d58ff6064fee09e66492";
                 String number = mobileWithoutSpaces; // in a comma seperated list
-                String message = HttpUtility.UrlEncode($"نشكر لكم دعمكم مشاريع جمعية اكرام للتفاصيل:\n https://receiptvoucher.dlelkrs.com/ReceiptPrints/{receipt.Id}");
+                String message = HttpUtility.UrlEncode($"نشكر لكم دعمكم مشاريع جمعية اكرام للتفاصيل:\n https://receiptvoucher.dlelkrs.com/ReceiptPrints/{receipt.Code}");
                 String sender = HttpUtility.UrlEncode("MAKARIM");
 
                 sendingResult = _sMSMessage.send(apiKey, username, number, message, sender);

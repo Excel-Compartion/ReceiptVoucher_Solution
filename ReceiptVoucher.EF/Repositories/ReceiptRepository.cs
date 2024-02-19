@@ -23,6 +23,11 @@ namespace ReceiptVoucher.EF.Repositories
             return await _context.Receipts.Include(p => p.Branch).Include(p=>p.SubProject).ToListAsync();
         }
 
+        public async Task<Receipt> GetLastAsync()
+        {
+            return await _context.Receipts.OrderByDescending(r => r.Number).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Receipt>> GetFilteredData(FilterData filterData)
         {
             if (filterData.RadioDateType == "Day")
@@ -38,10 +43,9 @@ namespace ReceiptVoucher.EF.Repositories
             }
         }
 
-        public async Task<Receipt>   GetReceiptRdclById(int id)
+        public async Task<Receipt>   GetReceiptRdclById(string code)
         {
-            var Receipt = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Where(x => x.Id == id).FirstOrDefaultAsync();
-
+            var Receipt = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Where(x => x.Code == code).FirstOrDefaultAsync();
            
 
             return Receipt;

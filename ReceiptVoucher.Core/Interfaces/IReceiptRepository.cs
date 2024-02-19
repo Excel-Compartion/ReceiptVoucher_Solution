@@ -16,7 +16,9 @@ namespace ReceiptVoucher.Core.Interfaces
 
         //  GetReceiptRdcl
 
-        Task<Receipt>  GetReceiptRdclById(int id);
+        Task<Receipt>  GetReceiptRdclById(string code);
+
+        Task<Receipt> GetLastAsync();
 
     }
 }
