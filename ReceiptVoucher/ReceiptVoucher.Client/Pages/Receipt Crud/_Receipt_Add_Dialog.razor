@@ -564,7 +564,11 @@
             {
                 _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
 
-                SendSMSMessage(content.Data);
+                if(receipt.Mobile!="" && receipt.Mobile!=null)
+                {
+                    SendSMSMessage(content.Data);
+                }
+               
             }
             else
             {

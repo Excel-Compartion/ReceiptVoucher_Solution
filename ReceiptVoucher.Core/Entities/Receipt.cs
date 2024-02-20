@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
 using ReceiptVoucher.Core.Enums;
 using ReceiptVoucher.Core.Identity;
 
@@ -60,13 +61,15 @@ public class Receipt
 
     public DateOnly? CheckDate { get; set; }
 
-
+    
     public int? AccountNumber { get; set;}
 
     [MinLength(2)]
     public string? Bank { get; set; }
 
+  
     public string Code { get; set; } = null!;
+
     
     public int Number { get;set; }
 

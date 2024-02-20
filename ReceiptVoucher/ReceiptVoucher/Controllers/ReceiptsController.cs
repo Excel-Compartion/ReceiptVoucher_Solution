@@ -173,8 +173,18 @@ namespace ReceiptVoucher.Server.Controllers
 
             // Get the last receipt and increment the number
             var lastReceipt = await _receiptRepository.GetLastAsync();
-            receipt.Number = (lastReceipt?.Number ?? 0) + 1;
+           int Number = (lastReceipt?.Number ?? 0) + 1;
 
+            var ReceiptIsExByNumber = await _unitOfWork.Receipts.FindAsync(x => x.Number == Number);
+
+            while (ReceiptIsExByNumber != null)
+            {
+                 lastReceipt = await _receiptRepository.GetLastAsync();
+                 Number = (lastReceipt?.Number ?? 0) + 1;
+                ReceiptIsExByNumber = await _unitOfWork.Receipts.FindAsync(x => x.Number == Number);
+            }
+
+            receipt.Number = Number;
             receipt.Date = DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
             {
