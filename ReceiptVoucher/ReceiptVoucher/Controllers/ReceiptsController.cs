@@ -159,8 +159,17 @@ namespace ReceiptVoucher.Server.Controllers
             // Generate a unique code
             //receipt.Code = Guid.NewGuid().ToString();
 
-            receipt.Code = Guid.NewGuid().ToString("N").Substring(0, 12);
+            string code = Guid.NewGuid().ToString("N").Substring(0, 8);
 
+            var ReceiptIsEx = await _unitOfWork.Receipts.FindAsync(x => x.Code == code);
+
+            while (ReceiptIsEx != null)
+            {
+                code = Guid.NewGuid().ToString("N").Substring(0, 8);
+                ReceiptIsEx = await _unitOfWork.Receipts.FindAsync(x => x.Code == code);
+            }
+
+            receipt.Code = code;
 
             // Get the last receipt and increment the number
             var lastReceipt = await _receiptRepository.GetLastAsync();
