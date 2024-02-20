@@ -267,24 +267,56 @@
                     ReceiptViewModel.SubProjectId = 0;
                 }
 
+                @{
+                    int SubprojectCount = SubProjects.Where(x => x.ProjectId == ReceiptViewModel.ProjectId).Count();
+
+                    if (SubprojectCount == 0)
+                    {
+                        ReceiptViewModel.SubProjectId = 0;
+                    }
+
+                    else 
+                    {
+                        var subProject = SubProjects.Where(x => x.ProjectId == ReceiptViewModel.ProjectId && x.Id == ReceiptViewModel.SubProjectId).FirstOrDefault();
+
+                        if (subProject == null)
+                        {
+                            ReceiptViewModel.SubProjectId = 0;
+                        }
+                       
+                    }
+                }
+               
+
                 <MudItem sm="4" xs="6">
                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار المشروع الفرعي ---</MudSelectItem>
-                        @foreach (var subProject in SubProjects)
-                        {
-                            @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)
-
-
+                        @{
+                            
+                          
+                           
+                            foreach (var subProject in SubProjects)
                             {
-                                <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+                                @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)
+
+
+                                {
+                                    <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+                                    
+                                }
+
+
+
                             }
 
-
+                           
                         }
+                       
                     </MudSelect>
                 </MudItem>
             </MudGrid>
 
+            
 
 
 
@@ -295,7 +327,7 @@
                 {
 
 
-                    <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
 
@@ -438,7 +470,9 @@
                     Age = OriginalReceiptViewModel.Age,
                     Gender = OriginalReceiptViewModel.Gender,
                     ProjectId = OriginalReceiptViewModel.ProjectId,
-
+                    Number= OriginalReceiptViewModel.Number,
+                    Code = OriginalReceiptViewModel.Code,
+                    ReceivedByName = OriginalReceiptViewModel.ReceivedByName,
 
 
 
@@ -495,6 +529,11 @@
     }
 
 
+    // public void SubrojectValueRest()
+    // {
+    //     ReceiptViewModel.SubProjectId = null;
+    // }
+
 
     async void Submit()
     {
@@ -508,13 +547,17 @@
         receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
         receipt.TotalAmount = ReceiptViewModel.TotalAmount;
         receipt.BranchId = ReceiptViewModel.BranchId;
-        receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+
         receipt.ForPurpose = ReceiptViewModel.ForPurpose;
         receipt.Date = ReceiptViewModel.Date;
         receipt.PaymentType = ReceiptViewModel.PaymentType;
         receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
         receipt.Mobile = ReceiptViewModel.Mobile;
         receipt.ProjectId = ReceiptViewModel.ProjectId;
+        receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+
+        
+        
 
 
 
@@ -601,6 +644,9 @@
             receipt.Id = ReceiptViewModel.Id;
 
             receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+
+            receipt.Number = ReceiptViewModel.Number;
+            receipt.Code = ReceiptViewModel.Code;
 
             var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
             if (response.IsSuccessStatusCode)

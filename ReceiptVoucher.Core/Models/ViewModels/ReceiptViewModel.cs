@@ -21,6 +21,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string ReceivedBy { get; set; }      // Foreign Key From User
 
 
+        public string? ReceivedByName { get; set; }
+
         [Range(1.0, 9999999999999999.0, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ بشكل صحيح ---")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
@@ -75,9 +77,12 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         
         public string? Mobile { get; set; }
 
-       
 
-       
+
+        public string Code { get; set; } = null!;
+
+
+        public int Number { get; set; }
 
 
     }

@@ -445,23 +445,29 @@
         receiptViewModel.Gender = receipt.Gender;
         receiptViewModel.Age = receipt.Age;
         receiptViewModel.Mobile = receipt.Mobile;
-        receiptViewModel.ProjectId = receipt.ProjectId;
+        // receiptViewModel.ProjectId = receipt.ProjectId;
+
+        receiptViewModel.Number = receipt.Number;
+        receiptViewModel.Code = receipt.Code;
 
         string ReceivedBy = "";
+        string ReceivedByName = "";
         try
         {
 
             var UserName = _UserManager.Users.Where(x => x.Id == receipt.ReceivedBy).FirstOrDefault();
             if (UserName != null)
             {
-                ReceivedBy = UserName.FirstName + " " + UserName.LastName;
+                ReceivedByName = UserName.FirstName + " " + UserName.LastName;
+                ReceivedBy = UserName.Id;
             }
 
-            
+
         }
         catch { }
-    
+
         receiptViewModel.ReceivedBy = ReceivedBy;
+        receiptViewModel.ReceivedByName = ReceivedByName;
 
 
         // التحقق من القيمة قبل التحويل
@@ -530,7 +536,7 @@
 
         if (selectedReceipt != null)
         {
-            var parameters = new DialogParameters() { { "ReceiptId", selectedReceipt.Id } };
+            var parameters = new DialogParameters() { { "ReceiptId", selectedReceipt.Number } };
             var dialog = _DialogService.Show<_ReceiptConfirmDeleteDialog>("الرجاء التأكيد", parameters);
 
             var result = await dialog.Result;
