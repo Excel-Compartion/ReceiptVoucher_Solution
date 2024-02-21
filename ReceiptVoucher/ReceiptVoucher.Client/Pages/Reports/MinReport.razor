@@ -473,7 +473,7 @@
                 var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
 
 
-                if (receipts != null) { data = receipts.OrderBy(x => x.Number).ToList(); }
+                if (receipts != null) { data = receipts.OrderByDescending(x => x.Number).ToList(); }
 
                 if (table != null) { await table.ReloadServerData(); }
 
