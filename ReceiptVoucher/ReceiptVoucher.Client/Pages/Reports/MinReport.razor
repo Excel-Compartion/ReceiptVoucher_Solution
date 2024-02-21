@@ -217,7 +217,7 @@
         <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Id">@context.Number</MudTd>
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
@@ -233,7 +233,7 @@
             <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Id)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
                 </MudButtonGroup>
             </MudTd>
         </RowTemplate>
@@ -334,9 +334,9 @@
 
 
 
-    void PrintReceipt(int id)
+    void PrintReceipt(string code)
     {
-        var url = $"api/Receipts/GetReceiptRdcl/{id}";
+        var url = $"ReceiptPrints/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
@@ -473,7 +473,7 @@
                 var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
 
 
-                if (receipts != null) { data = receipts; }
+                if (receipts != null) { data = receipts.OrderBy(x => x.Number).ToList(); }
 
                 if (table != null) { await table.ReloadServerData(); }
 
