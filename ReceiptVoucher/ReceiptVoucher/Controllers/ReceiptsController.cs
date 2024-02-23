@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authorization;
 using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
 using ReceiptVoucher.EF.Repositories;
 using ReceiptVoucher.Core.Models.ResponseModels;
+using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -26,13 +28,14 @@ namespace ReceiptVoucher.Server.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReceiptRepository _receiptRepository;
+        private readonly IMapper mapper;
 
 
         private readonly UserManager<ApplicationUser> _userManager;
 
         IWebHostEnvironment webHostEnvironment;
 
-        public ReceiptsController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi)
+        public ReceiptsController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi, IMapper _mapper)
         {
             _unitOfWork = unitOfWork;
             _receiptRepository = receiptRepository;
@@ -40,9 +43,10 @@ namespace ReceiptVoucher.Server.Controllers
             _userManager = userManager; 
 
             webHostEnvironment = WebHostEnvi;
-        }
 
-        public DataTable ToDataTable<T>(T instance)
+            mapper = _mapper;
+        }
+        public DataTable ToDataTable<T>(List<T> list)
         {
             PropertyInfo[] properties = typeof(T).GetProperties();
             DataTable dt = new DataTable();
@@ -50,17 +54,21 @@ namespace ReceiptVoucher.Server.Controllers
             {
                 dt.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
             }
-            DataRow row = dt.NewRow();
-            foreach (PropertyInfo info in properties)
+            foreach (T instance in list)
             {
-                row[info.Name] = info.GetValue(instance) ?? DBNull.Value;
+                DataRow row = dt.NewRow();
+                foreach (PropertyInfo info in properties)
+                {
+                    row[info.Name] = info.GetValue(instance) ?? DBNull.Value;
+                }
+                dt.Rows.Add(row);
             }
-            dt.Rows.Add(row);
             return dt;
         }
 
+
         //[AllowAnonymous]
-  
+
         //[HttpGet("{id}")]
         //public async Task<IActionResult> GetReceiptRdcl(int id)
         //{
@@ -77,7 +85,7 @@ namespace ReceiptVoucher.Server.Controllers
 
         //    receiptRdclViewModel.ReceivedBy = user.FirstName + " " + user.LastName;
 
-           
+
 
         //    receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
         //    receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
@@ -87,7 +95,7 @@ namespace ReceiptVoucher.Server.Controllers
         //    receiptRdclViewModel.PaymentType = Receipt.PaymentType.GetDisplayName();
         //    receiptRdclViewModel.CheckNumber = Receipt.CheckNumber + "";
 
-          
+
         //        //تحويل تاريخ الشيك الى تاريخ هجري
         //        DateOnly? gregDate2 = Receipt.CheckDate;
         //        CultureInfo ci2 = new CultureInfo("ar-SA");
@@ -95,7 +103,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         //        receiptRdclViewModel.CheckDate = checkDate;
-          
+
 
         //    receiptRdclViewModel.AccountNumber = Receipt.AccountNumber + "";
         //    receiptRdclViewModel.Bank = Receipt.Bank;
@@ -208,11 +216,6 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-
-
-
-
-
         [HttpPost("GetFilteredData")]
         public async Task<IActionResult> GetFilteredData(FilterData filterData)
         {
@@ -223,10 +226,56 @@ namespace ReceiptVoucher.Server.Controllers
 
            
 
-         var receipt =  await _receiptRepository.GetFilteredData(filterData);
+         var receipts =  await _receiptRepository.GetFilteredData(filterData);
 
 
-            return Ok(receipt);
+            return Ok(receipts);
+        }
+
+
+        [HttpPost("GetReportWithFilteredData")]
+        public async Task<IActionResult> GetReportWithFilteredData(FilterData filterData)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest("خطاء في البيانات المدخلة");
+            }
+
+
+
+            var receipts = await _receiptRepository.GetFilteredData(filterData);
+
+
+
+            if (receipts == null)
+            {
+                return BadRequest($"حدث خطاء اتناء جلب البيانات ");
+            }
+
+            List<ReceiptWithRelatedDataDto> receiptWithRelatedDataDto = mapper.Map<List<ReceiptWithRelatedDataDto>>(receipts);
+
+
+
+            string path = webHostEnvironment.WebRootPath + @"\_Reports\Report1.rdlc";
+
+            LocalReport localReport = new LocalReport(path);
+
+            DataTable dt = ToDataTable(receiptWithRelatedDataDto);
+
+            localReport.AddDataSource("DataSet1", dt);
+
+
+
+
+            var report = localReport.Execute(RenderType.Excel);
+
+
+            return File(report.MainStream, "application/msexcel", "myReport.xls");
+
         }
 
 

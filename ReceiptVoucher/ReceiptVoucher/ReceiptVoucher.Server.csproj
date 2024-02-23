@@ -48,6 +48,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="Microsoft.ReportingServices.ReportViewerControl.Winforms" Version="150.1620.0" />
 	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
 	  <PackageReference Include="MudBlazor" Version="6.11.2" />
 	  <ProjectReference Include="..\..\ReceiptVoucher.Core\ReceiptVoucher.Core.csproj" />

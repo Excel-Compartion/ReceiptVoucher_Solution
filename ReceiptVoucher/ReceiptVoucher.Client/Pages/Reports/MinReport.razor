@@ -6,6 +6,7 @@
 @using ReceiptVoucher.Client.Pages.Receipt_Crud
 @using System.Security.Claims
 @using ReceiptVoucher.Core.Identity
+@using ReceiptVoucher.Core.Models.ResponseModels
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
@@ -13,6 +14,8 @@
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
 
 <PageTitle>Makarim</PageTitle>
 
@@ -191,7 +194,15 @@
     <ToolBarContent>
         <MudButton Class="custom-btn" OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">
             <MudIcon Icon="@Icons.Material.Filled.EventNote" Title="add" />
-            <span>عرض التقارير</span>
+            <span>عرض التقرير</span>
+        </MudButton>
+
+        &nbsp;
+        &nbsp;
+        
+        <MudButton Class="custom-btn" OnClick="ExploreAsExcel" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.SimCardDownload" Title="add" />
+            <span>تصدير التقرير</span>
         </MudButton>
 
         <MudSpacer />
@@ -254,7 +265,7 @@
 
 
 
-    @code {
+@code {
     private MudTable<Receipt>? table;
     private string? searchString;
     private DateTime? selectedDate = DateTime.Now;
@@ -339,6 +350,10 @@
         var url = $"ReceiptPrints/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
+
+   
+
+
 
     public ApplicationUser ApplicationUser { get; set; } = new();
 
@@ -483,6 +498,30 @@
 
         }
     }
+
+
+    async void ExploreAsExcel()
+    {
+        if (data != null && data.Count() != 0)
+        {
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetReportWithFilteredData", filterData);
+            if (response.IsSuccessStatusCode)
+            {
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var fileContent = Convert.ToBase64String(fileBytes);
+                await JSRuntime.InvokeVoidAsync("downloadFile", fileContent, "ملف التقرير.xls");
+            }
+            else
+            {
+                _Snackbar.Add($"لاتوجد بيانات", Severity.Error);
+            }
+        }
+        else
+        {
+            _Snackbar.Add($"لاتوجد بيانات", Severity.Error);
+        }
+    }
+
 
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ReceiptVoucher.Core.Enums;
 
 namespace ReceiptVoucher.Server.AutoMapper
 {
@@ -11,7 +12,15 @@ namespace ReceiptVoucher.Server.AutoMapper
             //.ForMember(dest => dest.Id, opt => opt.Ignore()); // ignore Id when Mapp From ViewModel To DataBase
 
 
-           
+            CreateMap<Receipt, ReceiptWithRelatedDataDto>()
+          .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
+          .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.Project.Name))
+          .ForMember(dest => dest.SubProjectName, opt => opt.MapFrom(src => src.SubProject.Name))
+          .ForMember(dest => dest.GrantDestinationName, opt => opt.MapFrom(src => src.GrantDestinations.GetDisplayName()))
+          .ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender.GetDisplayName()))
+          .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => src.PaymentType.GetDisplayName()))
+          .ReverseMap();
+
         }
     }
 }

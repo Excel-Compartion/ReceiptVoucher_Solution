@@ -1,6 +1,7 @@
 ﻿using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Enums;
+using ReceiptVoucher.Core.Models.Dtos;
 using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,9 @@ namespace ReceiptVoucher.EF.Repositories
         {
             if (filterData.RadioDateType == "Day")
             {
-                return await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project).Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name) && filterData.SelectBranchId.Contains(x.Branch.Name) && x.Date==filterData.SelectedDate).ToListAsync();
+
+                return await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project).Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name) && filterData.SelectBranchId.Contains(x.Branch.Name) && x.Date == filterData.SelectedDate).ToListAsync();
+
 
             }
 

@@ -24,7 +24,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class DataSet1 : global::System.Data.DataSet {
         
-        private ProjectsDataTable tableProjects;
+        private ReceiptWithRelatedDataDtoDataTable tableReceiptWithRelatedDataDto;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -54,8 +54,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["Projects"] != null)) {
-                    base.Tables.Add(new ProjectsDataTable(ds.Tables["Projects"]));
+                if ((ds.Tables["ReceiptWithRelatedDataDto"] != null)) {
+                    base.Tables.Add(new ReceiptWithRelatedDataDtoDataTable(ds.Tables["ReceiptWithRelatedDataDto"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public ProjectsDataTable Projects {
+        public ReceiptWithRelatedDataDtoDataTable ReceiptWithRelatedDataDto {
             get {
-                return this.tableProjects;
+                return this.tableReceiptWithRelatedDataDto;
             }
         }
         
@@ -152,8 +152,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["Projects"] != null)) {
-                    base.Tables.Add(new ProjectsDataTable(ds.Tables["Projects"]));
+                if ((ds.Tables["ReceiptWithRelatedDataDto"] != null)) {
+                    base.Tables.Add(new ReceiptWithRelatedDataDtoDataTable(ds.Tables["ReceiptWithRelatedDataDto"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableProjects = ((ProjectsDataTable)(base.Tables["Projects"]));
+            this.tableReceiptWithRelatedDataDto = ((ReceiptWithRelatedDataDtoDataTable)(base.Tables["ReceiptWithRelatedDataDto"]));
             if ((initTable == true)) {
-                if ((this.tableProjects != null)) {
-                    this.tableProjects.InitVars();
+                if ((this.tableReceiptWithRelatedDataDto != null)) {
+                    this.tableReceiptWithRelatedDataDto.InitVars();
                 }
             }
         }
@@ -204,13 +204,13 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             this.Namespace = "http://tempuri.org/DataSet1.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableProjects = new ProjectsDataTable();
-            base.Tables.Add(this.tableProjects);
+            this.tableReceiptWithRelatedDataDto = new ReceiptWithRelatedDataDtoDataTable();
+            base.Tables.Add(this.tableReceiptWithRelatedDataDto);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializeProjects() {
+        private bool ShouldSerializeReceiptWithRelatedDataDto() {
             return false;
         }
         
@@ -270,27 +270,59 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void ProjectsRowChangeEventHandler(object sender, ProjectsRowChangeEvent e);
+        public delegate void ReceiptWithRelatedDataDtoRowChangeEventHandler(object sender, ReceiptWithRelatedDataDtoRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class ProjectsDataTable : global::System.Data.TypedTableBase<ProjectsRow> {
+        public partial class ReceiptWithRelatedDataDtoDataTable : global::System.Data.TypedTableBase<ReceiptWithRelatedDataDtoRow> {
             
             private global::System.Data.DataColumn columnId;
             
-            private global::System.Data.DataColumn columnName;
+            private global::System.Data.DataColumn columnReceivedFrom;
             
-            private global::System.Data.DataColumn columnNote;
+            private global::System.Data.DataColumn columnReceivedBy;
             
-            private global::System.Data.DataColumn columnIsActive;
+            private global::System.Data.DataColumn columnReceivedByName;
+            
+            private global::System.Data.DataColumn columnTotalAmount;
+            
+            private global::System.Data.DataColumn columnBranchName;
+            
+            private global::System.Data.DataColumn columnSubProjectName;
+            
+            private global::System.Data.DataColumn columnProjectName;
+            
+            private global::System.Data.DataColumn columnForPurpose;
+            
+            private global::System.Data.DataColumn columnGrantDestinationName;
+            
+            private global::System.Data.DataColumn columnGenderName;
+            
+            private global::System.Data.DataColumn columnAgeName;
+            
+            private global::System.Data.DataColumn columnMobile;
+            
+            private global::System.Data.DataColumn columnPaymentTypeName;
+            
+            private global::System.Data.DataColumn columnCheckNumber;
+            
+            private global::System.Data.DataColumn columnAccountNumber;
+            
+            private global::System.Data.DataColumn columnBank;
+            
+            private global::System.Data.DataColumn columnCode;
+            
+            private global::System.Data.DataColumn columnNumber;
+            
+            private global::System.Data.DataColumn columnDateToString;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsDataTable() {
-                this.TableName = "Projects";
+            public ReceiptWithRelatedDataDtoDataTable() {
+                this.TableName = "ReceiptWithRelatedDataDto";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -298,7 +330,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal ProjectsDataTable(global::System.Data.DataTable table) {
+            internal ReceiptWithRelatedDataDtoDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -315,7 +347,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected ProjectsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected ReceiptWithRelatedDataDtoDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -330,25 +362,153 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn NameColumn {
+            public global::System.Data.DataColumn ReceivedFromColumn {
                 get {
-                    return this.columnName;
+                    return this.columnReceivedFrom;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn NoteColumn {
+            public global::System.Data.DataColumn ReceivedByColumn {
                 get {
-                    return this.columnNote;
+                    return this.columnReceivedBy;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn IsActiveColumn {
+            public global::System.Data.DataColumn ReceivedByNameColumn {
                 get {
-                    return this.columnIsActive;
+                    return this.columnReceivedByName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn TotalAmountColumn {
+                get {
+                    return this.columnTotalAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn BranchNameColumn {
+                get {
+                    return this.columnBranchName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SubProjectNameColumn {
+                get {
+                    return this.columnSubProjectName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ProjectNameColumn {
+                get {
+                    return this.columnProjectName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ForPurposeColumn {
+                get {
+                    return this.columnForPurpose;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn GrantDestinationNameColumn {
+                get {
+                    return this.columnGrantDestinationName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn GenderNameColumn {
+                get {
+                    return this.columnGenderName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn AgeNameColumn {
+                get {
+                    return this.columnAgeName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn MobileColumn {
+                get {
+                    return this.columnMobile;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn PaymentTypeNameColumn {
+                get {
+                    return this.columnPaymentTypeName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CheckNumberColumn {
+                get {
+                    return this.columnCheckNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn AccountNumberColumn {
+                get {
+                    return this.columnAccountNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn BankColumn {
+                get {
+                    return this.columnBank;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CodeColumn {
+                get {
+                    return this.columnCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn NumberColumn {
+                get {
+                    return this.columnNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn DateToStringColumn {
+                get {
+                    return this.columnDateToString;
                 }
             }
             
@@ -363,48 +523,84 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsRow this[int index] {
+            public ReceiptWithRelatedDataDtoRow this[int index] {
                 get {
-                    return ((ProjectsRow)(this.Rows[index]));
+                    return ((ReceiptWithRelatedDataDtoRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event ProjectsRowChangeEventHandler ProjectsRowChanging;
+            public event ReceiptWithRelatedDataDtoRowChangeEventHandler ReceiptWithRelatedDataDtoRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event ProjectsRowChangeEventHandler ProjectsRowChanged;
+            public event ReceiptWithRelatedDataDtoRowChangeEventHandler ReceiptWithRelatedDataDtoRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event ProjectsRowChangeEventHandler ProjectsRowDeleting;
+            public event ReceiptWithRelatedDataDtoRowChangeEventHandler ReceiptWithRelatedDataDtoRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event ProjectsRowChangeEventHandler ProjectsRowDeleted;
+            public event ReceiptWithRelatedDataDtoRowChangeEventHandler ReceiptWithRelatedDataDtoRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void AddProjectsRow(ProjectsRow row) {
+            public void AddReceiptWithRelatedDataDtoRow(ReceiptWithRelatedDataDtoRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsRow AddProjectsRow(int Id, string Name, string Note, bool IsActive) {
-                ProjectsRow rowProjectsRow = ((ProjectsRow)(this.NewRow()));
+            public ReceiptWithRelatedDataDtoRow AddReceiptWithRelatedDataDtoRow(
+                        int Id, 
+                        string ReceivedFrom, 
+                        string ReceivedBy, 
+                        string ReceivedByName, 
+                        decimal TotalAmount, 
+                        string BranchName, 
+                        string SubProjectName, 
+                        string ProjectName, 
+                        string ForPurpose, 
+                        string GrantDestinationName, 
+                        string GenderName, 
+                        string AgeName, 
+                        string Mobile, 
+                        string PaymentTypeName, 
+                        int CheckNumber, 
+                        int AccountNumber, 
+                        string Bank, 
+                        string Code, 
+                        int Number, 
+                        string DateToString) {
+                ReceiptWithRelatedDataDtoRow rowReceiptWithRelatedDataDtoRow = ((ReceiptWithRelatedDataDtoRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
-                        Name,
-                        Note,
-                        IsActive};
-                rowProjectsRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowProjectsRow);
-                return rowProjectsRow;
+                        ReceivedFrom,
+                        ReceivedBy,
+                        ReceivedByName,
+                        TotalAmount,
+                        BranchName,
+                        SubProjectName,
+                        ProjectName,
+                        ForPurpose,
+                        GrantDestinationName,
+                        GenderName,
+                        AgeName,
+                        Mobile,
+                        PaymentTypeName,
+                        CheckNumber,
+                        AccountNumber,
+                        Bank,
+                        Code,
+                        Number,
+                        DateToString};
+                rowReceiptWithRelatedDataDtoRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowReceiptWithRelatedDataDtoRow);
+                return rowReceiptWithRelatedDataDtoRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                ProjectsDataTable cln = ((ProjectsDataTable)(base.Clone()));
+                ReceiptWithRelatedDataDtoDataTable cln = ((ReceiptWithRelatedDataDtoDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -412,16 +608,32 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new ProjectsDataTable();
+                return new ReceiptWithRelatedDataDtoDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
                 this.columnId = base.Columns["Id"];
-                this.columnName = base.Columns["Name"];
-                this.columnNote = base.Columns["Note"];
-                this.columnIsActive = base.Columns["IsActive"];
+                this.columnReceivedFrom = base.Columns["ReceivedFrom"];
+                this.columnReceivedBy = base.Columns["ReceivedBy"];
+                this.columnReceivedByName = base.Columns["ReceivedByName"];
+                this.columnTotalAmount = base.Columns["TotalAmount"];
+                this.columnBranchName = base.Columns["BranchName"];
+                this.columnSubProjectName = base.Columns["SubProjectName"];
+                this.columnProjectName = base.Columns["ProjectName"];
+                this.columnForPurpose = base.Columns["ForPurpose"];
+                this.columnGrantDestinationName = base.Columns["GrantDestinationName"];
+                this.columnGenderName = base.Columns["GenderName"];
+                this.columnAgeName = base.Columns["AgeName"];
+                this.columnMobile = base.Columns["Mobile"];
+                this.columnPaymentTypeName = base.Columns["PaymentTypeName"];
+                this.columnCheckNumber = base.Columns["CheckNumber"];
+                this.columnAccountNumber = base.Columns["AccountNumber"];
+                this.columnBank = base.Columns["Bank"];
+                this.columnCode = base.Columns["Code"];
+                this.columnNumber = base.Columns["Number"];
+                this.columnDateToString = base.Columns["DateToString"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -429,38 +641,70 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             private void InitClass() {
                 this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnId);
-                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnName);
-                this.columnNote = new global::System.Data.DataColumn("Note", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnNote);
-                this.columnIsActive = new global::System.Data.DataColumn("IsActive", typeof(bool), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIsActive);
+                this.columnReceivedFrom = new global::System.Data.DataColumn("ReceivedFrom", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceivedFrom);
+                this.columnReceivedBy = new global::System.Data.DataColumn("ReceivedBy", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceivedBy);
+                this.columnReceivedByName = new global::System.Data.DataColumn("ReceivedByName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceivedByName);
+                this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalAmount);
+                this.columnBranchName = new global::System.Data.DataColumn("BranchName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBranchName);
+                this.columnSubProjectName = new global::System.Data.DataColumn("SubProjectName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSubProjectName);
+                this.columnProjectName = new global::System.Data.DataColumn("ProjectName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnProjectName);
+                this.columnForPurpose = new global::System.Data.DataColumn("ForPurpose", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnForPurpose);
+                this.columnGrantDestinationName = new global::System.Data.DataColumn("GrantDestinationName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGrantDestinationName);
+                this.columnGenderName = new global::System.Data.DataColumn("GenderName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGenderName);
+                this.columnAgeName = new global::System.Data.DataColumn("AgeName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAgeName);
+                this.columnMobile = new global::System.Data.DataColumn("Mobile", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMobile);
+                this.columnPaymentTypeName = new global::System.Data.DataColumn("PaymentTypeName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentTypeName);
+                this.columnCheckNumber = new global::System.Data.DataColumn("CheckNumber", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCheckNumber);
+                this.columnAccountNumber = new global::System.Data.DataColumn("AccountNumber", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAccountNumber);
+                this.columnBank = new global::System.Data.DataColumn("Bank", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBank);
+                this.columnCode = new global::System.Data.DataColumn("Code", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCode);
+                this.columnNumber = new global::System.Data.DataColumn("Number", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumber);
+                this.columnDateToString = new global::System.Data.DataColumn("DateToString", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDateToString);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsRow NewProjectsRow() {
-                return ((ProjectsRow)(this.NewRow()));
+            public ReceiptWithRelatedDataDtoRow NewReceiptWithRelatedDataDtoRow() {
+                return ((ReceiptWithRelatedDataDtoRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new ProjectsRow(builder);
+                return new ReceiptWithRelatedDataDtoRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(ProjectsRow);
+                return typeof(ReceiptWithRelatedDataDtoRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.ProjectsRowChanged != null)) {
-                    this.ProjectsRowChanged(this, new ProjectsRowChangeEvent(((ProjectsRow)(e.Row)), e.Action));
+                if ((this.ReceiptWithRelatedDataDtoRowChanged != null)) {
+                    this.ReceiptWithRelatedDataDtoRowChanged(this, new ReceiptWithRelatedDataDtoRowChangeEvent(((ReceiptWithRelatedDataDtoRow)(e.Row)), e.Action));
                 }
             }
             
@@ -468,8 +712,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.ProjectsRowChanging != null)) {
-                    this.ProjectsRowChanging(this, new ProjectsRowChangeEvent(((ProjectsRow)(e.Row)), e.Action));
+                if ((this.ReceiptWithRelatedDataDtoRowChanging != null)) {
+                    this.ReceiptWithRelatedDataDtoRowChanging(this, new ReceiptWithRelatedDataDtoRowChangeEvent(((ReceiptWithRelatedDataDtoRow)(e.Row)), e.Action));
                 }
             }
             
@@ -477,8 +721,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.ProjectsRowDeleted != null)) {
-                    this.ProjectsRowDeleted(this, new ProjectsRowChangeEvent(((ProjectsRow)(e.Row)), e.Action));
+                if ((this.ReceiptWithRelatedDataDtoRowDeleted != null)) {
+                    this.ReceiptWithRelatedDataDtoRowDeleted(this, new ReceiptWithRelatedDataDtoRowChangeEvent(((ReceiptWithRelatedDataDtoRow)(e.Row)), e.Action));
                 }
             }
             
@@ -486,14 +730,14 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.ProjectsRowDeleting != null)) {
-                    this.ProjectsRowDeleting(this, new ProjectsRowChangeEvent(((ProjectsRow)(e.Row)), e.Action));
+                if ((this.ReceiptWithRelatedDataDtoRowDeleting != null)) {
+                    this.ReceiptWithRelatedDataDtoRowDeleting(this, new ReceiptWithRelatedDataDtoRowChangeEvent(((ReceiptWithRelatedDataDtoRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void RemoveProjectsRow(ProjectsRow row) {
+            public void RemoveReceiptWithRelatedDataDtoRow(ReceiptWithRelatedDataDtoRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -520,7 +764,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "ProjectsDataTable";
+                attribute2.FixedValue = "ReceiptWithRelatedDataDtoDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -564,15 +808,15 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class ProjectsRow : global::System.Data.DataRow {
+        public partial class ReceiptWithRelatedDataDtoRow : global::System.Data.DataRow {
             
-            private ProjectsDataTable tableProjects;
+            private ReceiptWithRelatedDataDtoDataTable tableReceiptWithRelatedDataDto;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal ProjectsRow(global::System.Data.DataRowBuilder rb) : 
+            internal ReceiptWithRelatedDataDtoRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableProjects = ((ProjectsDataTable)(this.Table));
+                this.tableReceiptWithRelatedDataDto = ((ReceiptWithRelatedDataDtoDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -580,111 +824,573 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             public int Id {
                 get {
                     try {
-                        return ((int)(this[this.tableProjects.IdColumn]));
+                        return ((int)(this[this.tableReceiptWithRelatedDataDto.IdColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Id\' in table \'Projects\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Id\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableProjects.IdColumn] = value;
+                    this[this.tableReceiptWithRelatedDataDto.IdColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Name {
+            public string ReceivedFrom {
                 get {
                     try {
-                        return ((string)(this[this.tableProjects.NameColumn]));
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ReceivedFromColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Name\' in table \'Projects\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceivedFrom\' in table \'ReceiptWithRelatedDataDto\' is DBNul" +
+                                "l.", e);
                     }
                 }
                 set {
-                    this[this.tableProjects.NameColumn] = value;
+                    this[this.tableReceiptWithRelatedDataDto.ReceivedFromColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Note {
+            public string ReceivedBy {
                 get {
                     try {
-                        return ((string)(this[this.tableProjects.NoteColumn]));
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ReceivedByColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Note\' in table \'Projects\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceivedBy\' in table \'ReceiptWithRelatedDataDto\' is DBNull." +
+                                "", e);
                     }
                 }
                 set {
-                    this[this.tableProjects.NoteColumn] = value;
+                    this[this.tableReceiptWithRelatedDataDto.ReceivedByColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsActive {
+            public string ReceivedByName {
                 get {
                     try {
-                        return ((bool)(this[this.tableProjects.IsActiveColumn]));
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ReceivedByNameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IsActive\' in table \'Projects\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceivedByName\' in table \'ReceiptWithRelatedDataDto\' is DBN" +
+                                "ull.", e);
                     }
                 }
                 set {
-                    this[this.tableProjects.IsActiveColumn] = value;
+                    this[this.tableReceiptWithRelatedDataDto.ReceivedByNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public decimal TotalAmount {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmount\' in table \'ReceiptWithRelatedDataDto\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string BranchName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.BranchNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BranchName\' in table \'ReceiptWithRelatedDataDto\' is DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.BranchNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string SubProjectName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.SubProjectNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SubProjectName\' in table \'ReceiptWithRelatedDataDto\' is DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.SubProjectNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ProjectName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ProjectNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ProjectName\' in table \'ReceiptWithRelatedDataDto\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.ProjectNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ForPurpose {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ForPurposeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ForPurpose\' in table \'ReceiptWithRelatedDataDto\' is DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.ForPurposeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string GrantDestinationName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.GrantDestinationNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'GrantDestinationName\' in table \'ReceiptWithRelatedDataDto\' " +
+                                "is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.GrantDestinationNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string GenderName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.GenderNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'GenderName\' in table \'ReceiptWithRelatedDataDto\' is DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.GenderNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string AgeName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.AgeNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AgeName\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.AgeNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Mobile {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.MobileColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Mobile\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.MobileColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string PaymentTypeName {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.PaymentTypeNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentTypeName\' in table \'ReceiptWithRelatedDataDto\' is DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.PaymentTypeNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int CheckNumber {
+                get {
+                    try {
+                        return ((int)(this[this.tableReceiptWithRelatedDataDto.CheckNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CheckNumber\' in table \'ReceiptWithRelatedDataDto\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.CheckNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int AccountNumber {
+                get {
+                    try {
+                        return ((int)(this[this.tableReceiptWithRelatedDataDto.AccountNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AccountNumber\' in table \'ReceiptWithRelatedDataDto\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.AccountNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Bank {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.BankColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Bank\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.BankColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Code {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.CodeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Code\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.CodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int Number {
+                get {
+                    try {
+                        return ((int)(this[this.tableReceiptWithRelatedDataDto.NumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Number\' in table \'ReceiptWithRelatedDataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.NumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string DateToString {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.DateToStringColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DateToString\' in table \'ReceiptWithRelatedDataDto\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.DateToStringColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsIdNull() {
-                return this.IsNull(this.tableProjects.IdColumn);
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.IdColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetIdNull() {
-                this[this.tableProjects.IdColumn] = global::System.Convert.DBNull;
+                this[this.tableReceiptWithRelatedDataDto.IdColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsNameNull() {
-                return this.IsNull(this.tableProjects.NameColumn);
+            public bool IsReceivedFromNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ReceivedFromColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetNameNull() {
-                this[this.tableProjects.NameColumn] = global::System.Convert.DBNull;
+            public void SetReceivedFromNull() {
+                this[this.tableReceiptWithRelatedDataDto.ReceivedFromColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsNoteNull() {
-                return this.IsNull(this.tableProjects.NoteColumn);
+            public bool IsReceivedByNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ReceivedByColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetNoteNull() {
-                this[this.tableProjects.NoteColumn] = global::System.Convert.DBNull;
+            public void SetReceivedByNull() {
+                this[this.tableReceiptWithRelatedDataDto.ReceivedByColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsIsActiveNull() {
-                return this.IsNull(this.tableProjects.IsActiveColumn);
+            public bool IsReceivedByNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ReceivedByNameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetIsActiveNull() {
-                this[this.tableProjects.IsActiveColumn] = global::System.Convert.DBNull;
+            public void SetReceivedByNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.ReceivedByNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsTotalAmountNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.TotalAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetTotalAmountNull() {
+                this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsBranchNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.BranchNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetBranchNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.BranchNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsSubProjectNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.SubProjectNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetSubProjectNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.SubProjectNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsProjectNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ProjectNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetProjectNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.ProjectNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsForPurposeNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ForPurposeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetForPurposeNull() {
+                this[this.tableReceiptWithRelatedDataDto.ForPurposeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsGrantDestinationNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.GrantDestinationNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetGrantDestinationNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.GrantDestinationNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsGenderNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.GenderNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetGenderNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.GenderNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsAgeNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.AgeNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetAgeNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.AgeNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsMobileNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.MobileColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetMobileNull() {
+                this[this.tableReceiptWithRelatedDataDto.MobileColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsPaymentTypeNameNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.PaymentTypeNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetPaymentTypeNameNull() {
+                this[this.tableReceiptWithRelatedDataDto.PaymentTypeNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCheckNumberNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.CheckNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCheckNumberNull() {
+                this[this.tableReceiptWithRelatedDataDto.CheckNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsAccountNumberNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.AccountNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetAccountNumberNull() {
+                this[this.tableReceiptWithRelatedDataDto.AccountNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsBankNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.BankColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetBankNull() {
+                this[this.tableReceiptWithRelatedDataDto.BankColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCodeNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.CodeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCodeNull() {
+                this[this.tableReceiptWithRelatedDataDto.CodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsNumberNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.NumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetNumberNull() {
+                this[this.tableReceiptWithRelatedDataDto.NumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsDateToStringNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.DateToStringColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetDateToStringNull() {
+                this[this.tableReceiptWithRelatedDataDto.DateToStringColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -692,22 +1398,22 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class ProjectsRowChangeEvent : global::System.EventArgs {
+        public class ReceiptWithRelatedDataDtoRowChangeEvent : global::System.EventArgs {
             
-            private ProjectsRow eventRow;
+            private ReceiptWithRelatedDataDtoRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsRowChangeEvent(ProjectsRow row, global::System.Data.DataRowAction action) {
+            public ReceiptWithRelatedDataDtoRowChangeEvent(ReceiptWithRelatedDataDtoRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public ProjectsRow Row {
+            public ReceiptWithRelatedDataDtoRow Row {
                 get {
                     return this.eventRow;
                 }
