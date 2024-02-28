@@ -141,7 +141,8 @@ namespace ReceiptVoucher.Server.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 BranchId = model.BranchId,
-                PhoneNumber=model.Mobile
+                PhoneNumber=model.Mobile,
+                IsEnabled =  true
             };
 
             var result = await _userManager.CreateAsync(userToDB, model.Password);
