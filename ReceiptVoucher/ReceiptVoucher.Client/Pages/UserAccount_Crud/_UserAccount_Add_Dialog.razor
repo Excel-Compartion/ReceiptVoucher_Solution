@@ -53,7 +53,7 @@
                     CreateUserModel.BranchId = Branches[0].Id;
                 }
 
-                <MudSelect T="int?" Label="المركز" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId">
+                <MudSelect T="int?" Label="المكتب" For="@(()=>CreateUserModel.BranchId)" @bind-Value="@CreateUserModel.BranchId">
        
                     @{
                         @foreach (var branch in Branches)
@@ -216,7 +216,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                _Snackbar.Add("تم اضافة الحساب بنجاح!", Severity.Success);
+                _Snackbar.Add("تم اضافة نقطة البيع بنجاح!", Severity.Success);
             }
 
             else
@@ -273,7 +273,7 @@
             var response = await Http.PutAsJsonAsync("api/Users", editProfileViewModel);
             if (response.IsSuccessStatusCode)
             {
-                _Snackbar.Add("تم تعديل الحساب بنجاح!", Severity.Success);
+                _Snackbar.Add("تم تعديل نقطة البيع بنجاح!", Severity.Success);
             }
             else
             {

@@ -8,7 +8,7 @@
         <EditForm Model="@Branch" OnValidSubmit="Submit" Class="custom-form" >
             <DataAnnotationsValidator />
 
-            <MudTextField  Label="اسم المركز" For="@(()=>Branch.Name)" @bind-Value="@Branch.Name"  AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+            <MudTextField  Label="اسم المكتب" For="@(()=>Branch.Name)" @bind-Value="@Branch.Name"  AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
             <MudTextField  Label="المنطقة" For="@(()=>Branch.Area)" @bind-Value="@Branch.Area" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
          
@@ -95,11 +95,11 @@
                 var response = await Http.PostAsJsonAsync("api/Branches/AddOneAsync", Branch);
                 if (response.IsSuccessStatusCode)
                 {
-                    _Snackbar.Add("تم اضافة المركز بنجاح!", Severity.Success);
+                    _Snackbar.Add("تم اضافة المكتب بنجاح!", Severity.Success);
                 }
                 else
                 {
-                    _Snackbar.Add($" لم يتم اضافة المركز: {response.StatusCode}", Severity.Error);
+                    _Snackbar.Add($" لم يتم اضافة المكتب: {response.StatusCode}", Severity.Error);
                 }
             }
 
@@ -110,11 +110,11 @@
                 var response = await Http.PutAsJsonAsync("api/Branches", Branch);
                 if (response.IsSuccessStatusCode)
                 {
-                    _Snackbar.Add("تم تعديل المركز بنجاح!", Severity.Success);
+                    _Snackbar.Add("تم تعديل المكتب بنجاح!", Severity.Success);
                 }
                 else
                 {
-                    _Snackbar.Add($" لم يتم تعديل المركز: {response.StatusCode}", Severity.Error);
+                    _Snackbar.Add($" لم يتم تعديل المكتب: {response.StatusCode}", Severity.Error);
                 }
             }
 

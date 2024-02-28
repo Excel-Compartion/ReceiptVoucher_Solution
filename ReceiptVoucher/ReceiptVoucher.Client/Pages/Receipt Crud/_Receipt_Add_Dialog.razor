@@ -91,7 +91,7 @@
 
                 }
 
-                // نوع الدفع عبر الحساب
+                // نوع الدفع عبر نقطة البيع
                 else if (ReceiptViewModel.PaymentType == PaymentTypes.Account)
                 {
 
@@ -108,7 +108,7 @@
                     ReceiptViewModel.Bank = "--";
 
 
-                    <MudTextField Label="رقم الحساب" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    <MudTextField Label="رقم نقطة البيع" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
 
                 }
@@ -215,8 +215,8 @@
 
             <MudGrid>
                 <MudItem sm="4" xs="12">
-                    <MudSelect Label="المركز" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
-                        <MudSelectItem Value="0">--- اختيار المركز ---</MudSelectItem>
+                    <MudSelect Label="المكتب" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار المكتب ---</MudSelectItem>
                         @{
                             if (UserBranchId != null)
                             {

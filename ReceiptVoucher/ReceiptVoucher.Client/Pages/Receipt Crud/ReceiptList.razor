@@ -77,94 +77,94 @@
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
 
-       @*  <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستلم</MudTableSortLabel></MudTh> *@
+        @*  <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستلم</MudTableSortLabel></MudTh> *@
 
         @if (UserBranchId == null)
         {
-            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المكتب</MudTableSortLabel></MudTh>
         }
 
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
-       @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh> *@
+        @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh> *@
         <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="رقم السند">@context.Number</MudTd>
-            <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
-            <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
-            <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+        <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
+        <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
+        <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
 
-         @*    <MudTd DataLabel="المستلم">
+        @*    <MudTd DataLabel="المستلم">
 
 
-                @{
-                string ReceivedBy = "";
-                try
-                {
+        @{
+        string ReceivedBy = "";
+        try
+        {
 
-                    var UserName = _UserManager.Users.Where(x => x.Id == context.ReceivedBy).FirstOrDefault();
-                    if (UserName != null)
-                    {
-                        ReceivedBy = UserName.FirstName + " " + UserName.LastName;
-                    }
+        var UserName = _UserManager.Users.Where(x => x.Id == context.ReceivedBy).FirstOrDefault();
+        if (UserName != null)
+        {
+        ReceivedBy = UserName.FirstName + " " + UserName.LastName;
+        }
 
-                }
-                catch { }
-            }
+        }
+        catch { }
+        }
 
-            @ReceivedBy
+        @ReceivedBy
 
         </MudTd> *@
 
         @if (UserBranchId == null)
         {
-            <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المكتب">@context.Branch.Name</MudTd>
         }
 
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
-            <MudTd DataLabel="التاريخ">@context.Date</MudTd>
-           @*  <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd> *@
-            <MudTd DataLabel="الاجراءت">
-                @* GetReceiptRdcl *@
+        <MudTd DataLabel="التاريخ">@context.Date</MudTd>
+        @*  <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd> *@
+        <MudTd DataLabel="الاجراءت">
+            @* GetReceiptRdcl *@
 
-                <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
-                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+            <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
+                <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
-  
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+
+                <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
 
 
                 <MudButton Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
 
-                </MudButtonGroup>
+            </MudButtonGroup>
 
 
 
 
-            </MudTd>
-        </RowTemplate>
-        <NoRecordsContent>
-            <MudText class="NotFound">@ResponseMessage</MudText>
-        </NoRecordsContent>
-        <LoadingContent>
-            <MudText class="LodingNow">جاري التحميل ...</MudText>
-        </LoadingContent>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText class="NotFound">@ResponseMessage</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText class="LodingNow">جاري التحميل ...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager RowsPerPageString="رقم الصفحة" />
+    </PagerContent>
+</MudTable>
 
 
-    <br />
+<br />
 
 
 
 
 
-    @code {
+@code {
     public IEnumerable<Receipt>? pagedData;
     private MudTable<Receipt>? table;
 
@@ -237,7 +237,7 @@
 
 
 
-     
+
 
 
         try
@@ -298,10 +298,10 @@
             if (response != null)
             {
 
-                if (currentUser!=null  )
+                if (currentUser != null)
                 {
-                    
-                    if (role!=null && role!= RolesNames.Admin)
+
+                    if (role != null && role != RolesNames.Admin)
                     {
                         data = response
       .Where(x => x.BranchId == currentUser.BranchId)
@@ -309,14 +309,14 @@
       .ToList();
 
                     }
-                    
+
                     else
                     {
                         data = response.OrderByDescending(x => x.Number);
                     }
                 }
-               
-               
+
+
             }
 
 
@@ -331,7 +331,9 @@
              return true;
          if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
              return true;
-         if ($"{receipt.Id}".Contains(searchString))
+         if ($"{receipt.Number}".Contains(searchString))
+             return true;
+         if ($"{receipt.Mobile}".Contains(searchString))
              return true;
          if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
              return true;

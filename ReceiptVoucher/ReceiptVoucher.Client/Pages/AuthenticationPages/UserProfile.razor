@@ -39,13 +39,13 @@
             <h4 class="">الاسم: <span>@ApplicationUser.FirstName @ApplicationUser.LastName</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">المركز: <span>@(ApplicationUser?.Branch?.Name ?? "لم يتم تحديد المركز")</span></h4>
+            <h4 class="">المكتب: <span>@(ApplicationUser?.Branch?.Name ?? "لم يتم تحديد المكتب")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
             <h4 class="">رقم الجوال: <span>@(ApplicationUser?.PhoneNumber ?? "لم يتم تحديد رقم الهاتف")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">نوع الحساب: <span>@userRole</span></h4>
+            <h4 class="">نوع نقطة البيع: <span>@userRole</span></h4>
         </MudItem>
         <MudItem xs="12" Class="text-center">
             <h4 class="">البريد الإلكتروني: <span>@ApplicationUser.Email</span></h4>

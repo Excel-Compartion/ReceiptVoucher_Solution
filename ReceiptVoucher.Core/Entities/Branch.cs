@@ -5,7 +5,7 @@ public class Branch
     [Key]
     public int Id { get; set; }
 
-    [Required(ErrorMessage = "يرجى ادخال اسم الفرع ")]
+    [Required(ErrorMessage = "يرجى ادخال اسم المكتب ")]
     [StringLength(250)]
     public string Name { get; set; } = null!;
 

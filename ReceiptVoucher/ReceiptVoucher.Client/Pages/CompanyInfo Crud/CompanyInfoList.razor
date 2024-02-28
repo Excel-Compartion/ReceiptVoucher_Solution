@@ -81,7 +81,7 @@
         <MudText class="NotFound">جاري التحميل...</MudText>
     </LoadingContent>
     <PagerContent>
-        <MudTablePager />
+        <MudTablePager RowsPerPageString="رقم الصفحة" />
     </PagerContent>
 </MudTable>
 
@@ -158,7 +158,7 @@
 
        
 
-            _DialogService.Show<_CompanyInfo_Add_Dialog>("اضافة فرع جديد", parameters,options);
+            _DialogService.Show<_CompanyInfo_Add_Dialog>("اضافة مكتب جديد", parameters,options);
         }
 
         private void OpenEditDialog(CompanyInfo CompanyInfo)
@@ -170,7 +170,7 @@
             parameters.Add("OriginalCompanyInfo", CompanyInfo);
             parameters.Add("BtnName", "تعديل");
 
-        _DialogService.Show<_CompanyInfo_Add_Dialog>("تعديل الفرع", parameters, options);
+        _DialogService.Show<_CompanyInfo_Add_Dialog>("تعديل المكتب", parameters, options);
         }
 
         private async void RefreshData(bool dialogResult)

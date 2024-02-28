@@ -66,7 +66,7 @@
         <MudTh><MudTableSortLabel SortLabel="username_field" T="UserViewModel">اسم المستخدم</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="email_field" T="UserViewModel"> البريد الالكتروني</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel T="UserViewModel"> رقم الجوال</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel  T="UserViewModel"> المركز</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel  T="UserViewModel"> المكتب</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel  T="UserViewModel"> الصلاحية</MudTableSortLabel></MudTh>
 
 
@@ -95,7 +95,7 @@
                 
             </MudTd>
 
-            <MudTd DataLabel="المركز">
+            <MudTd DataLabel="المكتب">
 
                 @{
                 string branchName = "---";
@@ -150,7 +150,7 @@
             <MudText class="LodingNow">جاري التحميل...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager />
+        <MudTablePager RowsPerPageString="رقم الصفحة" />
         </PagerContent>
     </MudTable>
 
@@ -339,7 +339,7 @@
 
 
         parameters.Add("BtnName", "تعديل");
-        _DialogService.Show<_UserAccount_Add_Dialog>("تعديل الحساب", parameters, options);
+        _DialogService.Show<_UserAccount_Add_Dialog>("تعديل نقطة البيع", parameters, options);
 
 
     }
@@ -381,7 +381,7 @@
                 if (content.Success)
                 {
                     // Show a success message
-                    _Snackbar.Add("تم حذف بيانات الحساب بنجاح", Severity.Success);
+                    _Snackbar.Add("تم حذف بيانات نقطة البيع بنجاح", Severity.Success);
 
                     // Reload the table data
                     if (table != null) { await table.ReloadServerData(); }

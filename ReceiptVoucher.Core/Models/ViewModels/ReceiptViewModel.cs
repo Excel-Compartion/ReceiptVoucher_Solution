@@ -28,7 +28,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public decimal TotalAmount { get; set; }
 
 
-        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المركز  ---")]
+        [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المكتب  ---")]
         public int BranchId { get; set; }   // Foreign Key
 
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]
@@ -55,7 +55,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Required(ErrorMessage = "يرجى ادخال تاريخ ")]
         public DateTime? CheckDate { get; set; }
 
-        [Required(ErrorMessage = "يرجى ادخال رقم الحساب بشكل صحيح ")]
+        [Required(ErrorMessage = "يرجى ادخال رقم نقطة البيع بشكل صحيح ")]
        
         public int? AccountNumber { get; set; }
 

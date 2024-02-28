@@ -68,7 +68,7 @@
         <MudItem xs="12" sm="6">
 
             <!--Project Select-->
-            <MudSelect Style="width:100%" T="string" SelectAll="true" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" ValueChanged="UnCheckedChange">
+            <MudSelect Style="width:100%" T="string" SelectAll="true" SelectAllText="اختيار الكل" Label="المشاريع الرئيسية" MultiSelection="true" @bind-SelectedValues="SelectProject" ValueChanged="UnCheckedChange">
 
                 @if (Projects != null)
                 {
@@ -92,7 +92,7 @@
         <MudItem xs="12" sm="6">
 
             <!--SubProject Select-->
-            <MudSelect T="string" SelectAll="true" Label="المشاريع الفرعية" MultiSelection="true" @bind-SelectedValues="SelectSubProject">
+            <MudSelect T="string" SelectAll="true" SelectAllText="اختيار الكل" Label="المشاريع الفرعية" MultiSelection="true" @bind-SelectedValues="SelectSubProject">
 
                 @if (SubProjects != null)
                 {
@@ -130,7 +130,7 @@
 
 
     <!--Center Select-->
-    <MudSelect SelectAll="true" Style="width:100%" T="string" Label="المراكز" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
+    <MudSelect SelectAll="true" SelectAllText="اختيار الكل" Style="width:100%" T="string" Label="المكتب" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
 
         @if (Branches != null)
         {
@@ -212,13 +212,14 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="mobile_field" T="Receipt">رقم الجوال</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
 
         @{
             if (UserBranchId == null)
             {
-                <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المركز</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المكتب</MudTableSortLabel></MudTh>
 
             }
         }
@@ -230,12 +231,13 @@
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Number</MudTd>
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
+            <MudTd DataLabel="رقم الجوال">@context.Mobile</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
 
             @if (UserBranchId == null)
         {
-            <MudTd DataLabel="المركز">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المكتب">@context.Branch.Name</MudTd>
         }
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
@@ -243,8 +245,8 @@
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                    <MudButton Color="Color.Warning" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                    <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                    <MudButton Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
                 </MudButtonGroup>
             </MudTd>
         </RowTemplate>
@@ -256,7 +258,7 @@
             <MudText class="LodingNow">جاري التحميل...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager />
+        <MudTablePager RowsPerPageString="رقم الصفحة" />
         </PagerContent>
     </MudTable>
 
@@ -530,7 +532,8 @@
         if (!string.IsNullOrWhiteSpace(searchString))
         {
             data = data.Where(r => r.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                                   r.Id.ToString().Contains(searchString)).ToList();
+            r.Mobile.Contains(searchString, StringComparison.OrdinalIgnoreCase) || 
+                                   r.Number.ToString().Contains(searchString)).ToList();
         }
 
 
@@ -568,6 +571,10 @@
 
             case "PaymentType_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.PaymentType.GetDisplayName()).ToList() : data.OrderByDescending(r => r.PaymentType.GetDisplayName()).ToList();
+                break;
+
+            case "mobile_field":
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.PaymentType.GetDisplayName()).ToList() : data.OrderByDescending(r => r.Mobile).ToList();
                 break;
 
         }

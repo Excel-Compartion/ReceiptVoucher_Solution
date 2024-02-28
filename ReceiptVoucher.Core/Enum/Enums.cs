@@ -19,7 +19,7 @@ namespace ReceiptVoucher.Core.Enums
         [Display(Name = "جمعية")]
         Association = 3,
 
-        [Display(Name = "مؤوسسة")]
+        [Display(Name = "مؤسسة")]
         Foundation = 4
     }
 
@@ -70,7 +70,7 @@ namespace ReceiptVoucher.Core.Enums
         [Display(Name = "نقد")]
         Cash = 2,
 
-        [Display(Name = "حساب")]
+        [Display(Name = "نقطة بيع")]
         Account = 3,
 
         [Display(Name = "بنك")]

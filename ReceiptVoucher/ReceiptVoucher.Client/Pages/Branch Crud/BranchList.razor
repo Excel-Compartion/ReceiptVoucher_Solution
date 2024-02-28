@@ -33,7 +33,7 @@
 
         <MudIcon Icon="@Icons.Material.Filled.Apartment" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
-        المراكز الاعلامية
+        مكاتب الجمعية
 
 
 
@@ -63,7 +63,7 @@
     </ToolBarContent>
     <HeaderContent>
 
-        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">اسم المركز</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">المكتب</MudTableSortLabel></MudTh>
 
         <MudTh><MudTableSortLabel SortLabel="area_field" T="Branch">المنطقة</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="responsiblePerson_field" T="Branch">الشخص المسؤول</MudTableSortLabel></MudTh>
@@ -78,7 +78,7 @@
     </HeaderContent>
     <RowTemplate>
 
-        <MudTd DataLabel="اسم المركز">@context.Name</MudTd>
+        <MudTd DataLabel="المكتب">@context.Name</MudTd>
             <MudTd DataLabel="المنطقة">@context.Area</MudTd>
             <MudTd DataLabel="الشخص المسؤول">@context.ResponsiblePerson</MudTd>
             <MudTd DataLabel="الجوال">@context.Mobile</MudTd>
@@ -97,7 +97,7 @@
             <MudText class="LodingNow">جاري التحميل...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager />
+        <MudTablePager RowsPerPageString="رقم الصفحة" />
         </PagerContent>
     </MudTable>
 
@@ -206,7 +206,7 @@
 
         parameters.Add("BtnName", "اضافه");
 
-        _DialogService.Show<_Branch_Add_Dialog>("اضافة مركز جديد", parameters);
+        _DialogService.Show<_Branch_Add_Dialog>("اضافة مكتب جديد", parameters);
     }
 
     private void OpenEditDialog(Branch branch)
@@ -216,7 +216,7 @@
         parameters.Add("OriginalBranch", branch);
         parameters.Add("BtnName", "تعديل");
 
-        _DialogService.Show<_Branch_Add_Dialog>("تعديل المركز", parameters);
+        _DialogService.Show<_Branch_Add_Dialog>("تعديل المكتب", parameters);
     }
 
     private async void RefreshData(bool dialogResult)
@@ -256,7 +256,7 @@
                 if (response.IsSuccessStatusCode)
                 {
                     // Show a success message
-                    _Snackbar.Add("تم حذف بيانات المركز بنجاح", Severity.Success);
+                    _Snackbar.Add("تم حذف بيانات المكتب بنجاح", Severity.Success);
 
                     // Reload the table data
                     if (table != null)
@@ -268,7 +268,7 @@
                 else
                 {
                     // Deletion failed
-                    _Snackbar.Add("فشل حذف بيانات المركز!", Severity.Error);
+                    _Snackbar.Add("فشل حذف بيانات المكتب!", Severity.Error);
                 }
 
                 StateHasChanged();

@@ -39,7 +39,7 @@ namespace ReceiptVoucher.Server.Controllers
             if(!result.IsAuthenticated)
                 return BadRequest(new BaseResponse<string>(null , result.Message , success: false));
 
-            return Ok(new BaseResponse<AuthModel>(result, "تم انشاء الحساب بنجاح", success: true));
+            return Ok(new BaseResponse<AuthModel>(result, "تم انشاء نقطة البيع بنجاح", success: true));
         }
 
 
