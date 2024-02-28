@@ -319,7 +319,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPost("ChangeUserStatus/{id}")]
-        public async Task<IActionResult> ToggleUser(string id )
+        public async Task<IActionResult> ChangeUserStatus(  string id )
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)

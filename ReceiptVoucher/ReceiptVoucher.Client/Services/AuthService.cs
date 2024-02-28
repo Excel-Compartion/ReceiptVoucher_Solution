@@ -80,12 +80,12 @@ namespace ReceiptVoucher.Client.Services
                 var userId = user.FindFirstValue("uid");
 
                 var UserInDB = await _userManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
-
-                var roles = await _userManager.GetRolesAsync(UserInDB); // Get all roles of the user
-
-
                 if (UserInDB != null)
                 {
+                    var roles = await _userManager.GetRolesAsync(UserInDB); // Get all roles of the user
+
+
+                  
                     var currentUser = new UserViewModel()
                     {
                         Id = UserInDB.Id,
@@ -98,6 +98,7 @@ namespace ReceiptVoucher.Client.Services
                     };
 
                     return currentUser;
+                  
                 }
             }
 
