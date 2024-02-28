@@ -156,19 +156,19 @@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                 <MudButton Color="Color.Info" Variant="Variant.Outlined" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
-                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteUserViewModelId(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => DeleteUserViewModelId(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حذف</MudButton>
 
                 @{
                     <!-- اذا كان الحساب مفعل-->
                     if (context.IsEnabled == true)
                     {
-                        <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => ChangeUserStatus(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">أيقاف الحساب</MudButton>
+                        <MudButton Color="Color.Error" Variant="Variant.Outlined" @onclick="@(() => ChangeUserStatus(context.Id))" StartIcon="@Icons.Material.Outlined.PersonAddDisabled">أيقاف الحساب</MudButton>
                     }
 
                     <!-- اذا كان الحساب موقف اصلا-->
                     else
                     {
-                        <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="@(() => ChangeUserStatus(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">تفعيل الحساب</MudButton>
+                        <MudButton Color="Color.Success" Variant="Variant.Outlined" @onclick="@(() => ChangeUserStatus(context.Id))" StartIcon="@Icons.Material.Filled.VerifiedUser">تفعيل الحساب</MudButton>
                     }
 
                 }
