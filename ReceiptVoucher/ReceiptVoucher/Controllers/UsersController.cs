@@ -65,7 +65,7 @@ namespace ReceiptVoucher.Server.Controllers
         //}
 
 
-            [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetUsersWithRoles()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -83,7 +83,9 @@ namespace ReceiptVoucher.Server.Controllers
                     BranchId = user.BranchId,
                     UserName = user.UserName,
                     Roles = userRoles,
-                    Mobile=user.PhoneNumber
+                    Mobile= user.PhoneNumber,
+                    IsEnabled = user.IsEnabled
+                    
                     
                 });
             }
@@ -239,6 +241,7 @@ namespace ReceiptVoucher.Server.Controllers
             userInDB.Email = model.Email;
             userInDB.BranchId = model.BranchId;
             userInDB.PhoneNumber = model.Mobile;
+            userInDB.IsEnabled = model.IsEnabled;
 
             var result = await _userManager.UpdateAsync(userInDB);
             if (!result.Succeeded)
@@ -277,6 +280,7 @@ namespace ReceiptVoucher.Server.Controllers
                 Email = userInDB.Email,
                 RoleName = currentRoles.FirstOrDefault(),
                 BranchId = userInDB.BranchId,
+                IsEnabled = userInDB.IsEnabled
                 
                 
             };
@@ -313,6 +317,30 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(new BaseResponse<string>(null, "تم حذف المستخدم بنجاح.", null, true));
         }
 
+
+        [HttpPost("ChangeUserStatus/{id}")]
+        public async Task<IActionResult> ToggleUser(string id )
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new BaseResponse<string>(null, "هذا الحساب غير موجود", null, false) );
+            }
+
+            // Toggle the user's enabled status
+            user.IsEnabled = !user.IsEnabled;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                var message = user.IsEnabled ? "تم تفعيل حساب المستخدم" : "تم الغاء تفعيل حساب المستخدم";
+                return Ok(new BaseResponse<string>(null, message , null, true));
+            }
+
+            var IdentityErrors = result.Errors.Select(error => error.Description).ToList();
+
+            return BadRequest(new BaseResponse<string>(null, "حدث خطاء اثناء تغيير حالة الحساب" , IdentityErrors , false));
+        }
 
     }
 

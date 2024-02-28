@@ -21,5 +21,7 @@ namespace ReceiptVoucher.Core.Models.ResponseModels
 
         public string? RoleName { get; set; }
 
+        public bool IsEnabled { get; set; }
+
     }
 }
