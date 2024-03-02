@@ -44,6 +44,15 @@ namespace ReceiptVoucher.Core.Services
 				return authModel;
 			}
 
+			// التحقق من اذا كان الحساب موقف
+			if( user.IsEnabled == false )
+			{
+				authModel.Message = "هذا الحساب موقف حاليا";
+				authModel.IsAuthenticated = false;
+
+				return authModel;
+			}
+
 			// generate Token
 			var jwtSecurityToken = await CreateJwtToken(user);
 			IList<string> roleList = await _userManager.GetRolesAsync(user);

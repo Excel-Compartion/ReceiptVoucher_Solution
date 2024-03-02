@@ -17,6 +17,8 @@ namespace ReceiptVoucher.Core.Identity
         public int? BranchId { get; set; }   // Foreign Key , except null means this will be Admin
 
 
+        public bool IsEnabled { get; set; } = false ;    // defualt
+
         //-------- Navigation Properties ---
 
         [ForeignKey(nameof(BranchId))]
