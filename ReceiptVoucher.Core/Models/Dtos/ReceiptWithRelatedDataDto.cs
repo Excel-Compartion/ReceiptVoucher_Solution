@@ -27,6 +27,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
 
+        public string TotalAmountToString => $" {TotalAmount} ريال";
+
         public string? BranchName { get; set; }
 
 
@@ -41,7 +43,7 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
         public DateOnly Date { get; set; }
 
-        public string? DateToString => Date.ToString();
+        public string? DateToString => $" {Date} م" ;
 
 
 
