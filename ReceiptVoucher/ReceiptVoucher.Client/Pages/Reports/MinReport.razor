@@ -124,7 +124,30 @@
         </MudItem>
     </MudGrid>
 
+     <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudSelect Style="width:100%" T="string" SelectAll="true" SelectAllText="اختيار الكل" Label="الجهات المانحة" MultiSelection="true" @bind-SelectedValues="SelectGrantDestinations" >
 
+                <MudSelectItem T="string" Value="@GrantDest.Individual.GetDisplayName()">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@GrantDest.Association.GetDisplayName()">@GrantDest.Association.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@GrantDest.Company.GetDisplayName()">@GrantDest.Company.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@GrantDest.Foundation.GetDisplayName()">@GrantDest.Foundation.GetDisplayName()</MudSelectItem>
+
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudSelect Style="width:100%" T="string" SelectAll="true" SelectAllText="اختيار الكل" Label="انواع الدفع" MultiSelection="true" @bind-SelectedValues="SelectPaymentTypes" >
+
+                <MudSelectItem T="string" Value="@PaymentTypes.Cash.GetDisplayName()">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@PaymentTypes.Check.GetDisplayName()">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@PaymentTypes.Bank.GetDisplayName()">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
+                <MudSelectItem T="string" Value="@PaymentTypes.Account.GetDisplayName()">@PaymentTypes.Account.GetDisplayName()</MudSelectItem> 
+
+            </MudSelect>
+        </MudItem>
+
+
+    </MudGrid>
 
 
 
@@ -296,6 +319,10 @@
 
     private IEnumerable<string> SelectBranchId { get; set; } = new List<string>();
 
+    private IEnumerable<string> SelectPaymentTypes { get; set; } = new List<string>();
+
+    private IEnumerable<string> SelectGrantDestinations { get; set; } = new List<string>();
+
     private bool subProjectClose = false;
 
     private int SelectProjectCount;
@@ -353,7 +380,7 @@
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
-   
+
 
 
 
@@ -380,7 +407,7 @@
         RadioDateType = Day;
 
 
-        
+
 
 
 
@@ -476,6 +503,54 @@
         filterData.SelectProject = SelectProject.ToList();
         filterData.SelectSubProject = SelectSubProject.ToList();
         filterData.SelectBranchId = SelectBranchId.ToList();
+        filterData.SelectBranchId = SelectBranchId.ToList();
+        filterData.SelectGrantDestinations = SelectGrantDestinations.ToList();
+        filterData.SelectPaymentTypes = SelectPaymentTypes.ToList();
+
+
+        // List<PaymentTypes> V_PaymentTypes = new List<PaymentTypes>();
+
+        // List<GrantDest> V_GrantDestinations = new List<GrantDest>();
+
+        // Dictionary<string, PaymentTypes> Dic_payments = new Dictionary<string, PaymentTypes>();
+
+        // Dictionary<string, GrantDest> Dic_grantDestinations = new Dictionary<string, GrantDest>();
+
+        // Dic_payments[PaymentTypes.Account.GetDisplayName()] = PaymentTypes.Account;
+        // Dic_payments[PaymentTypes.Bank.GetDisplayName()] = PaymentTypes.Bank;
+        // Dic_payments[PaymentTypes.Cash.GetDisplayName()] = PaymentTypes.Cash;
+        // Dic_payments[PaymentTypes.Check.GetDisplayName()] = PaymentTypes.Check;
+
+
+
+
+        // foreach (var PaymentType in SelectPaymentTypes.ToList())
+        // {
+        //     if (Dic_payments.ContainsKey(PaymentType))
+        //     {
+        //         V_PaymentTypes.Add(Dic_payments[PaymentType]);
+        //     }
+          
+        // }
+
+
+        // Dic_grantDestinations[GrantDest.Company.GetDisplayName()] = GrantDest.Company;
+        // Dic_grantDestinations[GrantDest.Association.GetDisplayName()] = GrantDest.Association;
+        // Dic_grantDestinations[GrantDest.Foundation.GetDisplayName()] = GrantDest.Foundation;
+        // Dic_grantDestinations[GrantDest.Individual.GetDisplayName()] = GrantDest.Individual;
+       
+
+
+
+        // foreach (var grantDest in SelectGrantDestinations.ToList())
+        // {
+        //     if (Dic_payments.ContainsKey(grantDest))
+        //     {
+        //         V_GrantDestinations.Add(Dic_grantDestinations[grantDest]);
+        //     }
+
+        // }
+
 
         // إرسال البيانات إلى واجهة برمجة التطبيقات
         var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
