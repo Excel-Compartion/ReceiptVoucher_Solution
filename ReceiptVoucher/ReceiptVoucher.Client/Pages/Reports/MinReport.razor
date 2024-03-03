@@ -492,6 +492,10 @@
 
     private async Task Submit()
     {
+
+
+
+
         // جمع بيانات الفلترة
         filterData.RadioDateType = RadioDateType;
 
@@ -508,72 +512,55 @@
         filterData.SelectPaymentTypes = SelectPaymentTypes.ToList();
 
 
-        // List<PaymentTypes> V_PaymentTypes = new List<PaymentTypes>();
-
-        // List<GrantDest> V_GrantDestinations = new List<GrantDest>();
-
-        // Dictionary<string, PaymentTypes> Dic_payments = new Dictionary<string, PaymentTypes>();
-
-        // Dictionary<string, GrantDest> Dic_grantDestinations = new Dictionary<string, GrantDest>();
-
-        // Dic_payments[PaymentTypes.Account.GetDisplayName()] = PaymentTypes.Account;
-        // Dic_payments[PaymentTypes.Bank.GetDisplayName()] = PaymentTypes.Bank;
-        // Dic_payments[PaymentTypes.Cash.GetDisplayName()] = PaymentTypes.Cash;
-        // Dic_payments[PaymentTypes.Check.GetDisplayName()] = PaymentTypes.Check;
+        bool IsFilter = filterData.SelectGrantDestinations.Count > 0
+       || filterData.SelectPaymentTypes.Count > 0
+       || filterData.SelectProject.Count > 0
+       || filterData.SelectSubProject.Count > 0
+       || filterData.SelectBranchId.Count > 0;
 
 
 
 
-        // foreach (var PaymentType in SelectPaymentTypes.ToList())
-        // {
-        //     if (Dic_payments.ContainsKey(PaymentType))
-        //     {
-        //         V_PaymentTypes.Add(Dic_payments[PaymentType]);
-        //     }
-          
-        // }
-
-
-        // Dic_grantDestinations[GrantDest.Company.GetDisplayName()] = GrantDest.Company;
-        // Dic_grantDestinations[GrantDest.Association.GetDisplayName()] = GrantDest.Association;
-        // Dic_grantDestinations[GrantDest.Foundation.GetDisplayName()] = GrantDest.Foundation;
-        // Dic_grantDestinations[GrantDest.Individual.GetDisplayName()] = GrantDest.Individual;
-       
+        bool IsFilterItemsAllSelected = filterData.SelectGrantDestinations.Count > 0
+      && filterData.SelectPaymentTypes.Count > 0
+      && filterData.SelectProject.Count > 0
+      && filterData.SelectSubProject.Count > 0
+      && filterData.SelectBranchId.Count > 0;
 
 
 
-        // foreach (var grantDest in SelectGrantDestinations.ToList())
-        // {
-        //     if (Dic_payments.ContainsKey(grantDest))
-        //     {
-        //         V_GrantDestinations.Add(Dic_grantDestinations[grantDest]);
-        //     }
-
-        // }
-
-
-        // إرسال البيانات إلى واجهة برمجة التطبيقات
-        var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
-
-        // التحقق من الاستجابة
-        if (response.IsSuccessStatusCode)
+        if ((IsFilter==false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected)
         {
+            // إرسال البيانات إلى واجهة برمجة التطبيقات
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
 
-            try
+            // التحقق من الاستجابة
+            if (response.IsSuccessStatusCode)
             {
-                // تحويل البيانات المرتجعة إلى قائمة الإيصالات
-                var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
+
+                try
+                {
+                    // تحويل البيانات المرتجعة إلى قائمة الإيصالات
+                    var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
 
 
-                if (receipts != null) { data = receipts.OrderByDescending(x => x.Number).ToList(); }
+                    if (receipts != null) { data = receipts.OrderByDescending(x => x.Number).ToList(); }
 
-                if (table != null) { await table.ReloadServerData(); }
+                    if (table != null) { await table.ReloadServerData(); }
+
+                }
+                catch { }
+
 
             }
-            catch { }
-
-
         }
+       
+
+        else
+        {
+            _Snackbar.Add($"قم بتحديد عناصر الفلترة", Severity.Error);
+        }
+
     }
 
 
