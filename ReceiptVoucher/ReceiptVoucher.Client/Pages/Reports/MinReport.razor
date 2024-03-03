@@ -215,7 +215,7 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudButton Class="custom-btn" OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">
+        <MudButton Class="custom-btn" OnClick="SendFilterData" Variant="Variant.Filled" Color="Color.Primary">
             <MudIcon Icon="@Icons.Material.Filled.EventNote" Title="add" />
             <span>عرض التقرير</span>
         </MudButton>
@@ -388,6 +388,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+
+
         //-------------------------
 
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -451,7 +453,7 @@
         catch { }
 
 
-
+        await SendFilterData();
 
 
     }
@@ -490,7 +492,7 @@
 
     private List<Receipt> data = new List<Receipt>();
 
-    private async Task Submit()
+    private async Task SendFilterData()
     {
 
 
@@ -554,7 +556,7 @@
 
             }
         }
-       
+
 
         else
         {
@@ -646,6 +648,7 @@
         return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
     }
 
+   
     private void OnSearch(string text)
     {
         searchString = text;

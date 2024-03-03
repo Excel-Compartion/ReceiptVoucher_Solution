@@ -700,10 +700,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
-        <Top>1.86473in</Top>
+        <Top>1.67723in</Top>
         <Left>0.30864in</Left>
         <Height>0.90762in</Height>
-        <Width>11.8304in</Width>
+        <Width>11.83038in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -714,9 +714,10 @@
         <Source>Embedded</Source>
         <Value>CommercialLogo</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.125in</Top>
-        <Height>1.39528in</Height>
-        <Width>2.72065in</Width>
+        <Top>0.2875in</Top>
+        <Left>0.13364in</Left>
+        <Height>1.0971in</Height>
+        <Width>2.37034in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -728,10 +729,10 @@
         <Source>Embedded</Source>
         <Value>LogoByScreenShort</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.23375in</Top>
-        <Left>6.14552in</Left>
-        <Height>1.25363in</Height>
-        <Width>3.79795in</Width>
+        <Top>0.40875in</Top>
+        <Left>8.08719in</Left>
+        <Height>0.88002in</Height>
+        <Width>2.73258in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -743,10 +744,10 @@
         <Source>Embedded</Source>
         <Value>Saudi_Vision_2030</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.23375in</Top>
-        <Left>10.25928in</Left>
-        <Height>1.25363in</Height>
-        <Width>1.87976in</Width>
+        <Top>0.44764in</Top>
+        <Left>10.90789in</Left>
+        <Height>0.76613in</Height>
+        <Width>1.45615in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
