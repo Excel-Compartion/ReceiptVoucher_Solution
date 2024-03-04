@@ -18,6 +18,7 @@ using ReceiptVoucher.EF.Repositories;
 using ReceiptVoucher.Core.Models.ResponseModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text.RegularExpressions;
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -230,6 +231,26 @@ namespace ReceiptVoucher.Server.Controllers
 
 
             return Ok(receipts);
+        }
+
+
+        [HttpPost("GetDonorCorrespondenceWithFilteredData")]
+        public async Task<IActionResult> GetDonorCorrespondenceWithFilteredData(FilterData filterData)
+        {
+
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+
+
+            var receipts = await _receiptRepository.GetFilteredData(filterData);
+
+
+            List<GrantDestination_VM> DonorCorrespondences = mapper.Map<List<GrantDestination_VM>>(receipts.GroupBy(x => x.Mobile)
+               .Select(group => group.First()));
+
+            return Ok(DonorCorrespondences);
         }
 
 

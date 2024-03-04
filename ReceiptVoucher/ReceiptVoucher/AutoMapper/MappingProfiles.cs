@@ -21,6 +21,8 @@ namespace ReceiptVoucher.Server.AutoMapper
           .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => src.PaymentType.GetDisplayName()))
           .ReverseMap();
 
+
+            CreateMap<Receipt, GrantDestination_VM>().ReverseMap();
         }
     }
 }
