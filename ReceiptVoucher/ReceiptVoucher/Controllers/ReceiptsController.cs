@@ -68,88 +68,6 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        //[AllowAnonymous]
-
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetReceiptRdcl(int id)
-        //{
-        //    var Receipt = await _receiptRepository.GetReceiptRdclById(id);
-
-        //    var user = await _userManager.Users.Where(a => a.Id == Receipt.ReceivedBy).FirstOrDefaultAsync();
-
-        //    ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
-
-        //    receiptRdclViewModel.Id = Receipt.Id;
-        //    receiptRdclViewModel.ReceivedFrom = Receipt.ReceivedFrom;
-
-
-
-        //    receiptRdclViewModel.ReceivedBy = user.FirstName + " " + user.LastName;
-
-
-
-        //    receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
-        //    receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
-        //    receiptRdclViewModel.SubProject = Receipt.SubProject.Name + "";
-        //    receiptRdclViewModel.ForPurpose = Receipt.ForPurpose;
-        //    receiptRdclViewModel.Date = Receipt.Date.ToString("yyyy-MM-dd") + "";
-        //    receiptRdclViewModel.PaymentType = Receipt.PaymentType.GetDisplayName();
-        //    receiptRdclViewModel.CheckNumber = Receipt.CheckNumber + "";
-
-
-        //        //تحويل تاريخ الشيك الى تاريخ هجري
-        //        DateOnly? gregDate2 = Receipt.CheckDate;
-        //        CultureInfo ci2 = new CultureInfo("ar-SA");
-        //        var checkDate = gregDate2?.ToString("dd/MM/yyyy", ci2);
-
-
-        //        receiptRdclViewModel.CheckDate = checkDate;
-
-
-        //    receiptRdclViewModel.AccountNumber = Receipt.AccountNumber + "";
-        //    receiptRdclViewModel.Bank = Receipt.Bank;
-
-        //    receiptRdclViewModel.GrantDestinations = Receipt.GrantDestinations.GetDisplayName();
-
-        //    if (Receipt.GrantDestinations.GetDisplayName() == GrantDest.Individual.GetDisplayName())
-        //    {
-        //        receiptRdclViewModel.Gender = Receipt.Gender.GetDisplayName();
-        //        receiptRdclViewModel.Age = Receipt.Age.GetDisplayName();
-        //    }
-
-        //    receiptRdclViewModel.Mobile = Receipt.Mobile + "";
-
-
-        //    NumberToWord numberToWord=new (Convert.ToDecimal(Receipt.TotalAmount) ,new CurrencyInfo(CurrencyInfo.Currencies.SaudiArabia));
-
-        //    string Text= numberToWord.ConvertToArabic();
-        //    receiptRdclViewModel.TotalAmountWord = Text.Replace(".", "");
-
-        //    //تحويل تاريخ السند الى تاريخ هجري
-        //    DateOnly gregDate = Receipt.Date; 
-        //    CultureInfo ci = new CultureInfo("ar-SA");
-        //  var D=   gregDate.ToString("dd/MM/yyyy", ci);
-
-
-        //    receiptRdclViewModel.DateArabic = D;
-
-
-        //    string path = webHostEnvironment.WebRootPath + @"\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc";
-
-        //    LocalReport localReport = new LocalReport(path);
-
-        //    DataTable dt = ToDataTable(receiptRdclViewModel);
-        //    localReport.AddDataSource("ReceiptDataSet", dt);
-
-
-        //    var report = localReport.Execute(RenderType.Pdf, 1);
-
-
-        //    return File(report.MainStream, "application/pdf");
-        //}
-
-
-
 
 
         [HttpGet("GetAllAsync")]
@@ -241,8 +159,6 @@ namespace ReceiptVoucher.Server.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
-
-
 
             var receipts = await _receiptRepository.GetFilteredData(filterData);
 

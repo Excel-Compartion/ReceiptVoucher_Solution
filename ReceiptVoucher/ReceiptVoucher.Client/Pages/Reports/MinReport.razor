@@ -151,34 +151,21 @@
 
 
 
-    <!--Center Select-->
-    <MudSelect SelectAll="true" SelectAllText="اختيار الكل" Style="width:100%" T="string" Label="المكاتب" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
-
-        @if (Branches != null)
+    @{
+        if (UserBranchId == null)
         {
-            if (UserBranchId != null)
-            {
-                @foreach (var branch in Branches)
-                {
-                    if (branch.Id == UserBranchId)
-                    {
-                        <MudSelectItem T="string" Value="@branch.Name">@branch.Name</MudSelectItem>
-                    }
+            <MudSelect SelectAll="true" SelectAllText="اختيار الكل" Style="width:100%" T="string" Label="المكاتب" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
 
-                }
 
-            }
-            else
-            {
                 @foreach (var branch in Branches)
                 {
                     <MudSelectItem T="string" Value="@branch.Name">@branch.Name</MudSelectItem>
                 }
-            }
 
+
+            </MudSelect>
         }
-
-    </MudSelect>
+    }
 
     <br />
 
@@ -511,6 +498,7 @@
         filterData.SelectBranchId = SelectBranchId.ToList();
         filterData.SelectGrantDestinations = SelectGrantDestinations.ToList();
         filterData.SelectPaymentTypes = SelectPaymentTypes.ToList();
+        filterData.UserBranchId = UserBranchId;
 
 
         bool IsFilter = filterData.SelectGrantDestinations.Count > 0
@@ -526,11 +514,11 @@
       && filterData.SelectPaymentTypes.Count > 0
       && filterData.SelectProject.Count > 0
       && filterData.SelectSubProject.Count > 0
-      && filterData.SelectBranchId.Count > 0;
+      && (filterData.SelectBranchId.Count > 0 || UserBranchId != null);
 
 
 
-        if ((IsFilter==false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected)
+        if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter == false && UserBranchId != null))
         {
             // إرسال البيانات إلى واجهة برمجة التطبيقات
             var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
@@ -591,13 +579,22 @@
     private async Task<TableData<Receipt>> ServerReload(TableState state)
     {
 
-
-        if (!string.IsNullOrWhiteSpace(searchString))
-        {
-            data = data.Where(r => r.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-            r.Mobile.Contains(searchString, StringComparison.OrdinalIgnoreCase) || 
-                                   r.Number.ToString().Contains(searchString)).ToList();
-        }
+        data = data.Where(receipt =>
+      {
+      if (string.IsNullOrWhiteSpace(searchString))
+          return true;
+      if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+          return true;
+      if (receipt.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+              return true;
+      if ($"{receipt.Number}".Contains(searchString))
+          return true;
+      if ($"{receipt.Mobile}".Contains(searchString))
+          return true;
+      if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+          return true;
+      return false;
+      }).ToList();
 
 
         int totalItems = data.Count();

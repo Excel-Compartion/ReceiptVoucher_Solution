@@ -157,7 +157,7 @@ namespace ReceiptVoucher.Server.Controllers
                 {
                     if (grantDest.Mobile == null || grantDest.Mobile == "")
                     {
-                        ErrorsMessage = $"/ {grantDest.ReceivedFrom} حقل الرقم غير مدخل" + "\n";
+                        ErrorsMessage += $"/ {grantDest.ReceivedFrom} حقل الرقم غير مدخل" + "\n";
                         MessageSuccessCount += 1;
                         continue;
                     }
@@ -175,7 +175,7 @@ namespace ReceiptVoucher.Server.Controllers
                     if (isDigitsOnly == false && !mobileWithoutSpaces.Contains("+"))
                     {
 
-                        ErrorsMessage = $"/ {grantDest.ReceivedFrom} الرقم غير صالح" + "\n";
+                        ErrorsMessage += $"/ {grantDest.ReceivedFrom} الرقم غير صالح" + "\n";
                         MessageSuccessCount += 1;
                         continue;
                     }
@@ -251,7 +251,7 @@ namespace ReceiptVoucher.Server.Controllers
 
                         }
 
-                        ErrorsMessage = $"/ {grantDest.ReceivedFrom} {message}" + "\n";
+                        ErrorsMessage += $"/ {grantDest.ReceivedFrom} {Message}" + "\n";
                         MessageSuccessCount += 1;
                         continue;
                     }

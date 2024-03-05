@@ -17,5 +17,6 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public List<string> SelectBranchId { get; set; }
         public List<string> SelectGrantDestinations { get; set; }
         public List<string> SelectPaymentTypes { get; set; }
+        public int? UserBranchId { get; set; }
     }
 }

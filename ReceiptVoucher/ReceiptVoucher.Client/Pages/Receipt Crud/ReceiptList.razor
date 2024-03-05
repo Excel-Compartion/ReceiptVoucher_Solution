@@ -95,27 +95,7 @@
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
         <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
 
-        @*    <MudTd DataLabel="المستلم">
 
-
-        @{
-        string ReceivedBy = "";
-        try
-        {
-
-        var UserName = _UserManager.Users.Where(x => x.Id == context.ReceivedBy).FirstOrDefault();
-        if (UserName != null)
-        {
-        ReceivedBy = UserName.FirstName + " " + UserName.LastName;
-        }
-
-        }
-        catch { }
-        }
-
-        @ReceivedBy
-
-        </MudTd> *@
 
         @if (UserBranchId == null)
         {
@@ -330,6 +310,8 @@
          if (string.IsNullOrWhiteSpace(searchString))
              return true;
          if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+             return true;
+         if (receipt.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
              return true;
          if ($"{receipt.Number}".Contains(searchString))
              return true;
