@@ -177,7 +177,7 @@
 
     void PrintReceipt(string code)
     {
-        var url = $"ReceiptPrints/{code}";
+        var url = $"RP/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 

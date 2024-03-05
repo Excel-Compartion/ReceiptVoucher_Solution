@@ -15,7 +15,7 @@ namespace ReceiptVoucher.Server.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ReceiptPrintsController : ControllerBase
+    public class RPController : ControllerBase
     {
 
         private readonly IUnitOfWork _unitOfWork;
@@ -26,7 +26,7 @@ namespace ReceiptVoucher.Server.Controllers
 
         IWebHostEnvironment webHostEnvironment;
 
-        public ReceiptPrintsController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi)
+        public RPController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IReceiptRepository receiptRepository, IWebHostEnvironment WebHostEnvi)
         {
             _unitOfWork = unitOfWork;
             _receiptRepository = receiptRepository;
