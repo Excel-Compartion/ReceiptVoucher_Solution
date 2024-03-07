@@ -27,6 +27,7 @@ public class Branch
     
     public DateTime CreatedDate { get; set; }
 
+    [Required(ErrorMessage = "يرجى ادخال رقم نقطة البيع ")]
     public int AccountNumber { get; set; }
 
 
