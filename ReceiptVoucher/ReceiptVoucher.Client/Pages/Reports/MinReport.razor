@@ -192,12 +192,23 @@
 
 
     }
+    <br />
+    <span style="font-size:15px;font-weight:500;color:grey"> اجمالي عدد السندات : @data.Count()</span>
+
+    &nbsp; &nbsp;&nbsp; &nbsp;
 
 
+    <span style="font-size:15px;font-weight:500;color:grey"> اجمالي مبالغ التبرعات : @data.Select(x => x.TotalAmount).Sum() ر. س</span>
 
 </div>
 <br />
 
+
+
+
+
+
+<br />
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
@@ -208,6 +219,7 @@
 
         &nbsp;
         &nbsp;
+
         
         <MudButton Class="custom-btn" OnClick="ExploreAsExcel" Variant="Variant.Filled" Color="Color.Primary">
             <MudIcon Icon="@Icons.Material.Filled.SimCardDownload" Title="add" />
@@ -566,7 +578,7 @@
             }
             else
             {
-                _Snackbar.Add($"لاتوجد بيانات", Severity.Error);
+                _Snackbar.Add($"حدث خطاء", Severity.Error);
             }
         }
         else

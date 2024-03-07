@@ -12,12 +12,23 @@
     <Content Remove="wwwroot\_Reports\DataSet1.xsc" />
     <Content Remove="wwwroot\_Reports\DataSet1.xsd" />
     <Content Remove="wwwroot\_Reports\DataSet1.xss" />
+    <Content Remove="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.Designer.cs" />
+    <Content Remove="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xsc" />
+    <Content Remove="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xsd" />
+    <Content Remove="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xss" />
+    <Content Remove="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationsReport.rdlc" />
+    <Content Remove="wwwroot\_Reports\InformationDataSet.xsc" />
+    <Content Remove="wwwroot\_Reports\InformationDataSet.xss" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.cs" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.Designer.cs" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsc" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsd" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xss" />
     <Content Remove="wwwroot\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc" />
+    <Content Remove="wwwroot\_Reports\ReceiptsInformationDataSet.Designer.cs" />
+    <Content Remove="wwwroot\_Reports\ReceiptsInformationDataSet.xsc" />
+    <Content Remove="wwwroot\_Reports\ReceiptsInformationDataSet.xsd" />
+    <Content Remove="wwwroot\_Reports\ReceiptsInformationDataSet.xss" />
     <Content Remove="wwwroot\_Reports\Report1.rdlc" />
   </ItemGroup>
 
@@ -31,9 +42,19 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.Designer.cs">
+      <DependentUpon>GrantDestinationDataSet.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.cs" />
     <Compile Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.Designer.cs">
       <DependentUpon>ReceiptDataSet.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="wwwroot\_Reports\ReceiptsInformationDataSet.Designer.cs">
+      <DependentUpon>ReceiptsInformationDataSet.xsd</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -73,6 +94,14 @@
       <Generator>MSDataSetGenerator</Generator>
     </None>
     <None Include="wwwroot\_Reports\DataSet1.xss" />
+    <None Include="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xsc" />
+    <None Include="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>GrantDestinationDataSet.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationDataSet.xss" />
+    <None Include="wwwroot\_Reports\GrantDestinationsReport\GrantDestinationsReport.rdlc" />
     <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsc" />
     <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xsd">
       <SubType>Designer</SubType>
@@ -81,6 +110,13 @@
     </None>
     <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptDataSet.xss" />
     <None Include="wwwroot\_Reports\ReceiptRdcl\ReceiptRdcl.rdlc" />
+    <None Include="wwwroot\_Reports\ReceiptsInformationDataSet.xsc" />
+    <None Include="wwwroot\_Reports\ReceiptsInformationDataSet.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>ReceiptsInformationDataSet.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="wwwroot\_Reports\ReceiptsInformationDataSet.xss" />
     <None Include="wwwroot\_Reports\Report1.rdlc" />
   </ItemGroup>
 

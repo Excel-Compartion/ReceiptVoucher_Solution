@@ -67,6 +67,23 @@ namespace ReceiptVoucher.Server.Controllers
             return dt;
         }
 
+        public DataTable ToDataTableOneRecord<T>(T instance)
+        {
+            PropertyInfo[] properties = typeof(T).GetProperties();
+            DataTable dt = new DataTable();
+            foreach (PropertyInfo info in properties)
+            {
+                dt.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
+            }
+            DataRow row = dt.NewRow();
+            foreach (PropertyInfo info in properties)
+            {
+                row[info.Name] = info.GetValue(instance) ?? DBNull.Value;
+            }
+            dt.Rows.Add(row);
+            return dt;
+        }
+
 
 
 
@@ -195,7 +212,11 @@ namespace ReceiptVoucher.Server.Controllers
 
             List<ReceiptWithRelatedDataDto> receiptWithRelatedDataDto = mapper.Map<List<ReceiptWithRelatedDataDto>>(receipts);
 
-
+            ReceiptsInformation receiptsInformation = new ReceiptsInformation()
+            {
+                TotalAmount=  $"اجمالي مبالغ التبرعات : {receiptWithRelatedDataDto.Select(x => x.TotalAmount).Sum()} ر.س",
+                ReceiptsCount= $"اجمالي عدد السندات : {receiptWithRelatedDataDto.Count()}"
+            };
 
             string path = webHostEnvironment.WebRootPath + @"\_Reports\Report1.rdlc";
 
@@ -203,7 +224,10 @@ namespace ReceiptVoucher.Server.Controllers
 
             DataTable dt = ToDataTable(receiptWithRelatedDataDto);
 
+            DataTable info = ToDataTableOneRecord(receiptsInformation);
+
             localReport.AddDataSource("DataSet1", dt);
+            localReport.AddDataSource("ReceiptsInformationDataSet", info);
 
 
 
@@ -212,6 +236,49 @@ namespace ReceiptVoucher.Server.Controllers
 
 
             return File(report.MainStream, "application/msexcel", "myReport.xls");
+
+        }
+
+
+        [HttpPost("GetDonorsCorrespondencesReportWithFilteredData")]
+        public async Task<IActionResult> GetDonorsCorrespondencesReportWithFilteredData(FilterData filterData)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                var ModelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return BadRequest("خطاء في البيانات المدخلة");
+            }
+
+
+            var receipts = await _receiptRepository.GetFilteredData(filterData);
+
+            if (receipts == null)
+            {
+                return BadRequest($"حدث خطاء اتناء جلب البيانات ");
+            }
+
+            List<GrantDestination_VM> grantDestination = mapper.Map<List<GrantDestination_VM>>(receipts.GroupBy(x => x.Mobile)
+               .Select(group => group.First()));
+
+
+            string path = webHostEnvironment.WebRootPath + @"\_Reports\GrantDestinationsReport\GrantDestinationsReport.rdlc";
+
+            LocalReport localReport = new LocalReport(path);
+
+            DataTable grDest = ToDataTable(grantDestination);
+
+            localReport.AddDataSource("GrantDestinationDataSet", grDest);
+
+
+
+
+            var report = localReport.Execute(RenderType.Excel);
+
+
+            return File(report.MainStream, "application/msexcel", "GrantDestination.xls");
 
         }
 

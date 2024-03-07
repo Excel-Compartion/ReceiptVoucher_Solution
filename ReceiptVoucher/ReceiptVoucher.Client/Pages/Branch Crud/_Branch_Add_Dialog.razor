@@ -16,6 +16,8 @@
 
             <MudTextField Label="رقم الجوال" For="@(()=>Branch.Mobile)" @bind-Value="@Branch.Mobile" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
 
+            <MudTextField Label="رقم نقطة البيع" For="@(()=>Branch.AccountNumber)" @bind-Value="@Branch.AccountNumber" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success"></MudTextField>
+
             <MudTextField Label="البريد الالكتروني" For="@(()=>Branch.Email)" @bind-Value="@Branch.Email" AdornmentIcon="@Icons.Material.Filled.Add" AdornmentColor="Color.Success" ></MudTextField>
 
             <div class="mt-5 mb-2 d-flex" style="gap: 10px;">
@@ -37,7 +39,7 @@
 
 
 
-    @code {
+@code {
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
@@ -56,7 +58,7 @@
 
     public Branch Branch { get; set; } = new Branch();
 
-  
+
 
     protected override void OnParametersSet()
     {
@@ -69,13 +71,15 @@
         {
 
             Branch = new Branch
-            {
+                {
                     Id = OriginalBranch.Id,
                     Name = OriginalBranch.Name,
                     Area = OriginalBranch.Area,
                     ResponsiblePerson = OriginalBranch.ResponsiblePerson,
                     Mobile = OriginalBranch.Mobile,
-                    Email = OriginalBranch.Email
+                    Email = OriginalBranch.Email,
+                    AccountNumber = OriginalBranch.AccountNumber
+
                 
                 
             };

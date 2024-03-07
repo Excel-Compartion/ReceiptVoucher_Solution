@@ -219,6 +219,14 @@
             <span> ارسال رساله</span>
         </MudButton>
 
+        &nbsp;
+        &nbsp;
+
+        <MudButton Class="custom-btn" OnClick="ExploreAsExcel" Variant="Variant.Filled" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.SimCardDownload" Title="add" />
+            <span>تصدير المانحين</span>
+        </MudButton>
+
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
@@ -318,6 +326,29 @@
     private List<GrantDestination_VM> selectedItemsList = new List<GrantDestination_VM>();
 
     public UserViewModel currentUser { get; set; } = new();
+
+
+    async void ExploreAsExcel()
+    {
+        if (data != null && data.Count() != 0)
+        {
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetDonorsCorrespondencesReportWithFilteredData", filterData);
+            if (response.IsSuccessStatusCode)
+            {
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var fileContent = Convert.ToBase64String(fileBytes);
+                await JSRuntime.InvokeVoidAsync("downloadFile", fileContent, "ملف تقرير المانحين.xls");
+            }
+            else
+            {
+                _Snackbar.Add($"حدث خطاء", Severity.Error);
+            }
+        }
+        else
+        {
+            _Snackbar.Add($"لاتوجد بيانات", Severity.Error);
+        }
+    }
 
 
     void UnCheckedChange()

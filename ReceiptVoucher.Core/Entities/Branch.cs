@@ -27,6 +27,8 @@ public class Branch
     
     public DateTime CreatedDate { get; set; }
 
+    public int AccountNumber { get; set; }
+
 
     //-------- Navigation Properties ---
 
