@@ -137,7 +137,7 @@
         <MudItem xs="12" sm="6">
             <MudSelect Style="width:100%" T="string" SelectAll="true" SelectAllText="اختيار الكل" Label="انواع الدفع" MultiSelection="true" @bind-SelectedValues="SelectPaymentTypes" >
 
-                <MudSelectItem T="string" Value="@PaymentTypes.Cash.GetDisplayName()">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem>
+               @*  <MudSelectItem T="string" Value="@PaymentTypes.Cash.GetDisplayName()">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
                 <MudSelectItem T="string" Value="@PaymentTypes.Check.GetDisplayName()">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
                 <MudSelectItem T="string" Value="@PaymentTypes.Bank.GetDisplayName()">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
                 <MudSelectItem T="string" Value="@PaymentTypes.Account.GetDisplayName()">@PaymentTypes.Account.GetDisplayName()</MudSelectItem> 
