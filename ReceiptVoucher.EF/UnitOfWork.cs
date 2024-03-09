@@ -17,7 +17,8 @@ namespace ReceiptVoucher.EF
 
         public IBaseRepository<CompanyInfo> CompanyInfo { get; private set; }
 
-        public IBaseRepository<Receipt> Receipts { get; private set; }
+        //public IBaseRepository<Receipt> Receipts { get; private set; }
+        public IReceiptRepository Receipts { get; private set; }    // new 
 
         public IBaseRepository<SubProject> SubProjects { get; private set; }
 
@@ -28,7 +29,7 @@ namespace ReceiptVoucher.EF
             Branches = new BranchRepository(context);
             Projects = new BaseRepository<Project>(context);
             CompanyInfo = new BaseRepository<CompanyInfo>(context);
-            Receipts = new BaseRepository<Receipt>(context);
+            Receipts = new ReceiptRepository(context);  // new 
             SubProjects = new BaseRepository<SubProject>(context);
 
         }
@@ -55,5 +56,9 @@ namespace ReceiptVoucher.EF
             _context.Dispose();
         }
 
+        public async Task<int> CompleteAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
     }
 }

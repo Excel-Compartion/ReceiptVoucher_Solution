@@ -16,13 +16,15 @@ namespace ReceiptVoucher.Client.Services
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly ReceiptVoucherDbContext _context;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly NavigationManager _navigationManager;
         private readonly ISnackbar _snackbar;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AuthService(HttpClient httpClient, NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider, ISnackbar snackbar, UserManager<ApplicationUser> userManager)
+        public AuthService(HttpClient httpClient, ReceiptVoucherDbContext context , NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider, ISnackbar snackbar, UserManager<ApplicationUser> userManager)
         {
             _httpClient = httpClient;
+            _context = context;
             _navigationManager = navigationManager;
             _authenticationStateProvider = authenticationStateProvider;
             _snackbar = snackbar;
@@ -79,22 +81,27 @@ namespace ReceiptVoucher.Client.Services
             {
                 var userId = user.FindFirstValue("uid");
 
-                var UserInDB = await _userManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
-                if (UserInDB != null)
+                string rolesString = user.FindFirstValue("roles");
+                string[] parsedRoles = rolesString.Split(',');
+
+                var userInDB = await _context.Users
+                   .Include(user => user.Branch)
+                   .SingleOrDefaultAsync(u => u.Id == userId);
+
+                if (userInDB != null)
                 {
-                    var roles = await _userManager.GetRolesAsync(UserInDB); // Get all roles of the user
 
 
-                  
+
                     var currentUser = new UserViewModel()
                     {
-                        Id = UserInDB.Id,
-                        BranchId = UserInDB.BranchId,
-                        Email = UserInDB.Email,
-                        FirstName = UserInDB.FirstName,
-                        LastName = UserInDB.LastName,
-                        UserName = UserInDB.UserName,
-                        Roles = roles.ToList() // Assign all roles to the UserViewModel
+                        Id = userInDB.Id,
+                        BranchId = userInDB.BranchId,
+                        Email = userInDB.Email,
+                        FirstName = userInDB.FirstName,
+                        LastName = userInDB.LastName,
+                        UserName = userInDB.UserName,
+                        Roles = parsedRoles.ToList()  // Assign all roles to the UserViewModel
                     };
 
                     return currentUser;

@@ -90,7 +90,9 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet("GetAllAsync")]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _receiptRepository.GetAllReceiptAsync());
+            IEnumerable<Receipt> recepts = await _unitOfWork.Receipts.GetAllReceiptAsync();
+
+            return Ok(recepts);
         }
 
 

@@ -15,11 +15,15 @@ namespace ReceiptVoucher.Core
 
         IBaseRepository<Project> Projects { get; }
         IBaseRepository<CompanyInfo> CompanyInfo { get; }
-        IBaseRepository<Receipt> Receipts { get; }
+        //IBaseRepository<Receipt> Receipts { get; }
         IBaseRepository<SubProject> SubProjects { get; }
+
+        IReceiptRepository Receipts { get; }
 
         void Detach<T>(T entity ) where T : class;
 
-       int  Complete();
+        int  Complete();
+
+        Task<int> CompleteAsync();
     }
 }
