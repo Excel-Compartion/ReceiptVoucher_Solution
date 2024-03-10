@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Client.Services
 @using System.Security.Claims
+@using ReceiptVoucher.Core.Models
 
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
@@ -14,6 +15,7 @@
 @inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IAuthService _IAuthservice
+@inject IMapper _Mapper
 
 <PageTitle>Makarim</PageTitle>
 
@@ -22,7 +24,7 @@
         --color-custom: #3090C7;
     }
 
-    .ReceiptTable {
+    .GetReceiptDtoTable {
         width: 100%;
         height: auto;
         margin-right: auto;
@@ -35,8 +37,8 @@
 <br />
 <!-- كود خاص بالطباعه في نفس الصفحه-->
 @* <div style="position:absolute;margin-top:-1000000px;">
-    <div id="printReceipt">
-        <_PrintReceiptPage RecId="RecId" />
+    <div id="printGetReceiptDto">
+        <_PrintGetReceiptDtoPage RecId="RecId" />
     </div>
 </div> *@
 
@@ -58,7 +60,7 @@
 
 </p>
 
-<MudTable Class="ReceiptTable" ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+<MudTable Class="GetReceiptDtoTable" ServerData="@(new Func<TableState, Task<TableData<GetReceiptDto>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
         @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
@@ -72,22 +74,22 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">المودع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="GetReceiptDto">رقم السند</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="GetReceiptDto">المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="GetReceiptDto">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="GetReceiptDto">اجمالي المبلغ</MudTableSortLabel></MudTh>
 
-        @*  <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="Receipt">المستلم</MudTableSortLabel></MudTh> *@
+        @*  <MudTh><MudTableSortLabel SortLabel="receivedBy_field" T="GetReceiptDto">المستلم</MudTableSortLabel></MudTh> *@
 
         @if (UserBranchId == null)
         {
-            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المكتب</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Branch_field" T="GetReceiptDto">المكتب</MudTableSortLabel></MudTh>
         }
 
-        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
-        @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh> *@
-        <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="GetReceiptDto">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="GetReceiptDto">التاريخ</MudTableSortLabel></MudTh>
+        @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="GetReceiptDto">نوع الدفع</MudTableSortLabel></MudTh> *@
+        <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="رقم السند">@context.Number</MudTd>
@@ -99,25 +101,25 @@
 
         @if (UserBranchId == null)
         {
-            <MudTd DataLabel="المكتب">@context.Branch.Name</MudTd>
+            <MudTd DataLabel="المكتب">@context.BranchName</MudTd>
         }
 
 
-        <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+        <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
         <MudTd DataLabel="التاريخ">@context.Date</MudTd>
         @*  <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd> *@
         <MudTd DataLabel="الاجراءت">
-            @* GetReceiptRdcl *@
+            @* GetGetReceiptDtoRdcl *@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
 @*                 <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
  *@                <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
 
-                <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintGetReceiptDto(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
 
 
-@*                 <MudButton Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => DeleteReceipt(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
+@*                 <MudButton Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => DeleteGetReceiptDto(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
  *@
             </MudButtonGroup>
 
@@ -145,8 +147,8 @@
 
 
 @code {
-    public IEnumerable<Receipt>? pagedData;
-    private MudTable<Receipt>? table;
+    public IEnumerable<GetReceiptDto>? pagedData;
+    private MudTable<GetReceiptDto>? table;
 
     private int totalItems;
     private string? searchString;
@@ -175,7 +177,7 @@
 
     string? role;
 
-    void PrintReceipt(string code)
+    void PrintGetReceiptDto(string code)
     {
         var url = $"RP/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
@@ -185,14 +187,14 @@
 
 
 
-    // private async Task PrintReceipt(int ReceiptId)
+    // private async Task PrintGetReceiptDto(int GetReceiptDtoId)
     // {
-    //     RecId = ReceiptId;
+    //     RecId = GetReceiptDtoId;
     //     PrintActive = true;
 
     //     await Task.Delay(500);
 
-    //     await JSRuntime.InvokeVoidAsync("printJS", "printReceipt", "html");
+    //     await JSRuntime.InvokeVoidAsync("printJS", "printGetReceiptDto", "html");
 
     //     PrintActive = false;
 
@@ -266,24 +268,40 @@
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
 
-    public IEnumerable<Receipt> data = new List<Receipt>();
+    public IEnumerable<GetReceiptDto> data = new List<GetReceiptDto>();
 
-    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    Pagination pagination { get; set; } = new Pagination();
+
+    private async Task<TableData<GetReceiptDto>> ServerReload(TableState state)
     {
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Receipt>>("api/Receipts/GetAllAsync");
+            // var response = await Http.GetFromJsonAsync<List<GetReceiptDto>>("api/Receipts/GetAllReceiptsWithGetDto");
 
-            if (response != null)
+            pagination.PageNumber = state.Page + 1;
+
+            pagination.PageSize = state.PageSize;
+
+            pagination.Search = searchString ?? "";
+
+
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetAllReceiptsWithGetDto", pagination);
+
+
+            BaseResponse<IEnumerable<GetReceiptDto>> content = await response.Content.ReadFromJsonAsync<BaseResponse<IEnumerable<GetReceiptDto>>>();
+
+
+
+
+            if (content != null && content.Success)
             {
-
                 if (currentUser != null)
                 {
 
                     if (role != null && role != RolesNames.Admin)
                     {
-                        data = response
+                        data = content.Data
       .Where(x => x.BranchId == currentUser.BranchId)
       .OrderByDescending(x => x.Date)
       .ToList();
@@ -292,11 +310,14 @@
 
                     else
                     {
-                        data = response.OrderByDescending(x => x.Number);
+                        data = content.Data.OrderByDescending(x => x.Number);
                     }
                 }
+            }
+            else if (content != null)
+            {
 
-
+                ResponseMessage = content.Message;
             }
 
 
@@ -305,19 +326,19 @@
 
 
 
-        data = data.Where(receipt =>
+        data = data.Where(GetReceiptDto =>
      {
          if (string.IsNullOrWhiteSpace(searchString))
              return true;
-         if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+         if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
              return true;
-         if (receipt.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+         if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
              return true;
-         if ($"{receipt.Number}".Contains(searchString))
+         if ($"{GetReceiptDto.Number}".Contains(searchString))
              return true;
-         if ($"{receipt.Mobile}".Contains(searchString))
+         if ($"{GetReceiptDto.Mobile}".Contains(searchString))
              return true;
-         if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+         if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
              return true;
          return false;
      }).ToArray();
@@ -346,11 +367,11 @@
                 break;
 
             case "Branch_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Branch.Name);
+                data = data.OrderByDirection(state.SortDirection, o => o.BranchName);
                 break;
 
             case "SubProject_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.SubProject.Name);
+                data = data.OrderByDirection(state.SortDirection, o => o.SubProjectName);
                 break;
 
             case "Date_field":
@@ -367,7 +388,7 @@
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+        return new TableData<GetReceiptDto>() { TotalItems = totalItems, Items = pagedData };
     }
 
     private void OnSearch(string text)
@@ -408,38 +429,23 @@
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
     }
 
-    private void OpenEditDialog(Receipt receipt, string optionalParameter = "")
+    private void OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
     {
+
+
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
 
-        ReceiptViewModel receiptViewModel = new ReceiptViewModel();
 
-        receiptViewModel.Id = receipt.Id;
-        receiptViewModel.ReceivedFrom = receipt.ReceivedFrom;
-        receiptViewModel.TotalAmount = receipt.TotalAmount;
-        receiptViewModel.BranchId = receipt.BranchId;
-        receiptViewModel.ProjectId = receipt.ProjectId;
-        receiptViewModel.SubProjectId = receipt.SubProjectId;
-        receiptViewModel.ForPurpose = receipt.ForPurpose;
-        receiptViewModel.Date = receipt.Date;
-        receiptViewModel.PaymentType = receipt.PaymentType;
-        receiptViewModel.CheckNumber = receipt.CheckNumber;
-        receiptViewModel.GrantDestinations = receipt.GrantDestinations;
-        receiptViewModel.Gender = receipt.Gender;
-        receiptViewModel.Age = receipt.Age;
-        receiptViewModel.Mobile = receipt.Mobile;
-        // receiptViewModel.ProjectId = receipt.ProjectId;
 
-        receiptViewModel.Number = receipt.Number;
-        receiptViewModel.Code = receipt.Code;
+        ReceiptViewModel receiptViewModel = _Mapper.Map<ReceiptViewModel>(GetReceiptDto);
 
         string ReceivedBy = "";
         string ReceivedByName = "";
         try
         {
 
-            var UserName = _UserManager.Users.Where(x => x.Id == receipt.ReceivedBy).FirstOrDefault();
+            var UserName = _UserManager.Users.Where(x => x.Id == GetReceiptDto.ReceivedBy).FirstOrDefault();
             if (UserName != null)
             {
                 ReceivedByName = UserName.FirstName + " " + UserName.LastName;
@@ -450,20 +456,10 @@
         }
         catch { }
 
-        receiptViewModel.ReceivedBy = ReceivedBy;
+
+        receiptViewModel.ReceivedBy=ReceivedBy;
+
         receiptViewModel.ReceivedByName = ReceivedByName;
-
-
-        // التحقق من القيمة قبل التحويل
-        DateTime? dateTime = receipt.CheckDate.HasValue ? receipt.CheckDate.Value.ToDateTime(TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay)) : (DateTime?)null;
-
-        // تعيين القيمة في ViewModel
-        receiptViewModel.CheckDate = dateTime;
-
-
-
-        receiptViewModel.AccountNumber = receipt.AccountNumber;
-        receiptViewModel.Bank = receipt.Bank;
 
 
 
@@ -514,13 +510,13 @@
 
 
 
-    private async Task DeleteReceipt(int receiptId)
+    private async Task DeleteGetReceiptDto(int GetReceiptDtoId)
     {
-        Receipt? selectedReceipt = data.SingleOrDefault(b => b.Id == receiptId);
+        GetReceiptDto? selectedGetReceiptDto = data.SingleOrDefault(b => b.Id == GetReceiptDtoId);
 
-        if (selectedReceipt != null)
+        if (selectedGetReceiptDto != null)
         {
-            var parameters = new DialogParameters() { { "ReceiptId", selectedReceipt.Number } };
+            var parameters = new DialogParameters() { { "GetReceiptDtoId", selectedGetReceiptDto.Number } };
             var dialog = _DialogService.Show<_ReceiptConfirmDeleteDialog>("الرجاء التأكيد", parameters);
 
             var result = await dialog.Result;
@@ -530,7 +526,7 @@
                 // User confirmed deletion, proceed with deletion
 
                 // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"api/Receipts/{receiptId}");
+                var response = await Http.DeleteAsync($"api/GetReceiptDtos/{GetReceiptDtoId}");
 
                 if (response.IsSuccessStatusCode)
                 {

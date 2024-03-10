@@ -16,6 +16,10 @@ namespace ReceiptVoucher.Core.Interfaces
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> match, int? take, int? skip,
             Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);
 
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int? PageSize, int? PageNumber, string? search,
+           Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending, string[] includes = null);
+
+
         Task<T> AddOneAsync(T entity);
 
         IEnumerable<T> AddRange(IEnumerable<T> entities);
@@ -31,6 +35,7 @@ namespace ReceiptVoucher.Core.Interfaces
         int Count(Expression<Func<T, bool>> match);
 
         Task<bool> AnyAsync(Expression<Func<T, bool>> match);
+
 
         
     }

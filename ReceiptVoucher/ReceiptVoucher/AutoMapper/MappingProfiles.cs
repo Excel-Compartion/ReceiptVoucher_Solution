@@ -23,6 +23,20 @@ namespace ReceiptVoucher.Server.AutoMapper
 
 
             CreateMap<Receipt, GrantDestination_VM>().ReverseMap();
+
+
+            /// Receipt
+            CreateMap<Receipt, GetReceiptDto>().ReverseMap();
+
+            CreateMap<GetReceiptDto, ReceiptViewModel>().ReverseMap();
+
+
+            CreateMap<PostReceiptDto, GetReceiptDto>().ReverseMap();
+
+
+            CreateMap<Receipt, PostReceiptDto>()
+                .ReverseMap();
+
         }
     }
 }

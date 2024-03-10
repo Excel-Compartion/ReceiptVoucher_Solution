@@ -19,6 +19,9 @@ using ReceiptVoucher.Core.Models.ResponseModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.RegularExpressions;
+using static MudBlazor.CategoryTypes;
+using Pagination = ReceiptVoucher.Core.Models.Pagination;
+
 
 namespace ReceiptVoucher.Server.Controllers
 {
@@ -95,6 +98,23 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(recepts);
         }
 
+
+        [HttpPost("GetAllReceiptsWithGetDto")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllPurchases([FromBody] Pagination pagination)
+        {
+            try
+            {
+                var items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
+
+
+                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
+                return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(Items, "تم جلب العناصر بنجاح", null, true));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BaseResponse<GetReceiptDto>(null, "حدث خطأ", errors: [ex.ToString()], false));
+            }
+        }
 
 
 

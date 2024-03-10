@@ -13,4 +13,8 @@ builder.Services.AddOptions();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 //builder.Services.AddAuthorizationCore();
 
+// Auto mapping ////////////////////////////////
+
+builder.Services.AddAutoMapper(typeof(Program));
+
 await builder.Build().RunAsync();

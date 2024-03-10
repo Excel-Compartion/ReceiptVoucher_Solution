@@ -89,6 +89,47 @@ namespace ReceiptVoucher.EF.Repositories
             return await query.ToListAsync();
         }
 
+
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int? PageSize, int? PageNumber, string? search,
+           Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending, string[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            //if (!string.IsNullOrWhiteSpace(search)) 
+            //{
+            //    query = query.Where(r =>
+            //        r.GetType().GetProperties()
+            //        .Any(p => p.PropertyType == typeof(string) &&
+            //        p.GetValue(r).ToString().Contains(search, StringComparison.OrdinalIgnoreCase) == true)
+            //        );
+            //}
+
+            if (criteria != null)
+            {
+                query = query.Where(criteria);
+            }
+
+            if (PageNumber.HasValue && PageSize.HasValue)
+                query = query.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+
+            if (orderBy != null)
+            {
+                if (orderByDirection == OrderBy.Ascending)
+                    query = query.OrderBy(orderBy);
+                else
+                    query = query.OrderByDescending(orderBy);
+            }
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return await query.ToListAsync();
+        }
+
+
         public async Task<T> AddOneAsync(T entity)
         {
             _context.Set<T>().Add(entity);
