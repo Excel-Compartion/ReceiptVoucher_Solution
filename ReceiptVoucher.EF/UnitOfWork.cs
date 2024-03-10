@@ -8,7 +8,7 @@ namespace ReceiptVoucher.EF
 
         private readonly ReceiptVoucherDbContext _context;
 
-
+        private readonly IMapper mapper;
         //public IBaseRepository<Branch> Branches { get; private set; }
 
         public IBranchRepository Branches { get; private set; }
@@ -22,14 +22,14 @@ namespace ReceiptVoucher.EF
 
         public IBaseRepository<SubProject> SubProjects { get; private set; }
 
-        public UnitOfWork(ReceiptVoucherDbContext context )
+        public UnitOfWork(ReceiptVoucherDbContext context, IMapper _mapper)
         {
             _context = context;
-
+            mapper = _mapper;
             Branches = new BranchRepository(context);
             Projects = new BaseRepository<Project>(context);
             CompanyInfo = new BaseRepository<CompanyInfo>(context);
-            Receipts = new ReceiptRepository(context);  // new 
+            Receipts = new ReceiptRepository(context, mapper);  // new 
             SubProjects = new BaseRepository<SubProject>(context);
 
         }

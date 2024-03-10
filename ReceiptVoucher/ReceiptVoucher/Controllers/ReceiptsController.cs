@@ -104,11 +104,20 @@ namespace ReceiptVoucher.Server.Controllers
         {
             try
             {
-                var items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
+                //                IEnumerable<Receipt> items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
+                //                var receipts = (await _unitOfWork.Receipts.GetAllAsync()).Select(a => new GetReceiptDto 
+                //                { 
+                //Id=a.Id,
+                //BranchName = a.Branch.Name,
+
+                //                }).ToList();
 
 
-                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
-                return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(Items, "تم جلب العناصر بنجاح", null, true));
+                //                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
+
+                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber);
+
+                return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(items, "تم جلب العناصر بنجاح", null, true));
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@ using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,9 +16,11 @@ namespace ReceiptVoucher.EF.Repositories
     public class ReceiptRepository : BaseRepository<Receipt>, IReceiptRepository
     {
         private readonly ReceiptVoucherDbContext _context;
-        public ReceiptRepository(ReceiptVoucherDbContext context) : base(context)
+        private readonly IMapper mapper;
+        public ReceiptRepository(ReceiptVoucherDbContext context, IMapper _mapper) : base(context)
         {
             _context = context;
+            mapper = _mapper;
         }
 
         public async Task<IEnumerable<Receipt>> GetAllReceiptAsync()
@@ -220,6 +223,70 @@ namespace ReceiptVoucher.EF.Repositories
             return Receipt;
         }
 
+        public async Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Ascending)
+        {
+            IQueryable<Receipt> query = _context.Set<Receipt>();
+            //if (!string.IsNullOrWhiteSpace(search)) 
+            //{
+            //    query = query.Where(r =>
+            //        r.GetType().GetProperties()
+            //        .Any(p => p.PropertyType == typeof(string) &&
+            //        p.GetValue(r).ToString().Contains(search, StringComparison.OrdinalIgnoreCase) == true)
+            //        );
+            //}
 
+            if (criteria != null)
+            {
+                query = query.Where(criteria);
+            }
+
+            if (PageNumber.HasValue && PageSize.HasValue)
+                query = query.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+
+            if (orderBy != null)
+            {
+                if (orderByDirection == OrderBy.Ascending)
+                    query = query.OrderBy(orderBy);
+                else
+                    query = query.OrderByDescending(orderBy);
+            }
+
+            IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(query);
+
+            return  Items;
+
+
+            //var receipts = await _context.Receipts.Select(a => new GetReceiptDto
+            //{
+            //    Id = a.Id,
+            //    AccountNumber =a.AccountNumber,
+            //    Bank = a.Bank,
+            //    BranchName = a.Branch.Name,
+            //    CheckDate =a.CheckDate,
+            //    Code =a.Code,
+            //    Date =a.Date,
+            //    ForPurpose =a.ForPurpose,
+            //    Mobile =a.Mobile,
+            //    Number =a.Number,
+            //    ProjectName = a.Project.Name,
+            //    ReceivedByName = a.ReceivedBy,
+            //    TotalAmount = a.TotalAmount,
+            //    SubProjectName = a.SubProject.Name,
+            //    CheckNumber = a.CheckNumber,
+            //    ReceivedBy = a.ReceivedBy,
+            //    GrantDestinations = a.GrantDestinations,
+            //    PaymentType = a.PaymentType,
+            //    Age = a.Age,
+            //    Gender = a.Gender,
+            //    ReceivedFrom = a.ReceivedFrom,
+            //    BranchId=a.BranchId,
+            //    ProjectId= a.ProjectId,
+            //    SubProjectId= a.SubProjectId
+                
+                
+            //}).ToListAsync();
+           
+        }
     }
 }
