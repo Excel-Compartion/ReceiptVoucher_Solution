@@ -26,7 +26,10 @@ namespace ReceiptVoucher.Server.AutoMapper
 
 
             /// Receipt
-            CreateMap<Receipt, GetReceiptDto>().ReverseMap();
+            CreateMap<Receipt, GetReceiptDto>()
+          .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
+
+                .ReverseMap();
 
             CreateMap<GetReceiptDto, ReceiptViewModel>().ReverseMap();
 
