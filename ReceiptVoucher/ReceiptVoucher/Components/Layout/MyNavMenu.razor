@@ -25,7 +25,7 @@
         </MudNavLink>
         <MudNavLink Href="/Branches" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.Apartment" Class="icon-color" />
-           مكاتب الجمعية
+            مكاتب الجمعية
         </MudNavLink>
         <MudNavLink Href="/Project" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.FileCopy" Class="icon-color" />
@@ -67,46 +67,46 @@
             التقارير
         </MudNavLink>
 
-      @*   <MudNavLink Href="/DonorCorrespondences" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
-            <MudIcon Icon="@Icons.Material.Filled.SupervisorAccount" Class="icon-color" />
-           مراسله المانحين
-        </MudNavLink> *@
+        @*   <MudNavLink Href="/DonorCorrespondences" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
+    <MudIcon Icon="@Icons.Material.Filled.SupervisorAccount" Class="icon-color" />
+    مراسله المانحين
+    </MudNavLink> *@
     }
 
-   @*  <AuthorizeView>
-        <NotAuthorized>
-            <MudNavLink Href="/login" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
-                <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
-                تسجيل الدخول
-            </MudNavLink>
-        </NotAuthorized>
+    @*  <AuthorizeView>
+    <NotAuthorized>
+    <MudNavLink Href="/login" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
+    <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
+    تسجيل الدخول
+    </MudNavLink>
+    </NotAuthorized>
     </AuthorizeView> *@
 
 
-    
-   
+
+
 
     <hr style="color: var(--color-custom); ;margin-top:4%" />
     <MudNavLink Href="/UserProfile" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
-        <img src="Images\avatar.webp" alt="Avatar" style="width:14px;"/>
-        @currentUser.FirstName @currentUser.LastName
+        <img src="Images\avatar.webp" alt="Avatar" style="width:14px;" />
+        @currentUser?.FirstName @currentUser?.LastName
     </MudNavLink>
     <MudNavLink OnClick="Logout"  Match="NavLinkMatch.Prefix" Class="mud-nav-link-right logOutBtn">
         <MudIcon Icon="@Icons.Material.Filled.Output" Class="icon-color" />
         تسجيل خروج
     </MudNavLink>
 
-@*     <MudNavLink   Class="mud-nav-link-right">
+    @*     <MudNavLink   Class="mud-nav-link-right">
 
-        <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
-        
+    <ReceiptVoucher.Client.Pages.AuthenticationPages.AuthenticationButton />
+
     </MudNavLink> *@
 
 
 
-   @*  <MudNavLink Href="/CompanyInfo" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
-        <MudIcon Icon="@Icons.Material.Outlined.Info" Class="icon-color" />
-        معلومات الشركة
+    @*  <MudNavLink Href="/CompanyInfo" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right">
+    <MudIcon Icon="@Icons.Material.Outlined.Info" Class="icon-color" />
+    معلومات الشركة
     </MudNavLink> *@
 
 </MudNavMenu>
@@ -122,7 +122,7 @@
         padding: 8px 16px;
         margin: 3px 0;
         font-size: 1rem;
-        color: #52595D; 
+        color: #52595D;
     }
 
     .icon-color {
@@ -160,8 +160,8 @@
 
 
 
-    <!--اكواد ربما احتاج لها-->
-   @*  <MudNavGroup Title="Settings" Expanded="true">
+<!--اكواد ربما احتاج لها-->
+@*  <MudNavGroup Title="Settings" Expanded="true">
         <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
         <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
     </MudNavGroup>
@@ -180,16 +180,23 @@
 
         if (user != null)
         {
+            // User is authenticated
+
             var roleClaim = user.FindFirst("roles");
             if (roleClaim != null)
             {
                 UserRole = roleClaim.Value;
             }
+
+            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
         }
 
-        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+        else
+        {
+            // User is not authenticated, redirect to login
+            NavigationManager.NavigateTo("/Login");
+        }
 
-        
     }
 
     private async Task Logout()
