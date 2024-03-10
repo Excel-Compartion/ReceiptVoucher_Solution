@@ -1,5 +1,6 @@
 ﻿
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Identity;
 
 namespace ReceiptVoucher.EF
 {
@@ -15,6 +16,8 @@ namespace ReceiptVoucher.EF
 
         public IBaseRepository<Project> Projects { get; private set; }
 
+        public IBaseRepository<ApplicationUser> Users { get; private set; }
+
         public IBaseRepository<CompanyInfo> CompanyInfo { get; private set; }
 
         //public IBaseRepository<Receipt> Receipts { get; private set; }
@@ -28,6 +31,7 @@ namespace ReceiptVoucher.EF
             mapper = _mapper;
             Branches = new BranchRepository(context);
             Projects = new BaseRepository<Project>(context);
+            Users = new BaseRepository<ApplicationUser>(context);
             CompanyInfo = new BaseRepository<CompanyInfo>(context);
             Receipts = new ReceiptRepository(context, mapper);  // new 
             SubProjects = new BaseRepository<SubProject>(context);

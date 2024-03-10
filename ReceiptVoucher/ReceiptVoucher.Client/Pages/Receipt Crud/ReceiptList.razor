@@ -2,6 +2,7 @@
 @rendermode InteractiveAuto
 
 @using System.Net.Http.Json
+@using AutoMapper
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Client.Services
 @using System.Security.Claims
@@ -146,7 +147,7 @@
 
 
 
-@code {
+    @code {
     public IEnumerable<GetReceiptDto>? pagedData;
     private MudTable<GetReceiptDto>? table;
 
@@ -201,6 +202,12 @@
     // }
 
 
+    // private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+    // {
+    //     var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+
+    //     return UserResponse;
+    // }
 
     protected override async Task OnInitializedAsync()
     {
@@ -216,7 +223,11 @@
 
             role = roles[0];
         }
-
+        else
+        {
+            // User is not authenticated, redirect to login
+            NavigationManager.NavigateTo("/Login");
+        }
 
 
 
