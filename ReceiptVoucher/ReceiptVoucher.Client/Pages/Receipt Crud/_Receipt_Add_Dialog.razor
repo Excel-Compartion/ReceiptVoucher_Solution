@@ -498,37 +498,65 @@
         }
     }
 
-    async void SendSMSMessage(Receipt receipt)
+    <!---------------------------------------------->
+    // private Receipt _receiptForMessage; // Assuming receipt is a property elsewhere
+
+    async Task<bool> SendSMSMessage(Receipt receipt)
     {
-        var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
-        if (response.IsSuccessStatusCode)
+        
+        try
         {
-            _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
-        }
-        else
-        {
-            try
+            // _receiptForMessage = receipt;
+
+            var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
+            if (response.IsSuccessStatusCode)
             {
+                _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
+
+                return true;
+            }
+            else
+            {
+
                 BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
 
-
-
-
-
                 _Snackbar.Add($"{content.Message} \n {content.Data} ", Severity.Error);
+
+                return false;
+
             }
-            catch
-            {
-                _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
-            }
-
-
-
-
-
         }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging and potential user feedback
+            // _logger.LogError("Error sending SMS message: {Message}", ex.Message);
+
+            _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
+            return false; // Indicate unsuccessful message sending (optional)
+        }
+       
     }
 
+    // private bool _isTaskCancelled = false; // Declare the field
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         // Initial tasks after render
+    //     }
+    //     else
+    //     {
+    //         // After refresh, retry tasks cancelled due to disconnection
+    //         if (_isTaskCancelled)
+    //         {
+    //             await SendSMSMessage(_receiptForMessage);
+    //             _isTaskCancelled = false;
+    //         }
+    //     }
+    // }
+
+    <!---------------------------------------------->
 
     // public void SubrojectValueRest()
     // {
