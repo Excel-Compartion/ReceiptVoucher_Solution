@@ -62,7 +62,7 @@
 </p>
 
 <MudTable Class="GetReceiptDtoTable" ServerData="@(new Func<TableState, Task<TableData<GetReceiptDto>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table">
+          Dense="true" Hover="true" @ref="table" >
     <ToolBarContent>
         @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
         <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
@@ -155,10 +155,10 @@
     private string? searchString;
 
 
-    public List<Branch> Branches { get; set; } = new List<Branch>();
-    public List<Project> Projects { get; set; } = new List<Project>();
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
+    public List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
 
-    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+    public List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
 
 
     public int RecId;
@@ -231,41 +231,6 @@
             }
 
 
-            <!----------->
-            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
-
-            if (response != null)
-            {
-                Branches = response;
-            }
-
-            <!----------->
-            var responseProject = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
-
-            if (responseProject != null)
-            {
-                Projects = responseProject;
-            }
-
-            <!----------->
-            var SubProjectresponse = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
-
-            if (SubProjectresponse != null)
-            {
-                SubProjects = SubProjectresponse;
-            }
-
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message); // Write error message to browser console
-                                           // Optionally, replace with a user-friendly message for display in Blazor:
-                                           //_snackbar.Add("An error occurred while retrieving user details", Severity.Error);
-        }
-       
-
-
     }
 
     /// <summary>
@@ -289,6 +254,8 @@
 
             pagination.Search = searchString ?? "";
 
+            pagination.NoPagination = true;
+
 
             var response = await Http.PostAsJsonAsync("api/Receipts/GetAllReceiptsWithGetDto", pagination);
 
@@ -307,7 +274,7 @@
                     {
                         data = content.Data
       .Where(x => x.BranchId == currentUser.BranchId)
-      .OrderByDescending(x => x.Date)
+      .OrderByDescending(x => x.Number)
       .ToList();
 
                     }
@@ -412,8 +379,47 @@
 
     //<!--==================     Add / Edit Dialog      =========================================-->
 
-    private void OpenAddDialog()
+    private async Task OpenAddDialog()
     {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
+
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
 
@@ -433,8 +439,46 @@
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
     }
 
-    private void OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
+    private async Task OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
     {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
 
 
         var parameters = new DialogParameters();

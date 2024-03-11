@@ -6,6 +6,7 @@
 
 
 
+
 <MudDialog Class="receipt-dialog" Style=" ">
     <DialogContent>
 
@@ -389,14 +390,14 @@
     string Icon = string.Empty;
 
 
-    [Parameter]
-    public List<Branch> Branches { get; set; } = new List<Branch>();
+   [Parameter]
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
 
     [Parameter]
-    public List<Project> Projects { get; set; } = new List<Project>();
+    public List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
 
     [Parameter]
-    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+    public List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
 
     public ReceiptViewModel ReceiptViewModel { get; set; } = new ReceiptViewModel();
 
@@ -424,6 +425,9 @@
 
     protected override void OnParametersSet()
     {
+
+      
+
         if (OriginalReceiptViewModel == null)
         {
             ReceiptViewModel = new ReceiptViewModel();

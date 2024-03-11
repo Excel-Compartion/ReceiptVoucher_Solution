@@ -149,8 +149,7 @@
 
 
     @{
-        if (UserBranchId == null)
-        {
+       
             <MudSelect SelectAll="true" SelectAllText="اختيار الكل" Style="width:100%" T="string" Label="المكاتب" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
 
                
@@ -161,7 +160,7 @@
                
 
             </MudSelect>
-        }
+        
     }
 
    
@@ -316,7 +315,7 @@
 
     private List<string> SelectSubProjectList = new List<string>();
 
-    public int? UserBranchId { get; set; }
+
 
     private HashSet<GrantDestination_VM> selectedItems1 = new HashSet<GrantDestination_VM>();
 
@@ -332,7 +331,9 @@
     {
         if (data != null && data.Count() != 0)
         {
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetDonorsCorrespondencesReportWithFilteredData", filterData);
+            receiptWithFilter_VM.NoPagination = true;
+
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetDonorsCorrespondencesReportWithFilteredData", receiptWithFilter_VM);
             if (response.IsSuccessStatusCode)
             {
                 var fileBytes = await response.Content.ReadAsByteArrayAsync();
@@ -408,22 +409,7 @@
     {
 
 
-        //-------------------------
-
-        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState?.User;
-
-        if (user != null)
-        {
-            var userId = user.FindFirstValue("uid");
-
-
-            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
-        }
-
-        UserBranchId = ApplicationUser.BranchId;
-
-        //-------------------------
+      
         RadioDateType = Day;
 
 
@@ -471,7 +457,7 @@
         catch { }
 
 
-        await SendFilterData();
+        // await SendFilterData();
 
 
     }
@@ -506,8 +492,7 @@
 
 
 
-    private FilterData filterData = new FilterData();
-
+    ReceiptWithFilter_VM receiptWithFilter_VM = new ReceiptWithFilter_VM();
 
 
     private List<GrantDestination_VM> data = new List<GrantDestination_VM>();
@@ -519,46 +504,46 @@
 
 
         // جمع بيانات الفلترة
-        filterData.RadioDateType = RadioDateType;
+        receiptWithFilter_VM.RadioDateType = RadioDateType;
 
 
 
-        filterData.SelectedDate = DateOnly.FromDateTime(selectedDate.Value);
-        filterData.SelectedMonth1 = DateOnly.FromDateTime(selectedMonth1.Value);
-        filterData.SelectedMonth2 = DateOnly.FromDateTime(selectedMonth2.Value);
-        filterData.SelectProject = SelectProject.ToList();
-        filterData.SelectSubProject = SelectSubProject.ToList();
-        filterData.SelectBranchId = SelectBranchId.ToList();
-        filterData.SelectBranchId = SelectBranchId.ToList();
-        filterData.SelectGrantDestinations = SelectGrantDestinations.ToList();
-        filterData.SelectPaymentTypes = SelectPaymentTypes.ToList();
-        filterData.UserBranchId = UserBranchId;
+        receiptWithFilter_VM.SelectedDate = DateOnly.FromDateTime(selectedDate.Value);
+        receiptWithFilter_VM.SelectedMonth1 = DateOnly.FromDateTime(selectedMonth1.Value);
+        receiptWithFilter_VM.SelectedMonth2 = DateOnly.FromDateTime(selectedMonth2.Value);
+        receiptWithFilter_VM.SelectProject = SelectProject.ToList();
+        receiptWithFilter_VM.SelectSubProject = SelectSubProject.ToList();
+        receiptWithFilter_VM.SelectBranchId = SelectBranchId.ToList();
+        receiptWithFilter_VM.SelectBranchId = SelectBranchId.ToList();
+        receiptWithFilter_VM.SelectGrantDestinations = SelectGrantDestinations.ToList();
+        receiptWithFilter_VM.SelectPaymentTypes = SelectPaymentTypes.ToList();
+     
 
 
-        bool IsFilter = filterData.SelectGrantDestinations.Count > 0
-       || filterData.SelectPaymentTypes.Count > 0
-       || filterData.SelectProject.Count > 0
-       || filterData.SelectSubProject.Count > 0
-       || filterData.SelectBranchId.Count > 0 ;
-
-
-
-
-        bool IsFilterItemsAllSelected = filterData.SelectGrantDestinations.Count > 0
-      && filterData.SelectPaymentTypes.Count > 0
-      && filterData.SelectProject.Count > 0
-      && filterData.SelectSubProject.Count > 0
-      && (filterData.SelectBranchId.Count > 0 || UserBranchId != null);
+        bool IsFilter = receiptWithFilter_VM.SelectGrantDestinations.Count > 0
+       || receiptWithFilter_VM.SelectPaymentTypes.Count > 0
+       || receiptWithFilter_VM.SelectProject.Count > 0
+       || receiptWithFilter_VM.SelectSubProject.Count > 0
+       || receiptWithFilter_VM.SelectBranchId.Count > 0;
 
 
 
-        if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter==false && UserBranchId!=null))
+
+        bool IsFilterItemsAllSelected = receiptWithFilter_VM.SelectGrantDestinations.Count > 0
+      && receiptWithFilter_VM.SelectPaymentTypes.Count > 0
+      && receiptWithFilter_VM.SelectProject.Count > 0
+      && receiptWithFilter_VM.SelectSubProject.Count > 0
+      && receiptWithFilter_VM.SelectBranchId.Count > 0;
+
+
+
+        if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter==false ))
         {
 
 
 
             // إرسال البيانات إلى واجهة برمجة التطبيقات
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetDonorCorrespondenceWithFilteredData", filterData);
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetDonorCorrespondenceWithFilteredData", receiptWithFilter_VM);
 
             // التحقق من الاستجابة
             if (response.IsSuccessStatusCode)
@@ -645,7 +630,13 @@
 
     private async Task<TableData<GrantDestination_VM>> ServerReload(TableState state)
     {
+        receiptWithFilter_VM.PageNumber = state.Page + 1;
 
+        receiptWithFilter_VM.PageSize = state.PageSize;
+
+        receiptWithFilter_VM.Search = searchString ?? "";
+
+        receiptWithFilter_VM.NoPagination = true;
 
 
         data = data.Where(GrantDest =>

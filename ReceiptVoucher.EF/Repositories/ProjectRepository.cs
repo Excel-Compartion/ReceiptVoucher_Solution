@@ -1,4 +1,5 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,7 +96,20 @@ namespace ReceiptVoucher.EF.Repositories
             }
         }
 
+        public async Task<List<ProjectVMForDrowpDownSelect>> GetAllForDrowpDownSelectAsync()
+        {
+            IQueryable<Project> query = _context.Set<Project>().AsNoTracking();
 
+            var Items = await query.Select(a => new ProjectVMForDrowpDownSelect
+            {
+                Id = a.Id,
+                Name = a.Name
+            }).ToListAsync();
+
+
+            return Items;
+
+        }
 
     }
 }

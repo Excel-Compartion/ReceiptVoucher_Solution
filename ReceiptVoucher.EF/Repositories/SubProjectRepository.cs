@@ -1,4 +1,6 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.ViewModels;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,5 +48,25 @@ namespace ReceiptVoucher.EF.Repositories
 
             return isDeleted;
         }
+
+
+        public async Task<List<SubProjectVMForDrowpDownSelect>> GetAllForDrowpDownSelectAsync()
+        {
+            IQueryable<SubProject> query = _context.Set<SubProject>().AsNoTracking();
+
+            var Items = await query.Select(a => new SubProjectVMForDrowpDownSelect
+            {
+                Id = a.Id,
+                Name = a.Name,
+                ProjectId=a.ProjectId,
+                ProjectName=a.Project.Name
+
+            }).ToListAsync();
+
+
+            return Items;
+
+        }
+
     }
 }

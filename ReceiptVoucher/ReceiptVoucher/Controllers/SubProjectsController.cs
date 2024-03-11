@@ -38,6 +38,12 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
+        [HttpGet("GetAllForDrowpDownSelectAsync")]
+        public async Task<IActionResult> GetAllForDrowpDownSelectAsync()
+        {
+            return Ok(await _unitOfWork.SubProjects.GetAllForDrowpDownSelectAsync());
+        }
+
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(SubProject subProject)
         {
@@ -86,5 +92,8 @@ namespace ReceiptVoucher.Server.Controllers
             return isDeleted ? Ok() : BadRequest("Bad Request");
 
         }
+
+
+
     }
 }

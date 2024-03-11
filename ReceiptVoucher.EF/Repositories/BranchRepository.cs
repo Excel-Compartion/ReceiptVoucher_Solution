@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.Dtos;
+using ReceiptVoucher.Core.Models.ViewModels;
 
 namespace ReceiptVoucher.EF.Repositories
 {
@@ -43,6 +45,23 @@ namespace ReceiptVoucher.EF.Repositories
                 isDeleted = true;
 
             return isDeleted;
+        }
+
+        public async Task<List<BranchVMForDrowpDownSelect>> GetAllForDrowpDownSelectAsync()
+        {
+            IQueryable<Branch> query = _context.Set<Branch>().AsNoTracking();
+
+            var Items = await query.Select(a => new BranchVMForDrowpDownSelect
+            {
+                Id = a.Id,
+                Name = a.Name ,
+                AccountNumber=a.AccountNumber
+                
+            }).ToListAsync();
+
+
+            return Items;
+
         }
     }
 }
