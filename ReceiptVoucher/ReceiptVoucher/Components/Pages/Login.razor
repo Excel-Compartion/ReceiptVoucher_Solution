@@ -84,6 +84,12 @@
                 <div class="text-danger">
                     <span><br/>@errorMessage</span>
                 </div>
+                @if (isLoading)
+                {
+                    <div class="loading-overlay">
+                        <p>Loading...</p>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -117,6 +123,9 @@
 
     private string returnUrl = string.Empty;
 
+    bool isLoading = false;
+
+
     protected override void OnInitialized()
     {
         var uri = _NavigationManager.ToAbsoluteUri(_NavigationManager.Uri);
@@ -129,29 +138,43 @@
 
     private async Task HandleLogin()
     {
-        var result = await _AuthService.LoginAsync(model);
-        if (result.Success)
+        try
         {
-            errorMessage = string.Empty;
-            await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
-            var authState = await _AuthenticationStateProvider?.GetAuthenticationStateAsync();
-            var user = authState?.User;
-            var userRole = user?.FindFirst("roles")?.Value;
+            isLoading = true; // Set loading state to true
 
-            if (userRole.Equals(RolesNames.User))
+            var result = await _AuthService.LoginAsync(model);
+            if (result.Success)
             {
-                _NavigationManager.NavigateTo("Receipt");
+                errorMessage = string.Empty;
+                await _LocalStorage.SetItemAsStringAsync("authToken", result.Data.Token);
+                var authState = await _AuthenticationStateProvider?.GetAuthenticationStateAsync();
+                var user = authState?.User;
+                var userRole = user?.FindFirst("roles")?.Value;
 
+                if (userRole.Equals(RolesNames.User))
+                {
+                    _NavigationManager.NavigateTo("Receipt");
+
+                }
+                else
+                {
+                    _NavigationManager.NavigateTo("home");
+                }
             }
             else
             {
-                _NavigationManager.NavigateTo("home");
+                errorMessage = result.Message + " \n";
             }
+
+            isLoading = false; // Set loading state to false
         }
-        else
+        catch (Exception ex )
         {
-            errorMessage = result.Message + " \n";
+            Console.WriteLine(ex.Message);
         }
+
+       
+
     }
 
     // show and hide password

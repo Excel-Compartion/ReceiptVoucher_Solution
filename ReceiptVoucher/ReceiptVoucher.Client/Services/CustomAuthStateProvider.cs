@@ -131,14 +131,26 @@ namespace ReceiptVoucher.Client.Services
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer
-                .Deserialize<Dictionary<string, object>>(jsonBytes);
+            try
+            {
+                var payload = jwt.Split('.')[1];
+                var jsonBytes = ParseBase64WithoutPadding(payload);
+                var keyValuePairs = JsonSerializer
+                    .Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            var claims = keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+                var claims = keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
 
-            return claims;
+                return claims;
+            }
+            catch (Exception ex )
+            {
+                // Handle the exception: Log the error, invalidate the token, etc.
+                //Console.WriteLine($"Error parsing Base-64: {ex.Message}");
+                throw new Exception(ex.Message); // Return null (needs handling in calling code)
+
+                //return Enumerable.Empty<Claim>(); // Or throw a custom exception
+            }
+
         }
     }
 }

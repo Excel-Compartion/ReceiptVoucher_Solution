@@ -382,29 +382,49 @@
 
 
 
-    public ApplicationUser ApplicationUser { get; set; } = new();
+    public UserViewModel ApplicationUser { get; set; } = new();
 
+    private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+    {
+        try
+        {
+            var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+            return UserResponse;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null; // Or provide a default value
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
-
-
-        //-------------------------
-
-        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState?.User;
-
-        if (user != null)
+        try
         {
-            var userId = user.FindFirstValue("uid");
+
+            //-------------------------
+
+            var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState?.User;
+
+            if (user != null)
+            {
+                var userId = user.FindFirstValue("uid");
 
 
-            ApplicationUser = await _UserManager.Users.Include(user => user.Branch).SingleOrDefaultAsync(u => u.Id == userId);
+                ApplicationUser = await GetCurrentUserDetailsAsync();
+            }
+
+            UserBranchId = ApplicationUser.BranchId;
+
+            //-------------------------
+            RadioDateType = Day;
+        }
+        catch (Exception ex )
+        {
+            Console.WriteLine(ex.Message);
         }
 
-        UserBranchId = ApplicationUser.BranchId;
-
-        //-------------------------
-        RadioDateType = Day;
 
 
 

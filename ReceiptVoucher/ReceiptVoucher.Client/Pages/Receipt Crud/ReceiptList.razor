@@ -211,30 +211,27 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
-
-        if (currentUser != null)
-        {
-            UserBranchId = currentUser.BranchId;
-            UserId = currentUser.Id;
-
-            var roles = currentUser.Roles.ToList();
-
-            role = roles[0];
-        }
-        else
-        {
-            // User is not authenticated, redirect to login
-            NavigationManager.NavigateTo("/Login");
-        }
-
-
-
-
-
         try
         {
+            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+
+            if (currentUser != null)
+            {
+                UserBranchId = currentUser.BranchId;
+                UserId = currentUser.Id;
+
+                var roles = currentUser.Roles.ToList();
+
+                role = roles[0];
+            }
+            else
+            {
+                // User is not authenticated, redirect to login
+                NavigationManager.NavigateTo("/Login");
+            }
+
+
+            <!----------->
             var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
 
             if (response != null)
@@ -242,35 +239,31 @@
                 Branches = response;
             }
 
+            <!----------->
+            var responseProject = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
 
-        }
-        catch { }
-
-        try
-        {
-            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
-
-            if (response != null)
+            if (responseProject != null)
             {
-                Projects = response;
+                Projects = responseProject;
+            }
+
+            <!----------->
+            var SubProjectresponse = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+
+            if (SubProjectresponse != null)
+            {
+                SubProjects = SubProjectresponse;
             }
 
 
         }
-        catch { }
-
-        try
+        catch (Exception ex)
         {
-            var response = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
-
-            if (response != null)
-            {
-                SubProjects = response;
-            }
-
-
+            Console.WriteLine(ex.Message); // Write error message to browser console
+                                           // Optionally, replace with a user-friendly message for display in Blazor:
+                                           //_snackbar.Add("An error occurred while retrieving user details", Severity.Error);
         }
-        catch { }
+       
 
 
     }

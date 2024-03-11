@@ -158,6 +158,9 @@ namespace ReceiptVoucher.Core.Services
 				new Claim (JwtRegisteredClaimNames.Sub , user.UserName),
 				new Claim (JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
 				new Claim (JwtRegisteredClaimNames.Email , user.Email),
+				new Claim (JwtRegisteredClaimNames.Name , user.FirstName + " " + user.LastName ),
+				new Claim ("IsEnabled" , user.IsEnabled.ToString() ),
+				new Claim ("BranchId" , user.BranchId.ToString() ?? string.Empty ),
 				new Claim ("uid" , user.Id)
 
 			}.Union(userClaims).Union(roleClaims);
