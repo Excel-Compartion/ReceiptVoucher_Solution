@@ -1,6 +1,7 @@
 ﻿@page "/MinReports"
 @rendermode InteractiveAuto
 @using System.Net.Http.Json
+@using AutoMapper
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Client.Pages.Receipt_Crud
 @using System.Security.Claims
@@ -417,7 +418,7 @@
                 ApplicationUser = await GetCurrentUserDetailsAsync();
             }
 
-            UserBranchId = ApplicationUser.BranchId;
+            // UserBranchId = ApplicationUser.BranchId;
 
             //-------------------------
             RadioDateType = Day;

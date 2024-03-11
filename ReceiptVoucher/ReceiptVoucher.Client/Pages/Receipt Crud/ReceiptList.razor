@@ -229,6 +229,11 @@
                 // User is not authenticated, redirect to login
                 NavigationManager.NavigateTo("/Login");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
 
 
     }
@@ -273,9 +278,9 @@
                     if (role != null && role != RolesNames.Admin)
                     {
                         data = content.Data
-      .Where(x => x.BranchId == currentUser.BranchId)
-      .OrderByDescending(x => x.Number)
-      .ToList();
+                        .Where(x => x.BranchId == currentUser.BranchId)
+                        .OrderByDescending(x => x.Number)
+                        .ToList();
 
                     }
 
@@ -298,21 +303,21 @@
 
 
         data = data.Where(GetReceiptDto =>
-     {
-         if (string.IsNullOrWhiteSpace(searchString))
-             return true;
-         if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if ($"{GetReceiptDto.Number}".Contains(searchString))
-             return true;
-         if ($"{GetReceiptDto.Mobile}".Contains(searchString))
-             return true;
-         if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
-             return true;
-         return false;
-     }).ToArray();
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{GetReceiptDto.Number}".Contains(searchString))
+                return true;
+            if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+                return true;
+            if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+                return true;
+            return false;
+        }).ToArray();
 
         totalItems = data.Count();
         switch (state.SortLabel)
@@ -373,7 +378,7 @@
 
 
 
-    @code {
+@code {
 
 
 
