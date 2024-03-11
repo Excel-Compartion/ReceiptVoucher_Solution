@@ -13,9 +13,9 @@ namespace ReceiptVoucher.Core.Interfaces
     {
         Task<IEnumerable<Receipt>> GetAllReceiptAsync();
         Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
-           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false);
 
-        Task<IEnumerable<Receipt>> GetFilteredData( FilterData filterData);
+        Task<IEnumerable<GetReceiptDto>> GetFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM);
 
         //  GetReceiptRdcl
 

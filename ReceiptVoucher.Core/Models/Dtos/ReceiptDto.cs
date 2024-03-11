@@ -49,7 +49,7 @@ namespace ReceiptVoucher.Core.Models.Dtos
         public string? ForPurpose { get; set; }
 
         public DateOnly Date { get; set; }
-
+        
 
         public GrantDest GrantDestinations { get; set; }
 

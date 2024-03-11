@@ -13,10 +13,10 @@ namespace ReceiptVoucher.Core
         //IBaseRepository<Branch> Branches { get; }
         IBranchRepository Branches { get; }
 
-        IBaseRepository<Project> Projects { get; }
+        IProjectRepository Projects { get; }
         IBaseRepository<CompanyInfo> CompanyInfo { get; }
         //IBaseRepository<Receipt> Receipts { get; }
-        IBaseRepository<SubProject> SubProjects { get; }
+        ISubProjectRepository SubProjects { get; }
 
         IReceiptRepository Receipts { get; }
 

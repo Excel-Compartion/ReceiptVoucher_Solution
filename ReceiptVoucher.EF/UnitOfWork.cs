@@ -13,24 +13,24 @@ namespace ReceiptVoucher.EF
 
         public IBranchRepository Branches { get; private set; }
 
-        public IBaseRepository<Project> Projects { get; private set; }
+        public IProjectRepository Projects { get; private set; }
 
         public IBaseRepository<CompanyInfo> CompanyInfo { get; private set; }
 
         //public IBaseRepository<Receipt> Receipts { get; private set; }
         public IReceiptRepository Receipts { get; private set; }    // new 
 
-        public IBaseRepository<SubProject> SubProjects { get; private set; }
+        public ISubProjectRepository SubProjects { get; private set; }
 
         public UnitOfWork(ReceiptVoucherDbContext context, IMapper _mapper)
         {
             _context = context;
             mapper = _mapper;
             Branches = new BranchRepository(context);
-            Projects = new BaseRepository<Project>(context);
+            Projects = new ProjectRepository(context);
             CompanyInfo = new BaseRepository<CompanyInfo>(context);
             Receipts = new ReceiptRepository(context, mapper);  // new 
-            SubProjects = new BaseRepository<SubProject>(context);
+            SubProjects = new SubProjectRepository(context);
 
         }
 

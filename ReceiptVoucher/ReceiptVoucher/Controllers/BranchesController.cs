@@ -34,6 +34,12 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok(await _unitOfWork.Branches.GetAllAsync());
         }
 
+        [HttpGet("GetAllForDrowpDownSelectAsync")]
+        public async Task<IActionResult> GetAllForDrowpDownSelectAsync()
+        {
+            return Ok(await _unitOfWork.Branches.GetAllForDrowpDownSelectAsync());
+        }
+
         [HttpPost("AddOneAsync")]
         public async Task<IActionResult> AddOne(Branch branch)
         {

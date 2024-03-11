@@ -103,7 +103,11 @@ namespace ReceiptVoucher.Server.Controllers
             return Ok();
         }
 
-
+        [HttpGet("GetAllForDrowpDownSelectAsync")]
+        public async Task<IActionResult> GetAllForDrowpDownSelectAsync()
+        {
+            return Ok(await _unitOfWork.Projects.GetAllForDrowpDownSelectAsync());
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)

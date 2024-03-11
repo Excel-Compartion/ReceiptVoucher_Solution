@@ -1,4 +1,6 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.ViewModels;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,5 +15,7 @@ namespace ReceiptVoucher.Core.Interfaces
         Task<IEnumerable<SubProject>> GetAllSubProjectAsync();
 
         Task<bool> DeleteSubProjectAsync(int id);
+
+        Task<List<SubProjectVMForDrowpDownSelect>> GetAllForDrowpDownSelectAsync();
     }
 }
