@@ -95,7 +95,7 @@
     <RowTemplate>
         <MudTd DataLabel="رقم السند">
             @{
-                string BranchNumWithReceiptNum = context.BranchNumber + " - " + context.ReceiptBranchNumber;
+                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
             }
 
             @BranchNumWithReceiptNum
@@ -154,7 +154,7 @@
 
 
 
-    @code {
+@code {
     public IEnumerable<GetReceiptDto>? pagedData;
     private MudTable<GetReceiptDto>? table;
 
@@ -268,7 +268,7 @@
 
             pagination.NoPagination = true;
 
-            
+
 
             var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId??0}", pagination);
 
@@ -282,9 +282,9 @@
             {
                 if (currentUser != null)
                 {
-                   
-                        data = content.Data;
-                   
+
+                    data = content.Data;
+
                 }
             }
             else if (content != null)
@@ -321,7 +321,15 @@
         {
 
             case "id_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                if (UserBranchId == null)
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.Number);
+
+                }
+                else
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.ReceiptBranchNumber);
+                }
                 break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);

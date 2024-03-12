@@ -1,4 +1,5 @@
-﻿using ReceiptVoucher.Core.Enums;
+﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
         public int Number { get; set; }
 
         public int ReceiptBranchNumber { get; set; }
+
+        public string? ReceiptBranchNumWithBranchNum => BranchNumber + " - " +  ReceiptBranchNumber;
 
 
     }

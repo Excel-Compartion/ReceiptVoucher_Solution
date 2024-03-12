@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.RegularExpressions;
 using static MudBlazor.CategoryTypes;
 using Pagination = ReceiptVoucher.Core.Models.Pagination;
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace ReceiptVoucher.Server.Controllers
@@ -255,6 +256,17 @@ namespace ReceiptVoucher.Server.Controllers
 
             List<ReceiptWithRelatedDataDto> receiptWithRelatedDataDto = mapper.Map<List<ReceiptWithRelatedDataDto>>(receipts);
 
+            DataTable dt;
+            if (receiptWithFilter_VM.UserBranchId == null)
+            {
+                 dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.Number).ToList());
+               
+            }
+            else
+            {
+                dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.ReceiptBranchNumber).ToList());
+            }
+
             ReceiptsInformation receiptsInformation = new ReceiptsInformation()
             {
                 TotalAmount=  $"اجمالي مبالغ التبرعات : {receiptWithRelatedDataDto.Select(x => x.TotalAmount).Sum()} ر.س",
@@ -265,7 +277,6 @@ namespace ReceiptVoucher.Server.Controllers
 
             LocalReport localReport = new LocalReport(path);
 
-            DataTable dt = ToDataTable(receiptWithRelatedDataDto.ToList());
 
             DataTable info = ToDataTableOneRecord(receiptsInformation);
 

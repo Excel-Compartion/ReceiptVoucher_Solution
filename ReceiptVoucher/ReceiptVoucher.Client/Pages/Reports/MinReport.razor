@@ -252,7 +252,14 @@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Number</MudTd>
+        <MudTd DataLabel="رقم السند">
+            @{
+                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+            }
+
+            @BranchNumWithReceiptNum
+
+        </MudTd>
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="رقم الجوال">@context.Mobile</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
@@ -328,6 +335,8 @@
     private int SelectProjectCount;
 
     private bool isUnChecked = false;
+
+    public int? UserBranchId { get; set; }
 
     private List<string> SelectSubProjectList = new List<string>();
 
@@ -558,7 +567,7 @@
         if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter == false ))
         {
 
-
+            receiptWithFilter_VM.UserBranchId = null;
 
             // إرسال البيانات إلى واجهة برمجة التطبيقات
             var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", receiptWithFilter_VM);
@@ -574,7 +583,9 @@
                     var GetReceiptDtos = await response.Content.ReadFromJsonAsync<List<GetReceiptDto>>();
 
 
-                    if (GetReceiptDtos != null) { data = GetReceiptDtos.OrderByDescending(x => x.Number).ToList(); }
+                    if (GetReceiptDtos != null && receiptWithFilter_VM.UserBranchId==null) { data = GetReceiptDtos.OrderByDescending(x => x.Number).ToList(); }
+
+                    else if (GetReceiptDtos != null && receiptWithFilter_VM.UserBranchId != null) { data = GetReceiptDtos.OrderByDescending(x => x.ReceiptBranchNumber).ToList(); }
 
                     if (table != null) { await table.ReloadServerData(); }
 
@@ -601,6 +612,8 @@
             // FilterData filterData = _Mapper.Map<FilterData>(receiptWithFilter_VM);
 
             receiptWithFilter_VM.NoPagination = true;
+
+            receiptWithFilter_VM.UserBranchId = null;
 
             var response = await Http.PostAsJsonAsync("api/Receipts/GetReportWithFilteredData", receiptWithFilter_VM);
             if (response.IsSuccessStatusCode)
@@ -634,19 +647,19 @@
 
         data = data.Where(GetReceiptDto =>
       {
-      if (string.IsNullOrWhiteSpace(searchString))
-          return true;
-      if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-          return true;
-      if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+          if (string.IsNullOrWhiteSpace(searchString))
               return true;
-      if ($"{GetReceiptDto.Number}".Contains(searchString))
-          return true;
-      if ($"{GetReceiptDto.Mobile}".Contains(searchString))
-          return true;
-      if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
-          return true;
-      return false;
+          if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+              return true;
+          if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+              return true;
+          if ($"{GetReceiptDto.Number}".Contains(searchString))
+              return true;
+          if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+              return true;
+          if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+              return true;
+          return false;
       }).ToList();
 
 
@@ -655,7 +668,15 @@
         switch (state.SortLabel)
         {
             case "id_field":
-                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
+                if (UserBranchId == null)
+                {
+                    data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Number).ToList() : data.OrderByDescending(r => r.Number).ToList();
+
+                }
+                else
+                {
+                    data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceiptBranchNumber).ToList() : data.OrderByDescending(r => r.ReceiptBranchNumber).ToList();
+                }
                 break;
             case "receivedFrom_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
