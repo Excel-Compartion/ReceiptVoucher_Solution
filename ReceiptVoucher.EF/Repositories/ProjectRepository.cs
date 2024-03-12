@@ -1,10 +1,13 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Models.Dtos;
 using ReceiptVoucher.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ReceiptVoucher.EF.Repositories
 {
@@ -111,5 +114,35 @@ namespace ReceiptVoucher.EF.Repositories
 
         }
 
+        public async Task<IEnumerable<GetProjectDto>> GetAllProjectAsyncV2(Expression<Func<Project, bool>> criteria, int? PageSize, int? PageNumber, string? search, Expression<Func<Project, object>> orderBy = null, string orderByDirection = "DESC", bool NoPagination = false)
+        {
+            IQueryable<Project> query = _context.Set<Project>().AsNoTracking();
+
+            if (criteria != null)
+            {
+                query = query.Where(criteria);
+            }
+
+
+
+            if (PageNumber.HasValue && PageSize.HasValue && NoPagination == false)
+                query = query.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+
+
+
+            var Items = await query.Select(a => new GetProjectDto
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Note=a.Note,
+                IsActive=a.IsActive,
+                Date = a.Date
+
+            })
+                .ToListAsync();
+
+
+            return Items;
+        }
     }
 }

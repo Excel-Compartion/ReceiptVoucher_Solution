@@ -21,7 +21,9 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet("GetAllBranchesBarChartDataAsync")]
         public async Task<IActionResult> GetAllBranchesBarChartDataAsync()
         {
-            var branch = await _unitOfWork.Branches.GetAllAsync();
+            IEnumerable<GetBranchDto> branchIEnumType = await _unitOfWork.Branches.GetAllBranchAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination: true);
+
+            List<GetBranchDto> branch = branchIEnumType.ToList();
 
             BranchesBarChartViewModel branchesBarChartViewModel = new BranchesBarChartViewModel();
 
@@ -38,7 +40,7 @@ namespace ReceiptVoucher.Server.Controllers
                 BranchesNames[i] = branch[i].Name;
             }
 
-            var receipt = await _unitOfWork.Receipts.GetAllAsync();
+            var receipt = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination:true);
 
             double[] Individual = new double[branchCount];
             double[] Company = new double[branchCount];
@@ -80,14 +82,14 @@ namespace ReceiptVoucher.Server.Controllers
         [HttpGet("GetAllProjectsLineChartDataAsync")]
         public async Task<IActionResult> GetAllProjectsLineChartDataAsync()
         {
-            var Projects = await _unitOfWork.Projects.GetAllAsync();
+            var Projects = await _unitOfWork.Projects.GetAllProjectAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination: true);
 
             if (Projects == null || Projects.Count() == 0)
             {
                 return NotFound();
             }
 
-            var receipt = await _unitOfWork.Receipts.GetAllAsync();
+            var receipt = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination: true);
 
             Dictionary<string, double[]> MainProjects = new Dictionary<string, double[]>();
 
