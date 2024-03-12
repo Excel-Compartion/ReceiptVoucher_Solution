@@ -107,7 +107,7 @@
                     {
                         if (SelectProject.Count() != 0)
                         {
-                            if (SelectProject.Contains(subProjects.Project.Name))
+                            if (SelectProject.Contains(subProjects.ProjectName))
                             {
                                 <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>
                             }
@@ -289,15 +289,15 @@
 
 
 
-    public List<Branch> Branches { get; set; } = new List<Branch>();
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
 
     // SubProject Select
-    private List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+    private List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
 
     private IEnumerable<string> SelectSubProject { get; set; } = new List<string>();
 
 
-    private List<Project> Projects { get; set; } = new List<Project>();
+    private List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
 
     private IEnumerable<string> SelectProject { get; set; } = new List<string>();
 
@@ -366,7 +366,7 @@
                 {
                     var SubProject = SubProjects.Where(x => x.Name == selectSubProject).FirstOrDefault();
 
-                    if (SelectProject.Contains(SubProject.Project.Name))
+                    if (SelectProject.Contains(SubProject.ProjectName))
                     {
                         SelectSubProjectList.Add(SubProject.Name);
                     }
@@ -413,13 +413,9 @@
         RadioDateType = Day;
 
 
-
-
-
-
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
@@ -432,7 +428,7 @@
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
@@ -445,7 +441,7 @@
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {

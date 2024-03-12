@@ -88,5 +88,9 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
 
         public int Number { get; set; }
+
+        public int ReceiptBranchNumber { get; set; }
+
+        public string? ReceiptBranchNumWithBranchNum { get; set; }
     }
 }

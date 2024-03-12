@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.RegularExpressions;
 using static MudBlazor.CategoryTypes;
 using Pagination = ReceiptVoucher.Core.Models.Pagination;
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace ReceiptVoucher.Server.Controllers
@@ -99,23 +100,16 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpPost("GetAllReceiptsWithGetDto")]
-        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllPurchases([FromBody] Pagination pagination)
+        [HttpPost("GetAllReceiptsWithGetDto/{UserBranchId}")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllReceiptsWithGetDto([FromBody] Pagination pagination,int? UserBranchId)
         {
             try
             {
-                //                IEnumerable<Receipt> items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
-                //                var receipts = (await _unitOfWork.Receipts.GetAllAsync()).Select(a => new GetReceiptDto 
-                //                { 
-                //Id=a.Id,
-                //BranchName = a.Branch.Name,
+                if (UserBranchId == 0)
+                    UserBranchId = null;
+               
 
-                //                }).ToList();
-
-
-                //                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
-
-                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination);
+                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination,UserBranchId: UserBranchId);
 
                 return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(items, "تم جلب العناصر بنجاح", null, true));
             }
@@ -160,6 +154,23 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             receipt.Number = Number;
+
+
+            // Get the last receipt and increment the number
+            var lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+            int ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+
+            var ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+
+            while (ReceiptIsExByReceiptBranchNum != null)
+            {
+                lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+                ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+            }
+
+            receipt.ReceiptBranchNumber = ReceiptBranchNum;
+
             receipt.Date = DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
             {
@@ -245,6 +256,17 @@ namespace ReceiptVoucher.Server.Controllers
 
             List<ReceiptWithRelatedDataDto> receiptWithRelatedDataDto = mapper.Map<List<ReceiptWithRelatedDataDto>>(receipts);
 
+            DataTable dt;
+            if (receiptWithFilter_VM.UserBranchId == null)
+            {
+                 dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.Number).ToList());
+               
+            }
+            else
+            {
+                dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.ReceiptBranchNumber).ToList());
+            }
+
             ReceiptsInformation receiptsInformation = new ReceiptsInformation()
             {
                 TotalAmount=  $"اجمالي مبالغ التبرعات : {receiptWithRelatedDataDto.Select(x => x.TotalAmount).Sum()} ر.س",
@@ -255,7 +277,6 @@ namespace ReceiptVoucher.Server.Controllers
 
             LocalReport localReport = new LocalReport(path);
 
-            DataTable dt = ToDataTable(receiptWithRelatedDataDto.ToList());
 
             DataTable info = ToDataTableOneRecord(receiptsInformation);
 

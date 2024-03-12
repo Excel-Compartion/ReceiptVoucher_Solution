@@ -319,6 +319,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             private global::System.Data.DataColumn columnNumber;
             
+            private global::System.Data.DataColumn columnReceiptBranchNumWithBranchNum;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public ReceiptRdclViewModelDataTable() {
@@ -514,6 +516,14 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReceiptBranchNumWithBranchNumColumn {
+                get {
+                    return this.columnReceiptBranchNumWithBranchNum;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -569,7 +579,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         string Mobile, 
                         string DateArabic, 
                         string TotalAmountWord, 
-                        string Number) {
+                        string Number, 
+                        string ReceiptBranchNumWithBranchNum) {
                 ReceiptRdclViewModelRow rowReceiptRdclViewModelRow = ((ReceiptRdclViewModelRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
@@ -591,7 +602,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                         Mobile,
                         DateArabic,
                         TotalAmountWord,
-                        Number};
+                        Number,
+                        ReceiptBranchNumWithBranchNum};
                 rowReceiptRdclViewModelRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowReceiptRdclViewModelRow);
                 return rowReceiptRdclViewModelRow;
@@ -634,6 +646,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 this.columnDateArabic = base.Columns["DateArabic"];
                 this.columnTotalAmountWord = base.Columns["TotalAmountWord"];
                 this.columnNumber = base.Columns["Number"];
+                this.columnReceiptBranchNumWithBranchNum = base.Columns["ReceiptBranchNumWithBranchNum"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -679,6 +692,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
                 base.Columns.Add(this.columnTotalAmountWord);
                 this.columnNumber = new global::System.Data.DataColumn("Number", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNumber);
+                this.columnReceiptBranchNumWithBranchNum = new global::System.Data.DataColumn("ReceiptBranchNumWithBranchNum", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceiptBranchNumWithBranchNum);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1143,6 +1158,23 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReceiptBranchNumWithBranchNum {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptRdclViewModel.ReceiptBranchNumWithBranchNumColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceiptBranchNumWithBranchNum\' in table \'ReceiptRdclViewMod" +
+                                "el\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptRdclViewModel.ReceiptBranchNumWithBranchNumColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsIdNull() {
                 return this.IsNull(this.tableReceiptRdclViewModel.IdColumn);
             }
@@ -1379,6 +1411,18 @@ namespace ReceiptVoucher.Server.wwwroot._Reports.ReceiptRdcl {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetNumberNull() {
                 this[this.tableReceiptRdclViewModel.NumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReceiptBranchNumWithBranchNumNull() {
+                return this.IsNull(this.tableReceiptRdclViewModel.ReceiptBranchNumWithBranchNumColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReceiptBranchNumWithBranchNumNull() {
+                this[this.tableReceiptRdclViewModel.ReceiptBranchNumWithBranchNumColumn] = global::System.Convert.DBNull;
             }
         }
         

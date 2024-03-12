@@ -58,7 +58,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!Number.Value</Value>
+                <Value>=Fields!ReceiptBranchNumWithBranchNum.Value</Value>
                 <Style>
                   <FontFamily>Tajawal</FontFamily>
                   <FontSize>9pt</FontSize>
@@ -72,9 +72,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>1.80911in</Top>
-        <Left>3.53093in</Left>
+        <Left>3.35037in</Left>
         <Height>0.22351in</Height>
-        <Width>1.17361in</Width>
+        <Width>1.59028in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -627,6 +627,10 @@
         </Field>
         <Field Name="Number">
           <DataField>Number</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiptBranchNumWithBranchNum">
+          <DataField>ReceiptBranchNumWithBranchNum</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

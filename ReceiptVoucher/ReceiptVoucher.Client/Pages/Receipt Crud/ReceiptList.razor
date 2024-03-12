@@ -93,7 +93,14 @@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="رقم السند">@context.Number</MudTd>
+        <MudTd DataLabel="رقم السند">
+            @{
+                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+            }
+
+            @BranchNumWithReceiptNum
+
+        </MudTd>
         <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
         <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
@@ -147,7 +154,7 @@
 
 
 
-    @code {
+@code {
     public IEnumerable<GetReceiptDto>? pagedData;
     private MudTable<GetReceiptDto>? table;
 
@@ -257,7 +264,8 @@
             pagination.NoPagination = true;
 
 
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetAllReceiptsWithGetDto", pagination);
+
+            var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId??0}", pagination);
 
 
             BaseResponse<IEnumerable<GetReceiptDto>> content = await response.Content.ReadFromJsonAsync<BaseResponse<IEnumerable<GetReceiptDto>>>();
@@ -270,19 +278,8 @@
                 if (currentUser != null)
                 {
 
-                    if (role != null && role != RolesNames.Admin)
-                    {
-                        data = content.Data
-                        .Where(x => x.BranchId == currentUser.BranchId)
-                        .OrderByDescending(x => x.Number)
-                        .ToList();
+                    data = content.Data;
 
-                    }
-
-                    else
-                    {
-                        data = content.Data.OrderByDescending(x => x.Number);
-                    }
                 }
             }
             else if (content != null)
@@ -319,7 +316,15 @@
         {
 
             case "id_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                if (UserBranchId == null)
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.Number);
+
+                }
+                else
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.ReceiptBranchNumber);
+                }
                 break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);

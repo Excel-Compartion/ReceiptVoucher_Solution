@@ -1,4 +1,5 @@
-﻿using ReceiptVoucher.Core.Enums;
+﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
         public int BranchId { get; set; }   // Foreign Key
 
         public string? BranchName { get; set; }
+
+        public int? BranchNumber { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]
         [Column("ProjectId")]
@@ -88,6 +91,12 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
 
         public int Number { get; set; }
+
+        public int ReceiptBranchNumber { get; set; }
+
+        public string? ReceiptBranchNumWithBranchNum => BranchNumber + " - " +  ReceiptBranchNumber;
+
+
     }
 
     public class PostReceiptDto
@@ -168,5 +177,7 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
 
         public int Number { get; set; }
+
+        public int ReceiptBranchNumber { get; set; }
     }
 }

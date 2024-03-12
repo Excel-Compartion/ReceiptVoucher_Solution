@@ -319,6 +319,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             private global::System.Data.DataColumn columnDateToString;
             
+            private global::System.Data.DataColumn columnReceiptBranchNumWithBranchNum;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public ReceiptWithRelatedDataDtoDataTable() {
@@ -514,6 +516,14 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReceiptBranchNumWithBranchNumColumn {
+                get {
+                    return this.columnReceiptBranchNumWithBranchNum;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -569,7 +579,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                         string Bank, 
                         string Code, 
                         int Number, 
-                        string DateToString) {
+                        string DateToString, 
+                        string ReceiptBranchNumWithBranchNum) {
                 ReceiptWithRelatedDataDtoRow rowReceiptWithRelatedDataDtoRow = ((ReceiptWithRelatedDataDtoRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
@@ -591,7 +602,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                         Bank,
                         Code,
                         Number,
-                        DateToString};
+                        DateToString,
+                        ReceiptBranchNumWithBranchNum};
                 rowReceiptWithRelatedDataDtoRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowReceiptWithRelatedDataDtoRow);
                 return rowReceiptWithRelatedDataDtoRow;
@@ -634,6 +646,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 this.columnCode = base.Columns["Code"];
                 this.columnNumber = base.Columns["Number"];
                 this.columnDateToString = base.Columns["DateToString"];
+                this.columnReceiptBranchNumWithBranchNum = base.Columns["ReceiptBranchNumWithBranchNum"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -679,6 +692,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 base.Columns.Add(this.columnNumber);
                 this.columnDateToString = new global::System.Data.DataColumn("DateToString", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDateToString);
+                this.columnReceiptBranchNumWithBranchNum = new global::System.Data.DataColumn("ReceiptBranchNumWithBranchNum", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceiptBranchNumWithBranchNum);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1155,6 +1170,23 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReceiptBranchNumWithBranchNum {
+                get {
+                    try {
+                        return ((string)(this[this.tableReceiptWithRelatedDataDto.ReceiptBranchNumWithBranchNumColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceiptBranchNumWithBranchNum\' in table \'ReceiptWithRelated" +
+                                "DataDto\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableReceiptWithRelatedDataDto.ReceiptBranchNumWithBranchNumColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsIdNull() {
                 return this.IsNull(this.tableReceiptWithRelatedDataDto.IdColumn);
             }
@@ -1391,6 +1423,18 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetDateToStringNull() {
                 this[this.tableReceiptWithRelatedDataDto.DateToStringColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReceiptBranchNumWithBranchNumNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.ReceiptBranchNumWithBranchNumColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReceiptBranchNumWithBranchNumNull() {
+                this[this.tableReceiptWithRelatedDataDto.ReceiptBranchNumWithBranchNumColumn] = global::System.Convert.DBNull;
             }
         }
         

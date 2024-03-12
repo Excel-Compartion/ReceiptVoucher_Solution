@@ -34,7 +34,8 @@
               <xs:element name="Bank" msprop:Generator_ColumnPropNameInTable="BankColumn" msprop:Generator_ColumnPropNameInRow="Bank" msprop:Generator_UserColumnName="Bank" msprop:Generator_ColumnVarNameInTable="columnBank" type="xs:string" minOccurs="0" />
               <xs:element name="Code" msprop:Generator_ColumnPropNameInTable="CodeColumn" msprop:Generator_ColumnPropNameInRow="Code" msprop:Generator_UserColumnName="Code" msprop:Generator_ColumnVarNameInTable="columnCode" type="xs:string" minOccurs="0" />
               <xs:element name="Number" msprop:Generator_ColumnPropNameInTable="NumberColumn" msprop:Generator_ColumnPropNameInRow="Number" msprop:Generator_UserColumnName="Number" msprop:Generator_ColumnVarNameInTable="columnNumber" type="xs:int" minOccurs="0" />
-              <xs:element name="DateToString" msprop:Generator_UserColumnName="DateToString" msprop:Generator_ColumnPropNameInTable="DateToStringColumn" msprop:Generator_ColumnPropNameInRow="DateToString" msprop:Generator_ColumnVarNameInTable="columnDateToString" type="xs:string" minOccurs="0" />
+              <xs:element name="DateToString" msprop:Generator_ColumnPropNameInTable="DateToStringColumn" msprop:Generator_ColumnPropNameInRow="DateToString" msprop:Generator_UserColumnName="DateToString" msprop:Generator_ColumnVarNameInTable="columnDateToString" type="xs:string" minOccurs="0" />
+              <xs:element name="ReceiptBranchNumWithBranchNum" msprop:Generator_ColumnPropNameInRow="ReceiptBranchNumWithBranchNum" msprop:Generator_ColumnPropNameInTable="ReceiptBranchNumWithBranchNumColumn" msprop:Generator_ColumnVarNameInTable="columnReceiptBranchNumWithBranchNum" msprop:Generator_UserColumnName="ReceiptBranchNumWithBranchNum" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
