@@ -1,4 +1,5 @@
 ﻿using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ReceiptVoucher.Core
         IBranchRepository Branches { get; }
 
         IProjectRepository Projects { get; }
+        IBaseRepository<ApplicationUser> Users { get; }
         IBaseRepository<CompanyInfo> CompanyInfo { get; }
         //IBaseRepository<Receipt> Receipts { get; }
         ISubProjectRepository SubProjects { get; }

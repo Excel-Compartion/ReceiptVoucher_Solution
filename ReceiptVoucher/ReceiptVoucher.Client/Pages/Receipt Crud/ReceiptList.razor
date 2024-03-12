@@ -2,6 +2,7 @@
 @rendermode InteractiveAuto
 
 @using System.Net.Http.Json
+@using AutoMapper
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Client.Services
 @using System.Security.Claims
@@ -153,7 +154,7 @@
 
 
 
-@code {
+    @code {
     public IEnumerable<GetReceiptDto>? pagedData;
     private MudTable<GetReceiptDto>? table;
 
@@ -208,20 +209,37 @@
     // }
 
 
+    // private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+    // {
+    //     var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+
+    //     return UserResponse;
+    // }
 
     protected override async Task OnInitializedAsync()
     {
-
-        currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
-
-        if (currentUser != null)
+        try
         {
-            UserBranchId = currentUser.BranchId;
-            UserId = currentUser.Id;
+            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
 
-            var roles = currentUser.Roles.ToList();
+            if (currentUser != null)
+            {
+                UserBranchId = currentUser.BranchId;
+                UserId = currentUser.Id;
 
-            role = roles[0];
+                var roles = currentUser.Roles.ToList();
+
+                role = roles[0];
+            }
+            else
+            {
+                // User is not authenticated, redirect to login
+                NavigationManager.NavigateTo("/Login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
 
 
@@ -262,10 +280,23 @@
 
             if (content != null && content.Success)
             {
-                
-                        data = content.Data;
-                    
-                
+                if (currentUser != null)
+                {
+
+                    if (role != null && role != RolesNames.Admin)
+                    {
+                        data = content.Data
+                        .Where(x => x.BranchId == currentUser.BranchId)
+                        .OrderByDescending(x => x.Number)
+                        .ToList();
+
+                    }
+
+                    else
+                    {
+                        data = content.Data.OrderByDescending(x => x.Number);
+                    }
+                }
             }
             else if (content != null)
             {
@@ -280,21 +311,21 @@
 
 
         data = data.Where(GetReceiptDto =>
-     {
-         if (string.IsNullOrWhiteSpace(searchString))
-             return true;
-         if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if ($"{GetReceiptDto.Number}".Contains(searchString))
-             return true;
-         if ($"{GetReceiptDto.Mobile}".Contains(searchString))
-             return true;
-         if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
-             return true;
-         return false;
-     }).ToArray();
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{GetReceiptDto.Number}".Contains(searchString))
+                return true;
+            if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+                return true;
+            if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+                return true;
+            return false;
+        }).ToArray();
 
         totalItems = data.Count();
         switch (state.SortLabel)
@@ -355,7 +386,7 @@
 
 
 
-    @code {
+@code {
 
 
 

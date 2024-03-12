@@ -1,15 +1,18 @@
 ﻿using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
 using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Models;
 using ReceiptVoucher.Core.Models.ResponseModels;
 using ReceiptVoucher.Core.Models.ViewModels.UserModels;
+using System.Security.Claims;
 
 
 namespace ReceiptVoucher.Server.Controllers
@@ -20,15 +23,20 @@ namespace ReceiptVoucher.Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ReceiptVoucherDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
 
 
-        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
+
+        public UsersController(UserManager<ApplicationUser> userManager, ReceiptVoucherDbContext context, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork, AuthenticationStateProvider authenticationStateProvider)
         {
             _userManager = userManager;
+            this._context = context;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
+            _authenticationStateProvider = authenticationStateProvider;
         }
 
 
@@ -40,8 +48,8 @@ namespace ReceiptVoucher.Server.Controllers
 
         //    var user = await _userManager.Users.Where(x=>x.Id==Id).FirstOrDefaultAsync();
 
-          
-            
+
+
 
         //    if (user == null)
         //    {
@@ -56,16 +64,17 @@ namespace ReceiptVoucher.Server.Controllers
         //        Email = user.Email,
         //        BranchId = user.BranchId,
         //        UserName = user.UserName,
-               
+
 
         //    };
 
         //    return Ok(userViewModels);
-        
+
         //}
 
 
         [HttpGet]
+
         public async Task<IActionResult> GetUsersWithRoles()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -95,6 +104,47 @@ namespace ReceiptVoucher.Server.Controllers
         
 
         }
+
+
+        [HttpGet("GetUserDetails")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserViewModel>> GetUserDetails()
+        {
+            // Get the current user's ID and roles from the User property of the HttpContext
+            var userId = User.FindFirstValue("uid");
+            var roles = User.FindFirstValue(ClaimTypes.Role);
+
+            if (userId == null || roles == null)
+            {
+                return Unauthorized();
+            }
+
+            // Split the roles string into a list
+            var roleList = roles.Split(',').ToList();
+
+            // Query the database for the user using the Unit of Work
+            ApplicationUser userInDB = await _unitOfWork.Users.FindAsync(u => u.Id == userId);
+
+            if (userInDB == null)
+            {
+                return NotFound();
+            }
+
+            // Create the UserViewModel
+            var currentUser = new UserViewModel()
+            {
+                Id = userInDB.Id,
+                Email = userInDB.Email,
+                BranchId = userInDB.BranchId,
+                FirstName = userInDB.FirstName,
+                LastName = userInDB.LastName,
+                UserName = userInDB.UserName,
+                Roles = roleList  // Assign all roles to the UserViewModel
+            };
+
+            return Ok(currentUser);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> CreateUser(  CreateUserModel model)

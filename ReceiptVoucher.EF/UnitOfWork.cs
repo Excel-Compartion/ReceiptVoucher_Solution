@@ -1,5 +1,6 @@
 ﻿
 using ReceiptVoucher.Core.Entities;
+using ReceiptVoucher.Core.Identity;
 
 namespace ReceiptVoucher.EF
 {
@@ -14,6 +15,8 @@ namespace ReceiptVoucher.EF
         public IBranchRepository Branches { get; private set; }
 
         public IProjectRepository Projects { get; private set; }
+
+        public IBaseRepository<ApplicationUser> Users { get; private set; }
 
         public IBaseRepository<CompanyInfo> CompanyInfo { get; private set; }
 

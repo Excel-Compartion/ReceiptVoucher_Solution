@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using ReceiptVoucher.Client.Services;
 using ReceiptVoucher.Core.Consts;
+using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
 using ReceiptVoucher.Core.Models.ResponseModels;
@@ -74,42 +75,13 @@ namespace ReceiptVoucher.Client.Services
 
         public async Task<UserViewModel?> GetCurrentUserDetailsAsync()
         {
-            var authState = await _authenticationStateProvider?.GetAuthenticationStateAsync();
-            var user = authState?.User;
+            // New Implementation
 
-            if (user != null && user.Identity.IsAuthenticated)
-            {
-                var userId = user.FindFirstValue("uid");
+            UserViewModel? result = await _httpClient.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
 
-                string rolesString = user.FindFirstValue("roles");
-                string[] parsedRoles = rolesString.Split(',');
-
-                var userInDB = await _context.Users
-                   .Include(user => user.Branch)
-                   .SingleOrDefaultAsync(u => u.Id == userId);
-
-                if (userInDB != null)
-                {
+            return result;
 
 
-
-                    var currentUser = new UserViewModel()
-                    {
-                        Id = userInDB.Id,
-                        BranchId = userInDB.BranchId,
-                        Email = userInDB.Email,
-                        FirstName = userInDB.FirstName,
-                        LastName = userInDB.LastName,
-                        UserName = userInDB.UserName,
-                        Roles = parsedRoles.ToList()  // Assign all roles to the UserViewModel
-                    };
-
-                    return currentUser;
-                  
-                }
-            }
-
-            return null; // Return null if user is not authenticated or user is not found in DB
         }
 
     }

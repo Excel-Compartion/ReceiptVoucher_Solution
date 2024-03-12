@@ -7,6 +7,10 @@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 @inject IAuthService _IAuthservice
+@inject HttpClient Http
+@inject ISnackbar _Snackbar
+
+
 
 
 
@@ -173,12 +177,26 @@
     public string UserRole  = string.Empty;
     public UserViewModel currentUser { get; set; } = new();
 
+    private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+    {
+        try
+        {
+            var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+            return UserResponse;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null; // Or provide a default value
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState?.User;
 
-        if (user != null)
+        if (user != null && user.Identity.IsAuthenticated )
         {
             // User is authenticated
 
@@ -188,7 +206,7 @@
                 UserRole = roleClaim.Value;
             }
 
-            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+            currentUser = await GetCurrentUserDetailsAsync();
         }
 
         else
