@@ -1,8 +1,11 @@
 ﻿
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ReceiptVoucher.Client.Services;
 using ReceiptVoucher.Core.Consts;
@@ -11,6 +14,7 @@ using ReceiptVoucher.Core.Identity;
 using ReceiptVoucher.Core.Models.Dtos.Auth;
 using ReceiptVoucher.Core.Models.ResponseModels;
 using ReceiptVoucher.Core.Models.ViewModels.UserModels;
+using static System.Net.WebRequestMethods;
 
 namespace ReceiptVoucher.Client.Services
 {
@@ -22,6 +26,8 @@ namespace ReceiptVoucher.Client.Services
         private readonly NavigationManager _navigationManager;
         private readonly ISnackbar _snackbar;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILocalStorageService _localStorageService;
+
         public AuthService(HttpClient httpClient, ReceiptVoucherDbContext context , NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider, ISnackbar snackbar, UserManager<ApplicationUser> userManager)
         {
             _httpClient = httpClient;
@@ -73,16 +79,83 @@ namespace ReceiptVoucher.Client.Services
             }
         }
 
-        public async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+        public async Task<UserViewModel?> GetCurrentUserDetailsFromTokenAsync()
         {
             // New Implementation
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState?.User;
 
-            UserViewModel? result = await _httpClient.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+            if (user != null && user.Identity.IsAuthenticated)
+            {
+                // Extract claims directly from the authentication state
+                var userName = user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var email = user.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+                var userId = user.FindFirst("uid")?.Value; // Assuming "uid" claim is present
+                var firstName = user.FindFirstValue(JwtRegisteredClaimNames.GivenName);
+                var lastName = user.FindFirstValue(JwtRegisteredClaimNames.FamilyName);
+                var phoneNumber = user.FindFirst("PhoneNumber")?.Value;
+                var branchIdClaim = user.FindFirst("branchId")?.Value; // Assuming "branchId" claim is present
+                var isEnabled = bool.Parse(user.FindFirst("isEnabled")?.Value ?? "false"); // Assuming "isEnabled" claim is present
+                var roleClaim = user.FindFirst("roles");
 
-            return result;
+
+                // Parse branchId to int
+                int? branchId = null;
+                if (branchIdClaim != null)
+                {
+                    if (int.TryParse(branchIdClaim, out var parsedBranchId))
+                    {
+                        branchId = parsedBranchId;
+                    }
+                    else
+                    {
+                        // Handle parsing failure, e.g., assign a default value or log an error
+                    }
+                }
+
+
+
+                var currentUser = new UserViewModel
+                {
+                    UserName = userName ?? "Unknown",
+                    Email = email ?? "Unknown",
+                    Id = userId,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    BranchId = branchId,
+                    IsEnabled = isEnabled,
+                    Roles = new List<string>() { roleClaim.Value },
+                    //Mobile = phoneNumber
+                    
+                };
+
+                return currentUser;
+            }
+            else
+            {
+                // Handle non-authenticated scenario
+                //_logger.LogInformation("User is not authenticated.");
+                return null; // Or provide a default UserViewModel if needed
+            }
 
 
         }
 
+        public async Task<UserViewModel?> GetCurrentUserDetailsFromApiAsync()
+        {
+            try
+            {
+                string authToken = await _localStorageService.GetItemAsStringAsync("authToken");
+
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+                var UserResponse = await _httpClient.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+                return UserResponse;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null; // Or provide a default value
+            }
+        }
     }
 }

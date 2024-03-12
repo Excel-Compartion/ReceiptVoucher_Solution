@@ -209,18 +209,13 @@
     // }
 
 
-    // private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
-    // {
-    //     var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
-
-    //     return UserResponse;
-    // }
+    
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+            currentUser = await _IAuthservice.GetCurrentUserDetailsFromTokenAsync() ?? throw new Exception();
 
             if (currentUser != null)
             {
