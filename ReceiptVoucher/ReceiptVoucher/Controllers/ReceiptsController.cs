@@ -99,23 +99,16 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpPost("GetAllReceiptsWithGetDto")]
-        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllPurchases([FromBody] Pagination pagination)
+        [HttpPost("GetAllReceiptsWithGetDto/{UserBranchId}")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllReceiptsWithGetDto([FromBody] Pagination pagination,int? UserBranchId)
         {
             try
             {
-                //                IEnumerable<Receipt> items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
-                //                var receipts = (await _unitOfWork.Receipts.GetAllAsync()).Select(a => new GetReceiptDto 
-                //                { 
-                //Id=a.Id,
-                //BranchName = a.Branch.Name,
+                if (UserBranchId == 0)
+                    UserBranchId = null;
+               
 
-                //                }).ToList();
-
-
-                //                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
-
-                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination);
+                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination,UserBranchId: UserBranchId);
 
                 return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(items, "تم جلب العناصر بنجاح", null, true));
             }
@@ -160,6 +153,23 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             receipt.Number = Number;
+
+
+            // Get the last receipt and increment the number
+            var lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+            int ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+
+            var ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+
+            while (ReceiptIsExByReceiptBranchNum != null)
+            {
+                lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+                ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+            }
+
+            receipt.ReceiptBranchNumber = ReceiptBranchNum;
+
             receipt.Date = DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
             {

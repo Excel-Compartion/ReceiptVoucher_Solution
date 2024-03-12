@@ -94,7 +94,7 @@
     <RowTemplate>
         <MudTd DataLabel="رقم السند">
             @{
-                string BranchNumWithReceiptNum = context.BranchNumber + " - " + context.Number;
+                string BranchNumWithReceiptNum = context.BranchNumber + " - " + context.ReceiptBranchNumber;
             }
 
             @BranchNumWithReceiptNum
@@ -250,8 +250,9 @@
 
             pagination.NoPagination = true;
 
+            
 
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetAllReceiptsWithGetDto", pagination);
+            var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId??0}", pagination);
 
 
             BaseResponse<IEnumerable<GetReceiptDto>> content = await response.Content.ReadFromJsonAsync<BaseResponse<IEnumerable<GetReceiptDto>>>();
@@ -261,23 +262,10 @@
 
             if (content != null && content.Success)
             {
-                if (currentUser != null)
-                {
-
-                    if (role != null && role != RolesNames.Admin)
-                    {
-                        data = content.Data
-      .Where(x => x.BranchId == currentUser.BranchId)
-      .OrderByDescending(x => x.Number)
-      .ToList();
-
-                    }
-
-                    else
-                    {
-                        data = content.Data.OrderByDescending(x => x.Number);
-                    }
-                }
+                
+                        data = content.Data;
+                    
+                
             }
             else if (content != null)
             {

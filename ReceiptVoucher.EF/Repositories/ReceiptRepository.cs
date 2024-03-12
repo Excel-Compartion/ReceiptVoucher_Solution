@@ -33,6 +33,12 @@ namespace ReceiptVoucher.EF.Repositories
             return await _context.Receipts.OrderByDescending(r => r.Number).FirstOrDefaultAsync();
         }
 
+        public async Task<Receipt> GetLastReceiptWitheBranchAsync(int branchId)
+        {
+            return await _context.Receipts.Where(x=>x.BranchId== branchId).OrderByDescending(r => r.ReceiptBranchNumber).FirstOrDefaultAsync();
+        }
+
+
         public async Task<IEnumerable<GetReceiptDto>> GetFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
@@ -298,7 +304,7 @@ namespace ReceiptVoucher.EF.Repositories
         }
 
         public async Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
-           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true)
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true,int? UserBranchId=null)
         {
             IQueryable<Receipt> query = _context.Set<Receipt>().AsNoTracking();
 
@@ -307,13 +313,22 @@ namespace ReceiptVoucher.EF.Repositories
                 query = query.Where(criteria);
             }
 
+            if (UserBranchId != null)
+            {
+                query = query.Where(x=>x.BranchId==UserBranchId).OrderByDescending(o => o.ReceiptBranchNumber);
+
+               
+            }
+
+         
+                if (PageNumber.HasValue && PageSize.HasValue && NoPagination == false)
+                    query = query.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+            
+
+          
 
 
-            if (PageNumber.HasValue && PageSize.HasValue && NoPagination == false)
-                query = query.OrderByDescending(o => o.Number).Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
-
-
-            if (OrderByNumber)
+            if (OrderByNumber &&UserBranchId==null)
                 query = query.OrderByDescending(o => o.Number);
 
 
@@ -343,7 +358,9 @@ namespace ReceiptVoucher.EF.Repositories
                 ReceivedFrom = a.ReceivedFrom,
                 BranchId = a.BranchId,
                 ProjectId = a.ProjectId,
-                SubProjectId = a.SubProjectId
+                SubProjectId = a.SubProjectId,
+                ReceiptBranchNumber=a.ReceiptBranchNumber
+                
             })
                 .ToListAsync();
 

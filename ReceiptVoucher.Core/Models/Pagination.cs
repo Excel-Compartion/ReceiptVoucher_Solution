@@ -13,5 +13,7 @@ namespace ReceiptVoucher.Core.Models
         public string Search { get; set; } = string.Empty;
 
         public bool NoPagination { get; set; } 
+
+ 
     }
 }
