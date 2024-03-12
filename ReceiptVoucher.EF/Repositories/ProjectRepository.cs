@@ -11,10 +11,12 @@ namespace ReceiptVoucher.EF.Repositories
     public class ProjectRepository : BaseRepository<Project>, IProjectRepository
     {
         private readonly ReceiptVoucherDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProjectRepository(ReceiptVoucherDbContext context) : base(context)
+        public ProjectRepository(ReceiptVoucherDbContext context , IMapper mapper) : base(context ,mapper )
         {
             _context = context;
+            this._mapper = mapper;
         }
 
         public async Task<bool> DeleteProjectAsync(int id)

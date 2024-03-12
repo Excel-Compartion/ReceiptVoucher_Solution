@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ReceiptVoucher.Core.Enums;
+using ReceiptVoucher.Core.Identity;
+using ReceiptVoucher.Core.Models.ViewModels.UserModels;
 
 namespace ReceiptVoucher.Server.AutoMapper
 {
@@ -50,6 +52,17 @@ namespace ReceiptVoucher.Server.AutoMapper
 
             CreateMap<ReceiptWithRelatedDataDto, GetReceiptDto>()
               .ReverseMap();
+
+
+            //========== User Mapping Config Strat =============
+
+            CreateMap<ApplicationUser, UserViewModel>()
+            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => (src.Branch != null ? src.Branch.Name : "ليس مرتبط بمكتب")))
+            //.ForMember(dest => dest.BranchAccountNumber, opt => opt.(src => (src.Branch != null ? src.Branch.AccountNumber : "No AccountNumber")))
+
+            .ForMember(dest => dest.Mobile, opt => opt.MapFrom(src => src.PhoneNumber)).ReverseMap();
+
+            //========== User Mapping Config End=============
 
 
         }

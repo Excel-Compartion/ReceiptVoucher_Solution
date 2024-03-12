@@ -16,11 +16,11 @@ namespace ReceiptVoucher.EF.Repositories
     public class ReceiptRepository : BaseRepository<Receipt>, IReceiptRepository
     {
         private readonly ReceiptVoucherDbContext _context;
-        private readonly IMapper mapper;
-        public ReceiptRepository(ReceiptVoucherDbContext context, IMapper _mapper) : base(context)
+        private readonly IMapper _mapper;
+        public ReceiptRepository(ReceiptVoucherDbContext context, IMapper mapper) : base(context , mapper)
         {
             _context = context;
-            mapper = _mapper;
+            this._mapper = mapper;
         }
 
         public async Task<IEnumerable<Receipt>> GetAllReceiptAsync()

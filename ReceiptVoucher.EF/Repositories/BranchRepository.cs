@@ -13,9 +13,12 @@ namespace ReceiptVoucher.EF.Repositories
     public class BranchRepository : BaseRepository<Branch> , IBranchRepository
     {
         private readonly ReceiptVoucherDbContext _context;
-        public BranchRepository(ReceiptVoucherDbContext context) : base(context) 
+        private readonly IMapper _mapper;
+
+        public BranchRepository(ReceiptVoucherDbContext context, IMapper mapper) : base(context , mapper) 
         {
             _context = context;
+            this._mapper = mapper;
         }
 
        

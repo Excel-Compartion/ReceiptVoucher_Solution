@@ -12,9 +12,12 @@ namespace ReceiptVoucher.EF.Repositories
     public class SubProjectRepository : BaseRepository<SubProject>, ISubProjectRepository
     {
         private readonly ReceiptVoucherDbContext _context;
-        public SubProjectRepository(ReceiptVoucherDbContext context) : base(context)
+        private readonly IMapper _mapper;
+
+        public SubProjectRepository(ReceiptVoucherDbContext context , IMapper mapper) : base(context , mapper)
         {
             _context = context;
+            this._mapper = mapper;
         }
     
         public async Task<IEnumerable<SubProject>> GetAllSubProjectAsync()

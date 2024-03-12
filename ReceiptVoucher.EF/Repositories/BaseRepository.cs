@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using ReceiptVoucher.Core.Consts;
 using ReceiptVoucher.Core.Entities;
 using ReceiptVoucher.Core.Interfaces;
@@ -14,10 +15,12 @@ namespace ReceiptVoucher.EF.Repositories
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected ReceiptVoucherDbContext _context;
+        private readonly IMapper _mapper;
 
-        public BaseRepository(ReceiptVoucherDbContext context)
+        public BaseRepository(ReceiptVoucherDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -128,6 +131,17 @@ namespace ReceiptVoucher.EF.Repositories
 
             return await query.ToListAsync();
         }
+
+
+        public async Task<IEnumerable<TDestination>> FindAllAsync<TDestination>(Expression<Func<T, bool>> criteria)
+        {
+            return await _context.Set<T>()
+                .Where(criteria)
+                .ProjectTo<TDestination>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+        //================================================================
+
 
 
         public async Task<T> AddOneAsync(T entity)

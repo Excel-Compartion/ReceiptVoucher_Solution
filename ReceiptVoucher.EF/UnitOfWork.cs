@@ -29,11 +29,12 @@ namespace ReceiptVoucher.EF
         {
             _context = context;
             mapper = _mapper;
-            Branches = new BranchRepository(context);
-            Projects = new ProjectRepository(context);
-            CompanyInfo = new BaseRepository<CompanyInfo>(context);
+            Branches = new BranchRepository(context, mapper);
+            Projects = new ProjectRepository(context, mapper);
+            Users = new BaseRepository<ApplicationUser>(context, mapper);
+            CompanyInfo = new BaseRepository<CompanyInfo>(context, mapper);
             Receipts = new ReceiptRepository(context, mapper);  // new 
-            SubProjects = new SubProjectRepository(context);
+            SubProjects = new SubProjectRepository(context, mapper);
 
         }
 
