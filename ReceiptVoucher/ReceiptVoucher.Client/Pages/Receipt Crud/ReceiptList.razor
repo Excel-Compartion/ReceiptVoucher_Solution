@@ -282,20 +282,9 @@
             {
                 if (currentUser != null)
                 {
-
-                    if (role != null && role != RolesNames.Admin)
-                    {
-                        data = content.Data
-                        .Where(x => x.BranchId == currentUser.BranchId)
-                        .OrderByDescending(x => x.Number)
-                        .ToList();
-
-                    }
-
-                    else
-                    {
-                        data = content.Data.OrderByDescending(x => x.Number);
-                    }
+                   
+                        data = content.Data;
+                   
                 }
             }
             else if (content != null)
