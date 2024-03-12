@@ -92,7 +92,14 @@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="رقم السند">@context.Number</MudTd>
+        <MudTd DataLabel="رقم السند">
+            @{
+                string BranchNumWithReceiptNum = context.BranchNumber + " - " + context.Number;
+            }
+
+            @BranchNumWithReceiptNum
+
+        </MudTd>
         <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
         <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>

@@ -31,6 +31,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
         [Required(ErrorMessage = "يرجى ادخال رقم نقطة البيع ")]
         public int AccountNumber { get; set; }
 
+        [Required(ErrorMessage = "يرجى ادخال رقم المكتب ")]
+        public int BranchNumber { get; set; }
 
     }
 
@@ -63,6 +65,9 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
         [Required(ErrorMessage = "يرجى ادخال رقم نقطة البيع ")]
         public int AccountNumber { get; set; }
+
+        [Required(ErrorMessage = "يرجى ادخال رقم المكتب ")]
+        public int BranchNumber { get; set; }
 
     }
 }

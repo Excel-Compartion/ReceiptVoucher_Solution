@@ -298,7 +298,7 @@ namespace ReceiptVoucher.EF.Repositories
         }
 
         public async Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
-           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false)
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true)
         {
             IQueryable<Receipt> query = _context.Set<Receipt>().AsNoTracking();
 
@@ -313,13 +313,17 @@ namespace ReceiptVoucher.EF.Repositories
                 query = query.OrderByDescending(o => o.Number).Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
 
 
+            if (OrderByNumber)
+                query = query.OrderByDescending(o => o.Number);
 
-            var Items = await query.OrderByDescending(o => o.Number).Select(a => new GetReceiptDto
+
+                var Items = await query.Select(a => new GetReceiptDto
             {
                 Id = a.Id,
                 AccountNumber = a.AccountNumber,
                 Bank = a.Bank,
                 BranchName = a.Branch != null ? a.Branch.Name : null,
+                BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                 CheckDate = a.CheckDate,
                 Code = a.Code,
                 Date = a.Date,

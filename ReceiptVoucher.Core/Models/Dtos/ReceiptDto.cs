@@ -33,6 +33,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
         public string? BranchName { get; set; }
 
+        public int? BranchNumber { get; set; }
+
         [Range(1, int.MaxValue, ErrorMessage = "--- يرجى اختيار اسم المشروع الرئيسي ---")]
         [Column("ProjectId")]
         public int ProjectId { get; set; }   // Foreign Key
@@ -88,6 +90,8 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
 
         public int Number { get; set; }
+
+
     }
 
     public class PostReceiptDto

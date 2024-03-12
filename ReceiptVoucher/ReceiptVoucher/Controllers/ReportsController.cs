@@ -40,7 +40,7 @@ namespace ReceiptVoucher.Server.Controllers
                 BranchesNames[i] = branch[i].Name;
             }
 
-            var receipt = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination:true);
+            var receipt = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: "", criteria: null, PageSize: null, PageNumber: null, NoPagination:true,OrderByNumber:false);
 
             double[] Individual = new double[branchCount];
             double[] Company = new double[branchCount];
