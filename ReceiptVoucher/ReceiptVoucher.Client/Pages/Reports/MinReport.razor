@@ -16,7 +16,9 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IMapper _Mapper
-@inject IAuthService _IAuthService
+@inject UserManager<ApplicationUser> _UserManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IAuthService _IAuthservice
 
 
 <PageTitle>Makarim</PageTitle>
@@ -342,6 +344,7 @@
 
     ReceiptWithFilter_VM receiptWithFilter_VM = new ReceiptWithFilter_VM();
 
+    public UserViewModel currentUser { get; set; } = new();
 
     void UnCheckedChange()
     {
@@ -398,6 +401,32 @@
     
     protected override async Task OnInitializedAsync()
     {
+
+        try
+        {
+            currentUser = await _IAuthservice.GetCurrentUserDetailsFromTokenAsync() ?? throw new Exception();
+
+            if (currentUser != null)
+            {
+                UserBranchId = currentUser.BranchId;
+               
+
+                var roles = currentUser.Roles.ToList();
+
+            
+            }
+            else
+            {
+                // User is not authenticated, redirect to login
+                NavigationManager.NavigateTo("/Login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+
         try
         {
             var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
@@ -522,7 +551,7 @@
         if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter == false ))
         {
 
-            receiptWithFilter_VM.UserBranchId = null;
+            receiptWithFilter_VM.UserBranchId = currentUser.BranchId;
 
             // إرسال البيانات إلى واجهة برمجة التطبيقات
             var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", receiptWithFilter_VM);
@@ -568,7 +597,7 @@
 
             receiptWithFilter_VM.NoPagination = true;
 
-            receiptWithFilter_VM.UserBranchId = null;
+            receiptWithFilter_VM.UserBranchId = currentUser.BranchId;
 
             var response = await Http.PostAsJsonAsync("api/Receipts/GetReportWithFilteredData", receiptWithFilter_VM);
             if (response.IsSuccessStatusCode)
