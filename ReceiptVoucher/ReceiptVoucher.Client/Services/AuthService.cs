@@ -125,8 +125,8 @@ namespace ReceiptVoucher.Client.Services
                     BranchId = branchId,
                     IsEnabled = isEnabled,
                     Roles = new List<string>() { roleClaim.Value },
-                    //Mobile = phoneNumber
-                    
+                    Mobile = phoneNumber
+
                 };
 
                 return currentUser;
@@ -145,17 +145,27 @@ namespace ReceiptVoucher.Client.Services
         {
             try
             {
-                string authToken = await _localStorageService.GetItemAsStringAsync("authToken");
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState?.User;
 
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
-                var UserResponse = await _httpClient.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
-                return UserResponse;
+                if (user != null)
+                {
+                    var userId = user.FindFirstValue("uid");
+
+                    var UserResponse = await _httpClient.GetFromJsonAsync<BaseResponse<UserViewModel>>($"api/users/GetUserDetails/{userId}");
+
+                    if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
+                    {
+                        return UserResponse.Data;
+                    }
+                }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null; // Or provide a default value
             }
+
+            return null;
         }
     }
 }

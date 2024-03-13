@@ -35,28 +35,28 @@
     <img src="Images\avatar.webp" alt="Avatar" />
     <MudGrid>
         <MudItem xs="12" sm="6">
-            <h4 class="">الاسم: <span>@ApplicationUser.FirstName @ApplicationUser.LastName</span></h4>
+            <h4 class="">الاسم: <span>@UserViewModel.FirstName @UserViewModel.LastName</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">المكتب: <span>@(ApplicationUser.BranchName ?? "لم يتم تحديد المكتب")</span></h4>
+            <h4 class="">المكتب: <span>@(UserViewModel.BranchName ?? "لم يتم تحديد المكتب")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">رقم الجوال: <span>@(ApplicationUser.Mobile ?? "لم يتم تحديد رقم الهاتف")</span></h4>
+            <h4 class="">رقم الجوال: <span>@(UserViewModel.Mobile ?? "لم يتم تحديد رقم الهاتف")</span></h4>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <h4 class="">الصلاحيه: <span>@userRole</span></h4>
+            <h4 class="">الصلاحيه: <span>@string.Join("," , UserViewModel.Roles ?? Enumerable.Empty<string>())</span></h4>
         </MudItem>
 
-        @if (ApplicationUser.BranchId is not null)
+        @if (UserViewModel.BranchId is not null)
         {
             <MudItem xs="12" sm="6">
-                <h4 class=""> رقم نقطة البيع : <span>@(ApplicationUser.BranchAccountNumber)</span></h4>
+                <h4 class=""> رقم نقطة البيع : <span>@(UserViewModel.BranchAccountNumber)</span></h4>
             </MudItem>
 
         }
 
         <MudItem xs="12" Class="text-center">
-            <h4 class="">البريد الإلكتروني: <span>@ApplicationUser.Email</span></h4>
+            <h4 class="">البريد الإلكتروني: <span>@UserViewModel.Email</span></h4>
         </MudItem>
         <MudItem xs="12">
             <MudButton Class="custom-btn mx-auto" Variant="Variant.Filled" Color="Color.Primary" OnClick="ToggleContainerPass">
@@ -101,7 +101,7 @@
 
 
 @code {
-    public UserViewModel ApplicationUser { get; set; } = new();
+    public UserViewModel UserViewModel { get; set; } = new();
 
     UserChangePassword request = new();
 
@@ -120,33 +120,44 @@
     {
         try
         {
-            var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState?.User;
+            UserViewModel = await _IAuthService.GetCurrentUserDetailsFromApiAsync() ;
 
-            if (user != null)
-            {
-                var userId = user.FindFirstValue("uid");
-
-                var roleClaim = user.FindFirst("roles");
-                if (roleClaim != null)
-                {
-                    userRole = roleClaim.Value;
-                }
-
-                var UserResponse = await _Http.GetFromJsonAsync<BaseResponse<UserViewModel>>($"api/users/GetUserDetails/{userId}");
-
-                if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
-                {
-                    ApplicationUser = UserResponse.Data;
-                }
-
-            }
         }
         catch (Exception ex)
         {
-            
             Console.WriteLine(ex.Message);
         }
+
+        // ----------------
+        // try
+        // {
+        //     var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //     var user = authState?.User;
+
+        //     if (user != null)
+        //     {
+        //         var userId = user.FindFirstValue("uid");
+
+        //         var roleClaim = user.FindFirst("roles");
+        //         if (roleClaim != null)
+        //         {
+        //             userRole = roleClaim.Value;
+        //         }
+
+        //         var UserResponse = await _Http.GetFromJsonAsync<BaseResponse<UserViewModel>>($"api/users/GetUserDetails/{userId}");
+
+        //         if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
+        //         {
+        //             UserViewModel = UserResponse.Data;
+        //         }
+
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+            
+        //     Console.WriteLine(ex.Message);
+        // }
        
 
     }
@@ -158,26 +169,4 @@
     {
         showContainerPass = !showContainerPass;
     }
-
-    // private async Task<UserViewModel?> GetCurrentUserDetailsFromApiAsync()
-    // {
-    //     try
-    //     {
-    //         var userId = user.FindFirstValue("uid");
-
-    //         var UserResponse = await _Http.GetFromJsonAsync<BaseResponse<UserViewModel>>($"api/users/GetUserDetails/{userid}");
-
-    //         if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
-    //         {
-    //             return UserResponse.Data;
-    //         }
-
-    //         return null;
-    //     }
-    //     catch (HttpRequestException ex)
-    //     {
-    //         Console.WriteLine(ex.Message);
-    //         return null; // Or provide a default value
-    //     }
-    // }
 }

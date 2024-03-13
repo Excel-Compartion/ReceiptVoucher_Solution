@@ -13,7 +13,6 @@
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IAuthService _IAuthservice
 @inject IMapper _Mapper
@@ -498,11 +497,11 @@
         try
         {
 
-            var UserName = _UserManager.Users.Where(x => x.Id == GetReceiptDto.ReceivedBy).FirstOrDefault();
-            if (UserName != null)
+            var UserViewModel = await _IAuthservice.GetCurrentUserDetailsFromApiAsync();
+            if (UserViewModel != null)
             {
-                ReceivedByName = UserName.FirstName + " " + UserName.LastName;
-                ReceivedBy = UserName.Id;
+                ReceivedByName = UserViewModel.FirstName + " " + UserViewModel.LastName;
+                ReceivedBy = UserViewModel.Id;
             }
 
 
