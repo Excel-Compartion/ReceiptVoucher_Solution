@@ -106,43 +106,82 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpGet("GetUserDetails")]
+        [HttpGet("GetUserDetails/{userId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserViewModel>> GetUserDetails()
+        public async Task<ActionResult<BaseResponse<UserViewModel>>> GetUserDetails(string userId)
         {
-            // Get the current user's ID and roles from the User property of the HttpContext
-            var userId = User.FindFirstValue("uid");
-            var roles = User.FindFirstValue(ClaimTypes.Role);
 
-            if (userId == null || roles == null)
+
+
+            try
             {
-                return Unauthorized();
+                // Query the database for the user
+                var applicationUser = await _unitOfWork.Users.FindAsync(u => u.Id == userId, [nameof(Branch)]);
+
+                if (applicationUser == null)
+                {
+                    return NotFound();
+                }
+
+                var userVM = new UserViewModel
+                {
+                    Id = applicationUser.Id,
+                    UserName = applicationUser.UserName,
+                    FirstName = applicationUser.FirstName,
+                    LastName = applicationUser.LastName,
+                    Mobile = applicationUser.PhoneNumber,
+                    Email = applicationUser.Email,
+                    BranchId = applicationUser.BranchId,
+                    BranchName = applicationUser.Branch != null ? applicationUser.Branch.Name : "ليس مرتبط بمكتب",
+                    BranchAccountNumber = applicationUser.Branch != null ? applicationUser.Branch.AccountNumber : 0,
+                    IsEnabled = applicationUser.IsEnabled,
+                    Roles = _userManager.GetRolesAsync(applicationUser).Result
+                };
+
+
+
+
+                return Ok( new BaseResponse<UserViewModel>(userVM , " تم جلب بيانات المستخدم", null , true ) );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BaseResponse<UserViewModel>(null, ex.Message , null, false));
+
+
             }
 
-            // Split the roles string into a list
-            var roleList = roles.Split(',').ToList();
 
-            // Query the database for the user using the Unit of Work
-            ApplicationUser userInDB = await _unitOfWork.Users.FindAsync(u => u.Id == userId);
 
-            if (userInDB == null)
-            {
-                return NotFound();
-            }
+            //// Get the current user's ID and roles from the User property of the HttpContext
+            //var userId = User.FindFirstValue("uid");
 
-            // Create the UserViewModel
-            var currentUser = new UserViewModel()
-            {
-                Id = userInDB.Id,
-                Email = userInDB.Email,
-                BranchId = userInDB.BranchId,
-                FirstName = userInDB.FirstName,
-                LastName = userInDB.LastName,
-                UserName = userInDB.UserName,
-                Roles = roleList  // Assign all roles to the UserViewModel
-            };
+            //var roles = User.FindFirstValue(ClaimTypes.Role);
+            //// Split the roles string into a list
+            //var roleList = roles?.Split(',').ToList();
+            //userVM.Roles = roleList;
 
-            return Ok(currentUser);
+            ////// Query the database for the user using the Unit of Work
+            ////ApplicationUser userInDB = await _unitOfWork.Users.FindAsync(u => u.Id == userId);
+
+            ////if (userInDB == null)
+            ////{
+            ////    return NotFound();
+            ////}
+
+            ////// Create the UserViewModel
+            ////var currentUser = new UserViewModel()
+            ////{
+            ////    Id = userInDB.Id,
+            ////    Email = userInDB.Email,
+            ////    BranchId = userInDB.BranchId,
+            ////    FirstName = userInDB.FirstName,
+            ////    LastName = userInDB.LastName,
+            ////    UserName = userInDB.UserName,
+            ////    BranchName
+            ////    Roles = roleList  // Assign all roles to the UserViewModel
+            ////};
+
+            //return Ok(userVM);
         }
 
 

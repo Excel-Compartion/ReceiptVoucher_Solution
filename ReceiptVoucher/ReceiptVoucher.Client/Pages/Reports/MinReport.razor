@@ -1,19 +1,24 @@
 ﻿@page "/MinReports"
 @rendermode InteractiveAuto
 @using System.Net.Http.Json
+@using AutoMapper
 @using Microsoft.AspNetCore.Identity
 @using ReceiptVoucher.Client.Pages.Receipt_Crud
 @using System.Security.Claims
 @using ReceiptVoucher.Core.Identity
+@using ReceiptVoucher.Core.Models
 @using ReceiptVoucher.Core.Models.ResponseModels
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IMapper _Mapper
+@inject UserManager<ApplicationUser> _UserManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IAuthService _IAuthservice
 
 
 <PageTitle>Makarim</PageTitle>
@@ -109,7 +114,7 @@
                     {
                         if (SelectProject.Count() != 0)
                         {
-                            if (SelectProject.Contains(subProjects.Project.Name))
+                            if (SelectProject.Contains(subProjects.ProjectName))
                             {
                                 <MudSelectItem T="string" Value="@subProjects.Name">@subProjects.Name</MudSelectItem>
                             }
@@ -152,8 +157,7 @@
 
 
     @{
-        if (UserBranchId == null)
-        {
+        
             <MudSelect SelectAll="true" SelectAllText="اختيار الكل" Style="width:100%" T="string" Label="المكاتب" MultiSelection="true" @bind-SelectedValues="SelectBranchId">
 
 
@@ -164,7 +168,7 @@
 
 
             </MudSelect>
-        }
+        
     }
 
     <br />
@@ -209,7 +213,7 @@
 
 
 <br />
-<MudTable ServerData="@(new Func<TableState, Task<TableData<Receipt>>>(ServerReload))"
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetReceiptDto>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
         <MudButton Class="custom-btn" OnClick="SendFilterData" Variant="Variant.Filled" Color="Color.Primary">
@@ -231,43 +235,50 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="id_field" T="Receipt">رقم السند</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="Receipt">اسم المودع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="mobile_field" T="Receipt">رقم الجوال</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="Receipt">جهه المنح</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="Receipt">اجمالي المبلغ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="GetReceiptDto">رقم السند</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="receivedFrom_field" T="GetReceiptDto">اسم المودع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="mobile_field" T="GetReceiptDto">رقم الجوال</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="grantDestinations_field" T="GetReceiptDto">جهه المنح</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="totalAmount_field" T="GetReceiptDto">اجمالي المبلغ</MudTableSortLabel></MudTh>
 
         @{
-            if (UserBranchId == null)
-            {
-                <MudTh><MudTableSortLabel SortLabel="Branch_field" T="Receipt">المكتب</MudTableSortLabel></MudTh>
+          
+            
+                <MudTh><MudTableSortLabel SortLabel="Branch_field" T="GetReceiptDto">المكتب</MudTableSortLabel></MudTh>
 
-            }
+            
         }
-        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="Receipt">المشروع الفرعي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Date_field" T="Receipt">التاريخ</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="Receipt">نوع الدفع</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="Receipt">الاجراءت</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="GetReceiptDto">المشروع الفرعي</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="GetReceiptDto">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="GetReceiptDto">نوع الدفع</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Number</MudTd>
+        <MudTd DataLabel="رقم السند">
+            @{
+                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+            }
+
+            @BranchNumWithReceiptNum
+
+        </MudTd>
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="رقم الجوال">@context.Mobile</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
             <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
 
-            @if (UserBranchId == null)
-        {
-            <MudTd DataLabel="المكتب">@context.Branch.Name</MudTd>
-        }
+            
+        
+            <MudTd DataLabel="المكتب">@context.BranchName</MudTd>
+        
 
-        <MudTd DataLabel="المشروع الفرعي">@context.SubProject.Name</MudTd>
+        <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
             <MudTd DataLabel="التاريخ">@context.Date</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
                     <MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Outlined" @onclick="@(() => OpenDetailsDialog(context))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
-                    <MudButton Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" @onclick="()=>PrintReceipt(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
+                    <MudButton Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" @onclick="()=>PrintGetReceiptDto(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
                 </MudButtonGroup>
             </MudTd>
         </RowTemplate>
@@ -289,7 +300,7 @@
 
 
 @code {
-    private MudTable<Receipt>? table;
+    private MudTable<GetReceiptDto>? table;
     private string? searchString;
     private DateTime? selectedDate = DateTime.Now;
     private DateTime? selectedMonth1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -303,15 +314,15 @@
 
 
 
-    public List<Branch> Branches { get; set; } = new List<Branch>();
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
 
     // SubProject Select
-    private List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+    private List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
 
     private IEnumerable<string> SelectSubProject { get; set; } = new List<string>();
 
 
-    private List<Project> Projects { get; set; } = new List<Project>();
+    private List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
 
     private IEnumerable<string> SelectProject { get; set; } = new List<string>();
 
@@ -327,9 +338,13 @@
 
     private bool isUnChecked = false;
 
+    public int? UserBranchId { get; set; }
+
     private List<string> SelectSubProjectList = new List<string>();
 
-    public int? UserBranchId { get; set; } 
+    ReceiptWithFilter_VM receiptWithFilter_VM = new ReceiptWithFilter_VM();
+
+    public UserViewModel currentUser { get; set; } = new();
 
     void UnCheckedChange()
     {
@@ -345,7 +360,7 @@
                 {
                     var SubProject = SubProjects.Where(x => x.Name == selectSubProject).FirstOrDefault();
 
-                    if (SelectProject.Contains(SubProject.Project.Name))
+                    if (SelectProject.Contains(SubProject.ProjectName))
                     {
                         SelectSubProjectList.Add(SubProject.Name);
                     }
@@ -372,7 +387,7 @@
 
 
 
-    void PrintReceipt(string code)
+    void PrintGetReceiptDto(string code)
     {
         var url = $"RP/{code}";
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
@@ -382,58 +397,39 @@
 
 
 
-    public UserViewModel ApplicationUser { get; set; } = new();
 
-    private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
-    {
-        try
-        {
-            var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
-            return UserResponse;
-        }
-        catch (HttpRequestException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return null; // Or provide a default value
-        }
-    }
+    
     protected override async Task OnInitializedAsync()
     {
+
         try
         {
+            currentUser = await _IAuthservice.GetCurrentUserDetailsFromTokenAsync() ?? throw new Exception();
 
-            //-------------------------
-
-            var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState?.User;
-
-            if (user != null)
+            if (currentUser != null)
             {
-                var userId = user.FindFirstValue("uid");
+                UserBranchId = currentUser.BranchId;
+               
 
+                var roles = currentUser.Roles.ToList();
 
-                ApplicationUser = await GetCurrentUserDetailsAsync();
+            
             }
-
-            UserBranchId = ApplicationUser.BranchId;
-
-            //-------------------------
-            RadioDateType = Day;
+            else
+            {
+                // User is not authenticated, redirect to login
+                NavigationManager.NavigateTo("/Login");
+            }
         }
-        catch (Exception ex )
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
 
 
-
-
-
-
-
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
@@ -446,7 +442,7 @@
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
@@ -459,7 +455,7 @@
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
@@ -471,7 +467,7 @@
         catch { }
 
 
-        await SendFilterData();
+        // await SendFilterData();
 
 
     }
@@ -506,54 +502,59 @@
 
 
 
-    private FilterData filterData = new FilterData();
 
-    private List<Receipt> data = new List<Receipt>();
+
+    private List<GetReceiptDto> data = new List<GetReceiptDto>();
+
+
+
 
     private async Task SendFilterData()
     {
 
 
 
-
         // جمع بيانات الفلترة
-        filterData.RadioDateType = RadioDateType;
+        receiptWithFilter_VM.RadioDateType = RadioDateType;
 
 
 
-        filterData.SelectedDate = DateOnly.FromDateTime(selectedDate.Value);
-        filterData.SelectedMonth1 = DateOnly.FromDateTime(selectedMonth1.Value);
-        filterData.SelectedMonth2 = DateOnly.FromDateTime(selectedMonth2.Value);
-        filterData.SelectProject = SelectProject.ToList();
-        filterData.SelectSubProject = SelectSubProject.ToList();
-        filterData.SelectBranchId = SelectBranchId.ToList();
-        filterData.SelectBranchId = SelectBranchId.ToList();
-        filterData.SelectGrantDestinations = SelectGrantDestinations.ToList();
-        filterData.SelectPaymentTypes = SelectPaymentTypes.ToList();
-        filterData.UserBranchId = UserBranchId;
-
-
-        bool IsFilter = filterData.SelectGrantDestinations.Count > 0
-       || filterData.SelectPaymentTypes.Count > 0
-       || filterData.SelectProject.Count > 0
-       || filterData.SelectSubProject.Count > 0
-       || filterData.SelectBranchId.Count > 0;
+        receiptWithFilter_VM.SelectedDate = DateOnly.FromDateTime(selectedDate.Value);
+        receiptWithFilter_VM.SelectedMonth1 = DateOnly.FromDateTime(selectedMonth1.Value);
+        receiptWithFilter_VM.SelectedMonth2 = DateOnly.FromDateTime(selectedMonth2.Value);
+        receiptWithFilter_VM.SelectProject = SelectProject.ToList();
+        receiptWithFilter_VM.SelectSubProject = SelectSubProject.ToList();
+        receiptWithFilter_VM.SelectBranchId = SelectBranchId.ToList();
+        receiptWithFilter_VM.SelectBranchId = SelectBranchId.ToList();
+        receiptWithFilter_VM.SelectGrantDestinations = SelectGrantDestinations.ToList();
+        receiptWithFilter_VM.SelectPaymentTypes = SelectPaymentTypes.ToList();
 
 
 
-
-        bool IsFilterItemsAllSelected = filterData.SelectGrantDestinations.Count > 0
-      && filterData.SelectPaymentTypes.Count > 0
-      && filterData.SelectProject.Count > 0
-      && filterData.SelectSubProject.Count > 0
-      && (filterData.SelectBranchId.Count > 0 || UserBranchId != null);
-
+        bool IsFilter = receiptWithFilter_VM.SelectGrantDestinations.Count > 0
+       || receiptWithFilter_VM.SelectPaymentTypes.Count > 0
+       || receiptWithFilter_VM.SelectProject.Count > 0
+       || receiptWithFilter_VM.SelectSubProject.Count > 0
+       || receiptWithFilter_VM.SelectBranchId.Count > 0;
 
 
-        if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter == false && UserBranchId != null))
+
+
+        bool IsFilterItemsAllSelected = receiptWithFilter_VM.SelectGrantDestinations.Count > 0
+      && receiptWithFilter_VM.SelectPaymentTypes.Count > 0
+      && receiptWithFilter_VM.SelectProject.Count > 0
+      && receiptWithFilter_VM.SelectSubProject.Count > 0
+      && receiptWithFilter_VM.SelectBranchId.Count > 0;
+
+
+
+        if (((IsFilter == false && IsFilterItemsAllSelected == false) || IsFilterItemsAllSelected) || (IsFilter == false ))
         {
+
+            receiptWithFilter_VM.UserBranchId = currentUser.BranchId;
+
             // إرسال البيانات إلى واجهة برمجة التطبيقات
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", filterData);
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetFilteredData", receiptWithFilter_VM);
 
             // التحقق من الاستجابة
             if (response.IsSuccessStatusCode)
@@ -561,11 +562,14 @@
 
                 try
                 {
+
                     // تحويل البيانات المرتجعة إلى قائمة الإيصالات
-                    var receipts = await response.Content.ReadFromJsonAsync<List<Receipt>>();
+                    var GetReceiptDtos = await response.Content.ReadFromJsonAsync<List<GetReceiptDto>>();
 
 
-                    if (receipts != null) { data = receipts.OrderByDescending(x => x.Number).ToList(); }
+                    if (GetReceiptDtos != null && receiptWithFilter_VM.UserBranchId==null) { data = GetReceiptDtos.OrderByDescending(x => x.Number).ToList(); }
+
+                    else if (GetReceiptDtos != null && receiptWithFilter_VM.UserBranchId != null) { data = GetReceiptDtos.OrderByDescending(x => x.ReceiptBranchNumber).ToList(); }
 
                     if (table != null) { await table.ReloadServerData(); }
 
@@ -589,7 +593,13 @@
     {
         if (data != null && data.Count() != 0)
         {
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetReportWithFilteredData", filterData);
+            // FilterData filterData = _Mapper.Map<FilterData>(receiptWithFilter_VM);
+
+            receiptWithFilter_VM.NoPagination = true;
+
+            receiptWithFilter_VM.UserBranchId = currentUser.BranchId;
+
+            var response = await Http.PostAsJsonAsync("api/Receipts/GetReportWithFilteredData", receiptWithFilter_VM);
             if (response.IsSuccessStatusCode)
             {
                 var fileBytes = await response.Content.ReadAsByteArrayAsync();
@@ -608,24 +618,32 @@
     }
 
 
-    private async Task<TableData<Receipt>> ServerReload(TableState state)
+    private async Task<TableData<GetReceiptDto>> ServerReload(TableState state)
     {
 
-        data = data.Where(receipt =>
+        receiptWithFilter_VM.PageNumber = state.Page + 1;
+
+        receiptWithFilter_VM.PageSize = state.PageSize;
+
+        receiptWithFilter_VM.Search = searchString ?? "";
+
+        receiptWithFilter_VM.NoPagination = true;
+
+        data = data.Where(GetReceiptDto =>
       {
-      if (string.IsNullOrWhiteSpace(searchString))
-          return true;
-      if (receipt.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-          return true;
-      if (receipt.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+          if (string.IsNullOrWhiteSpace(searchString))
               return true;
-      if ($"{receipt.Number}".Contains(searchString))
-          return true;
-      if ($"{receipt.Mobile}".Contains(searchString))
-          return true;
-      if (receipt.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
-          return true;
-      return false;
+          if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+              return true;
+          if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+              return true;
+          if ($"{GetReceiptDto.Number}".Contains(searchString))
+              return true;
+          if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+              return true;
+          if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+              return true;
+          return false;
       }).ToList();
 
 
@@ -634,7 +652,15 @@
         switch (state.SortLabel)
         {
             case "id_field":
-                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Id).ToList() : data.OrderByDescending(r => r.Id).ToList();
+                if (UserBranchId == null)
+                {
+                    data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Number).ToList() : data.OrderByDescending(r => r.Number).ToList();
+
+                }
+                else
+                {
+                    data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceiptBranchNumber).ToList() : data.OrderByDescending(r => r.ReceiptBranchNumber).ToList();
+                }
                 break;
             case "receivedFrom_field":
                 data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.ReceivedFrom).ToList() : data.OrderByDescending(r => r.ReceivedFrom).ToList();
@@ -652,11 +678,11 @@
                 break;
 
             case "Branch_field":
-                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Branch.Name).ToList() : data.OrderByDescending(r => r.Branch.Name).ToList();
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.BranchName).ToList() : data.OrderByDescending(r => r.BranchName).ToList();
                 break;
 
             case "SubProject_field":
-                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.SubProject.Name).ToList() : data.OrderByDescending(r => r.SubProject.Name).ToList();
+                data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.SubProjectName).ToList() : data.OrderByDescending(r => r.SubProjectName).ToList();
                 break;
 
 
@@ -673,7 +699,7 @@
 
         var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
-        return new TableData<Receipt>() { TotalItems = totalItems, Items = pagedData };
+        return new TableData<GetReceiptDto>() { TotalItems = totalItems, Items = pagedData };
     }
 
    
@@ -684,46 +710,46 @@
 
     }
 
-    private void OpenDetailsDialog(Receipt receipt)
+    private void OpenDetailsDialog(GetReceiptDto GetReceiptDto)
     {
         var parameters = new DialogParameters();
 
 
-        ReceiptViewModel receiptViewModel = new ReceiptViewModel();
+        ReceiptViewModel ReceiptViewModel = new ReceiptViewModel();
 
-        receiptViewModel.Id = receipt.Id;
-        receiptViewModel.ReceivedFrom = receipt.ReceivedFrom;
-        receiptViewModel.ReceivedBy = receipt.ReceivedBy;
-        receiptViewModel.TotalAmount = receipt.TotalAmount;
-        receiptViewModel.BranchId = receipt.BranchId;
-        receiptViewModel.SubProjectId = receipt.SubProjectId;
-        receiptViewModel.ForPurpose = receipt.ForPurpose;
-        receiptViewModel.Date = receipt.Date;
-        receiptViewModel.PaymentType = receipt.PaymentType;
-        receiptViewModel.CheckNumber = receipt.CheckNumber;
-        receiptViewModel.ProjectId = receipt.ProjectId;
-        receiptViewModel.GrantDestinations = receipt.GrantDestinations;
-        receiptViewModel.Gender = receipt.Gender;
-        receiptViewModel.Age = receipt.Age;
-        receiptViewModel.Mobile = receipt.Mobile;
+        ReceiptViewModel.Id = GetReceiptDto.Id;
+        ReceiptViewModel.ReceivedFrom = GetReceiptDto.ReceivedFrom;
+        ReceiptViewModel.ReceivedBy = GetReceiptDto.ReceivedBy;
+        ReceiptViewModel.TotalAmount = GetReceiptDto.TotalAmount;
+        ReceiptViewModel.BranchId = GetReceiptDto.BranchId;
+        ReceiptViewModel.SubProjectId = GetReceiptDto.SubProjectId;
+        ReceiptViewModel.ForPurpose = GetReceiptDto.ForPurpose;
+        ReceiptViewModel.Date = GetReceiptDto.Date;
+        ReceiptViewModel.PaymentType = GetReceiptDto.PaymentType;
+        ReceiptViewModel.CheckNumber = GetReceiptDto.CheckNumber;
+        ReceiptViewModel.ProjectId = GetReceiptDto.ProjectId;
+        ReceiptViewModel.GrantDestinations = GetReceiptDto.GrantDestinations;
+        ReceiptViewModel.Gender = GetReceiptDto.Gender;
+        ReceiptViewModel.Age = GetReceiptDto.Age;
+        ReceiptViewModel.Mobile = GetReceiptDto.Mobile;
 
 
 
 
         // التحقق من القيمة قبل التحويل
-        DateTime? dateTime = receipt.CheckDate.HasValue ? receipt.CheckDate.Value.ToDateTime(TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay)) : (DateTime?)null;
+        DateTime? dateTime = GetReceiptDto.CheckDate.HasValue ? GetReceiptDto.CheckDate.Value.ToDateTime(TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay)) : (DateTime?)null;
 
         // تعيين القيمة في ViewModel
-        receiptViewModel.CheckDate = dateTime;
+        ReceiptViewModel.CheckDate = dateTime;
 
 
 
-        receiptViewModel.AccountNumber = receipt.AccountNumber;
-        receiptViewModel.Bank = receipt.Bank;
+        ReceiptViewModel.AccountNumber = GetReceiptDto.AccountNumber;
+        ReceiptViewModel.Bank = GetReceiptDto.Bank;
 
 
 
-        parameters.Add("OriginalReceiptViewModel", receiptViewModel);
+        parameters.Add("OriginalReceiptViewModel", ReceiptViewModel);
 
 
         parameters.Add("Branches", Branches);

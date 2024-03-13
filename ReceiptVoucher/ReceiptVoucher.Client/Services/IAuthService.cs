@@ -12,7 +12,8 @@ namespace ReceiptVoucher.Client.Services
 
         Task CheckIfNotAdminRedirectToLoginAsync();
 
-        Task<UserViewModel?> GetCurrentUserDetailsAsync();
+        Task<UserViewModel?> GetCurrentUserDetailsFromTokenAsync();
+        Task<UserViewModel?> GetCurrentUserDetailsFromApiAsync();
 
         //Task<string> AddRoleAsync(AddRoleModel roleModel);
         //Task<AuthModel> RefreshTokenAsync(string token);

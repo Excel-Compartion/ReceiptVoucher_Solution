@@ -25,5 +25,6 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string Code { get; set; } = null!;
 
         public int Number { get; set; }
+
     }
 }

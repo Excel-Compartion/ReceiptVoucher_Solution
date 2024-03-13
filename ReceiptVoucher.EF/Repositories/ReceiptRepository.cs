@@ -16,11 +16,11 @@ namespace ReceiptVoucher.EF.Repositories
     public class ReceiptRepository : BaseRepository<Receipt>, IReceiptRepository
     {
         private readonly ReceiptVoucherDbContext _context;
-        private readonly IMapper mapper;
-        public ReceiptRepository(ReceiptVoucherDbContext context, IMapper _mapper) : base(context)
+        private readonly IMapper _mapper;
+        public ReceiptRepository(ReceiptVoucherDbContext context, IMapper mapper) : base(context , mapper)
         {
             _context = context;
-            mapper = _mapper;
+            this._mapper = mapper;
         }
 
         public async Task<IEnumerable<Receipt>> GetAllReceiptAsync()
@@ -33,7 +33,13 @@ namespace ReceiptVoucher.EF.Repositories
             return await _context.Receipts.OrderByDescending(r => r.Number).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Receipt>> GetFilteredData(FilterData filterData)
+        public async Task<Receipt> GetLastReceiptWitheBranchAsync(int branchId)
+        {
+            return await _context.Receipts.Where(x => x.BranchId == branchId).OrderByDescending(r => r.ReceiptBranchNumber).FirstOrDefaultAsync();
+        }
+
+
+        public async Task<IEnumerable<GetReceiptDto>> GetFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
             ////////////////////////   معرفة عنصر ال enum هل هو موجود في القائمه المحدده //////////////////////////////
@@ -54,7 +60,7 @@ namespace ReceiptVoucher.EF.Repositories
 
 
 
-            foreach (var PaymentType in filterData.SelectPaymentTypes)
+            foreach (var PaymentType in receiptWithFilter_VM.SelectPaymentTypes)
             {
                 if (Dic_payments.ContainsKey(PaymentType))
                 {
@@ -72,7 +78,7 @@ namespace ReceiptVoucher.EF.Repositories
 
 
 
-            foreach (var grantDest in filterData.SelectGrantDestinations)
+            foreach (var grantDest in receiptWithFilter_VM.SelectGrantDestinations)
             {
                 if (Dic_grantDestinations.ContainsKey(grantDest))
                 {
@@ -86,57 +92,119 @@ namespace ReceiptVoucher.EF.Repositories
 
 
 
-            bool IsFilter = filterData.SelectGrantDestinations.Count > 0
-         && filterData.SelectPaymentTypes.Count > 0
-         && filterData.SelectProject.Count > 0
-         && filterData.SelectSubProject.Count > 0
-         && (filterData.SelectBranchId.Count > 0 || filterData.UserBranchId != null);
+            bool IsFilter = receiptWithFilter_VM.SelectGrantDestinations.Count > 0
+         && receiptWithFilter_VM.SelectPaymentTypes.Count > 0
+         && receiptWithFilter_VM.SelectProject.Count > 0
+         && receiptWithFilter_VM.SelectSubProject.Count > 0
+         && (receiptWithFilter_VM.SelectBranchId.Count > 0);
+
+            IQueryable<Receipt> query = _context.Set<Receipt>().AsNoTracking();
+
+            if (!receiptWithFilter_VM.NoPagination)
+            {
+                query = query.OrderByDescending(o => o.Number).Skip((receiptWithFilter_VM.PageNumber - 1) * receiptWithFilter_VM.PageSize).Take(receiptWithFilter_VM.PageSize);
+
+            }
 
 
 
-            if (filterData.RadioDateType == "Day")
+            if (receiptWithFilter_VM.RadioDateType == "Day")
             {
 
 
                 if (IsFilter)
                 {
-                    if (filterData.UserBranchId == null)
-                    {
-                        var receipts = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project)
-                        .Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name)
-                         && filterData.SelectBranchId.Contains(x.Branch.Name) && x.Date == filterData.SelectedDate
-                         && V_PaymentTypes.Contains((PaymentTypes)x.PaymentType) && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations)
-                         ).ToListAsync();
 
-                        return receipts;
-                    }
-                    else
-                    {
-                        var receipts = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project)
-                       .Where(x => filterData.SelectProject.Contains(x.Project.Name) && filterData.SelectSubProject.Contains(x.SubProject.Name)
-                        && x.BranchId == filterData.UserBranchId && x.Date == filterData.SelectedDate
-                        && V_PaymentTypes.Contains((PaymentTypes)x.PaymentType) && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations)
-                        ).ToListAsync();
+                    var Items = await query
+                      .Where(x => receiptWithFilter_VM.SelectProject.Contains(x.Project.Name)
+                       && receiptWithFilter_VM.SelectSubProject.Contains(x.SubProject.Name)
+                       && (x.Branch == null || receiptWithFilter_VM.SelectBranchId.Contains(x.Branch.Name))
+                       && x.Date == receiptWithFilter_VM.SelectedDate
+                       && V_PaymentTypes.Contains((PaymentTypes)x.PaymentType)
+                       && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations)
+                       && (receiptWithFilter_VM.UserBranchId == null || x.BranchId == receiptWithFilter_VM.UserBranchId)
+                          )
 
-                        return receipts;
-                    }
+
+                        .Select(a => new GetReceiptDto
+                        {
+                            Id = a.Id,
+                            AccountNumber = a.AccountNumber,
+                            Bank = a.Bank,
+                            BranchName = a.Branch != null ? a.Branch.Name : null,
+                            CheckDate = a.CheckDate,
+                            Code = a.Code,
+                            Date = a.Date,
+                            ForPurpose = a.ForPurpose,
+                            Mobile = a.Mobile,
+                            Number = a.Number,
+                            ProjectName = a.Project.Name,
+                            ReceivedByName = a.ReceivedBy,
+                            TotalAmount = a.TotalAmount,
+                            SubProjectName = a.SubProject.Name,
+                            CheckNumber = a.CheckNumber,
+                            ReceivedBy = a.ReceivedBy,
+                            GrantDestinations = a.GrantDestinations,
+                            PaymentType = a.PaymentType,
+                            Age = a.Age,
+                            Gender = a.Gender,
+                            ReceivedFrom = a.ReceivedFrom,
+                            BranchId = a.BranchId,
+                            ProjectId = a.ProjectId,
+                            SubProjectId = a.SubProjectId
+                            ,ReceiptBranchNumber=a.ReceiptBranchNumber
+                           ,BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+
+                        })
+                        .ToListAsync();
+
+                    return Items;
 
                 }
 
                 else
                 {
-                    if (filterData.UserBranchId == null)
-                    {
-                        var receipts = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project)
-                       .Where(x => x.Date == filterData.SelectedDate).ToListAsync();
-                        return receipts;
-                    }
-                    else
-                    {
-                        var receipts = await _context.Receipts.Include(p => p.Branch).Include(p => p.SubProject).Include(p => p.Project)
-                      .Where(x => x.Date == filterData.SelectedDate && x.BranchId == filterData.UserBranchId).ToListAsync();
-                        return receipts;
-                    }
+
+
+                    var Items = await query
+                         .Where(x => x.Date == receiptWithFilter_VM.SelectedDate && (receiptWithFilter_VM.UserBranchId == null || x.BranchId == receiptWithFilter_VM.UserBranchId))
+                        .Select(a => new GetReceiptDto
+                        {
+                            Id = a.Id,
+                            AccountNumber = a.AccountNumber,
+                            Bank = a.Bank,
+                            BranchName = a.Branch != null ? a.Branch.Name : null,
+                            CheckDate = a.CheckDate,
+                            Code = a.Code,
+                            Date = a.Date,
+                            ForPurpose = a.ForPurpose,
+                            Mobile = a.Mobile,
+                            Number = a.Number,
+                            ProjectName = a.Project.Name,
+                            ReceivedByName = a.ReceivedBy,
+                            TotalAmount = a.TotalAmount,
+                            SubProjectName = a.SubProject.Name,
+                            CheckNumber = a.CheckNumber,
+                            ReceivedBy = a.ReceivedBy,
+                            GrantDestinations = a.GrantDestinations,
+                            PaymentType = a.PaymentType,
+                            Age = a.Age,
+                            Gender = a.Gender,
+                            ReceivedFrom = a.ReceivedFrom,
+                            BranchId = a.BranchId,
+                            ProjectId = a.ProjectId,
+                            SubProjectId = a.SubProjectId
+                                ,
+                            ReceiptBranchNumber = a.ReceiptBranchNumber
+                            ,
+                            BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                        })
+                        .ToListAsync();
+
+                    return Items;
+
+
+
 
                 }
 
@@ -148,68 +216,97 @@ namespace ReceiptVoucher.EF.Repositories
             {
                 if (IsFilter)
                 {
-                    if (filterData.UserBranchId == null)
-                    {
-                        var receipts = await _context.Receipts
-                       .Include(p => p.Branch)
-                       .Include(p => p.SubProject)
-                       .Include(p => p.Project)
+
+
+
+                    var Items = await query
                        .Where(x =>
-                       filterData.SelectProject.Contains(x.Project.Name) &&
-                       filterData.SelectSubProject.Contains(x.SubProject.Name) &&
-                       filterData.SelectBranchId.Contains(x.Branch.Name) &&
-                       (x.Date >= filterData.SelectedMonth1 && x.Date <= filterData.SelectedMonth2) &&
-                       V_PaymentTypes.Contains((PaymentTypes)x.PaymentType) && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations)).ToListAsync();
+                       receiptWithFilter_VM.SelectProject.Contains(x.Project.Name) &&
+                       receiptWithFilter_VM.SelectSubProject.Contains(x.SubProject.Name) &&
+                       (x.Branch == null || receiptWithFilter_VM.SelectBranchId.Contains(x.Branch.Name)) &&
+                       (x.Date >= receiptWithFilter_VM.SelectedMonth1 && x.Date <= receiptWithFilter_VM.SelectedMonth2) &&
+                       V_PaymentTypes.Contains((PaymentTypes)x.PaymentType) && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations) && (receiptWithFilter_VM.UserBranchId == null || x.BranchId == receiptWithFilter_VM.UserBranchId))
 
-                        return receipts;
-                    }
+                        .Select(a => new GetReceiptDto
+                        {
+                            Id = a.Id,
+                            AccountNumber = a.AccountNumber,
+                            Bank = a.Bank,
+                            BranchName = a.Branch != null ? a.Branch.Name : null,
+                            CheckDate = a.CheckDate,
+                            Code = a.Code,
+                            Date = a.Date,
+                            ForPurpose = a.ForPurpose,
+                            Mobile = a.Mobile,
+                            Number = a.Number,
+                            ProjectName = a.Project.Name,
+                            ReceivedByName = a.ReceivedBy,
+                            TotalAmount = a.TotalAmount,
+                            SubProjectName = a.SubProject.Name,
+                            CheckNumber = a.CheckNumber,
+                            ReceivedBy = a.ReceivedBy,
+                            GrantDestinations = a.GrantDestinations,
+                            PaymentType = a.PaymentType,
+                            Age = a.Age,
+                            Gender = a.Gender,
+                            ReceivedFrom = a.ReceivedFrom,
+                            BranchId = a.BranchId,
+                            ProjectId = a.ProjectId,
+                            SubProjectId = a.SubProjectId
+                                ,
+                            ReceiptBranchNumber = a.ReceiptBranchNumber
+                            ,
+                            BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                        })
+                        .ToListAsync();
 
-                    else
-                    {
-                        var receipts = await _context.Receipts
-                      .Include(p => p.Branch)
-                      .Include(p => p.SubProject)
-                      .Include(p => p.Project)
-                      .Where(x =>
-                      filterData.SelectProject.Contains(x.Project.Name) &&
-                      filterData.SelectSubProject.Contains(x.SubProject.Name) &&
-                     x.BranchId==filterData.UserBranchId &&
-                      (x.Date >= filterData.SelectedMonth1 && x.Date <= filterData.SelectedMonth2) &&
-                      V_PaymentTypes.Contains((PaymentTypes)x.PaymentType) && V_GrantDestinations.Contains((GrantDest)x.GrantDestinations)).ToListAsync();
+                    return Items;
 
-                        return receipts;
-                    }
 
                 }
 
                 else
                 {
-                    if (filterData.UserBranchId == null)
-                    {
-                        var receipts = await _context.Receipts
-                       .Include(p => p.Branch)
-                       .Include(p => p.SubProject)
-                       .Include(p => p.Project)
-                       .Where(x =>
-                       (x.Date >= filterData.SelectedMonth1 && x.Date <= filterData.SelectedMonth2))
-                       .ToListAsync();
 
-                        return receipts;
-                    }
 
-                    else
-                    {
-                        var receipts = await _context.Receipts
-                       .Include(p => p.Branch)
-                       .Include(p => p.SubProject)
-                       .Include(p => p.Project)
-                       .Where(x =>
-                       (x.Date >= filterData.SelectedMonth1 && x.Date <= filterData.SelectedMonth2) &&x.BranchId==filterData.UserBranchId)
-                       .ToListAsync();
+                    var Items = await query
+                        .Where(x =>
+                        (x.Date >= receiptWithFilter_VM.SelectedMonth1 && x.Date <= receiptWithFilter_VM.SelectedMonth2) && (receiptWithFilter_VM.UserBranchId == null || x.BranchId == receiptWithFilter_VM.UserBranchId))
+                        .Select(a => new GetReceiptDto
+                        {
+                            Id = a.Id,
+                            AccountNumber = a.AccountNumber,
+                            Bank = a.Bank,
+                            BranchName = a.Branch != null ? a.Branch.Name : null,
+                            CheckDate = a.CheckDate,
+                            Code = a.Code,
+                            Date = a.Date,
+                            ForPurpose = a.ForPurpose,
+                            Mobile = a.Mobile,
+                            Number = a.Number,
+                            ProjectName = a.Project.Name,
+                            ReceivedByName = a.ReceivedBy,
+                            TotalAmount = a.TotalAmount,
+                            SubProjectName = a.SubProject.Name,
+                            CheckNumber = a.CheckNumber,
+                            ReceivedBy = a.ReceivedBy,
+                            GrantDestinations = a.GrantDestinations,
+                            PaymentType = a.PaymentType,
+                            Age = a.Age,
+                            Gender = a.Gender,
+                            ReceivedFrom = a.ReceivedFrom,
+                            BranchId = a.BranchId,
+                            ProjectId = a.ProjectId,
+                            SubProjectId = a.SubProjectId
+                                ,
+                            ReceiptBranchNumber = a.ReceiptBranchNumber
+                            ,
+                            BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                        })
+                        .ToListAsync();
 
-                        return receipts;
-                    }
-                    
+                    return Items;
+
                 }
 
             }
@@ -224,7 +321,7 @@ namespace ReceiptVoucher.EF.Repositories
         }
 
         public async Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
-           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending)
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true, int? UserBranchId = null)
         {
             IQueryable<Receipt> query = _context.Set<Receipt>().AsNoTracking();
 
@@ -233,25 +330,32 @@ namespace ReceiptVoucher.EF.Repositories
                 query = query.Where(criteria);
             }
 
-           
+            if (UserBranchId != null)
+            {
+                query = query.Where(x => x.BranchId == UserBranchId).OrderByDescending(o => o.ReceiptBranchNumber);
 
-            if (PageNumber.HasValue && PageSize.HasValue)
-                query = query.OrderByDescending(o => o.Number).Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
 
-            //if (orderBy != null)
-            //{
-            //    if (orderByDirection == OrderBy.Ascending)
-            //        query = query.OrderBy(orderBy);
-            //    else
-            //        query = query.OrderByDescending(orderBy);
-            //}
+            }
 
-            var Items = await query.OrderByDescending(o => o.Number).Select(a => new GetReceiptDto
+
+            if (PageNumber.HasValue && PageSize.HasValue && NoPagination == false)
+                query = query.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+
+
+
+
+
+            if (OrderByNumber && UserBranchId == null)
+                query = query.OrderByDescending(o => o.Number);
+
+
+            var Items = await query.Select(a => new GetReceiptDto
             {
                 Id = a.Id,
                 AccountNumber = a.AccountNumber,
                 Bank = a.Bank,
-                BranchName = a.Branch.Name,
+                BranchName = a.Branch != null ? a.Branch.Name : null,
+                BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                 CheckDate = a.CheckDate,
                 Code = a.Code,
                 Date = a.Date,
@@ -271,14 +375,18 @@ namespace ReceiptVoucher.EF.Repositories
                 ReceivedFrom = a.ReceivedFrom,
                 BranchId = a.BranchId,
                 ProjectId = a.ProjectId,
-                SubProjectId = a.SubProjectId
-            })
-                .ToListAsync();
+                SubProjectId = a.SubProjectId,
+                ReceiptBranchNumber = a.ReceiptBranchNumber
 
-           
+            })
+            .ToListAsync();
+
+
             return Items;
-           
+
 
         }
+
+
     }
 }

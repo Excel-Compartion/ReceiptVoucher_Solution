@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.RegularExpressions;
 using static MudBlazor.CategoryTypes;
 using Pagination = ReceiptVoucher.Core.Models.Pagination;
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace ReceiptVoucher.Server.Controllers
@@ -99,23 +100,16 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpPost("GetAllReceiptsWithGetDto")]
-        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllPurchases([FromBody] Pagination pagination)
+        [HttpPost("GetAllReceiptsWithGetDto/{UserBranchId}")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllReceiptsWithGetDto([FromBody] Pagination pagination,int? UserBranchId)
         {
             try
             {
-                //                IEnumerable<Receipt> items = await _unitOfWork.Receipts.FindAllAsync(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber, includes: ["Branch", "Project", "SubProject"]);
-                //                var receipts = (await _unitOfWork.Receipts.GetAllAsync()).Select(a => new GetReceiptDto 
-                //                { 
-                //Id=a.Id,
-                //BranchName = a.Branch.Name,
+                if (UserBranchId == 0)
+                    UserBranchId = null;
+               
 
-                //                }).ToList();
-
-
-                //                IEnumerable<GetReceiptDto> Items = mapper.Map<List<GetReceiptDto>>(items);
-
-                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber);
+                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination,UserBranchId: UserBranchId);
 
                 return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(items, "تم جلب العناصر بنجاح", null, true));
             }
@@ -160,6 +154,23 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             receipt.Number = Number;
+
+
+            // Get the last receipt and increment the number
+            var lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+            int ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+
+            var ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+
+            while (ReceiptIsExByReceiptBranchNum != null)
+            {
+                lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
+                ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
+                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+            }
+
+            receipt.ReceiptBranchNumber = ReceiptBranchNum;
+
             receipt.Date = DateOnly.FromDateTime(DateTime.Now);
             if (!ModelState.IsValid)
             {
@@ -184,7 +195,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPost("GetFilteredData")]
-        public async Task<IActionResult> GetFilteredData(FilterData filterData)
+        public async Task<IActionResult> GetFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
            
@@ -193,7 +204,7 @@ namespace ReceiptVoucher.Server.Controllers
 
            
 
-         var receipts =  await _receiptRepository.GetFilteredData(filterData);
+         var receipts =  await _receiptRepository.GetFilteredData(receiptWithFilter_VM);
 
 
             return Ok(receipts);
@@ -201,25 +212,27 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPost("GetDonorCorrespondenceWithFilteredData")]
-        public async Task<IActionResult> GetDonorCorrespondenceWithFilteredData(FilterData filterData)
+        public async Task<IActionResult> GetDonorCorrespondenceWithFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var receipts = await _receiptRepository.GetFilteredData(filterData);
+            var receipts = await _receiptRepository.GetFilteredData(receiptWithFilter_VM);
 
 
-            List<GrantDestination_VM> DonorCorrespondences = mapper.Map<List<GrantDestination_VM>>(receipts.GroupBy(x => x.Mobile)
-               .Select(group => group.First()));
+          List<GrantDestination_VM> DonorCorrespondences = mapper.Map<List<GrantDestination_VM>>(receipts.GroupBy(x => x.Mobile)
+    .Select(group => group.Key == null ? group.ToList() : new List<GetReceiptDto> { group.First() })
+    .SelectMany(x => x));
+
 
             return Ok(DonorCorrespondences);
         }
 
 
         [HttpPost("GetReportWithFilteredData")]
-        public async Task<IActionResult> GetReportWithFilteredData(FilterData filterData)
+        public async Task<IActionResult> GetReportWithFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
 
@@ -232,7 +245,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-            var receipts = await _receiptRepository.GetFilteredData(filterData);
+            IEnumerable<GetReceiptDto> receipts = await _receiptRepository.GetFilteredData(receiptWithFilter_VM);
 
 
 
@@ -242,6 +255,17 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             List<ReceiptWithRelatedDataDto> receiptWithRelatedDataDto = mapper.Map<List<ReceiptWithRelatedDataDto>>(receipts);
+
+            DataTable dt;
+            if (receiptWithFilter_VM.UserBranchId == null)
+            {
+                 dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.Number).ToList());
+               
+            }
+            else
+            {
+                dt = ToDataTable(receiptWithRelatedDataDto.OrderByDescending(x => x.ReceiptBranchNumber).ToList());
+            }
 
             ReceiptsInformation receiptsInformation = new ReceiptsInformation()
             {
@@ -253,7 +277,6 @@ namespace ReceiptVoucher.Server.Controllers
 
             LocalReport localReport = new LocalReport(path);
 
-            DataTable dt = ToDataTable(receiptWithRelatedDataDto);
 
             DataTable info = ToDataTableOneRecord(receiptsInformation);
 
@@ -272,7 +295,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
         [HttpPost("GetDonorsCorrespondencesReportWithFilteredData")]
-        public async Task<IActionResult> GetDonorsCorrespondencesReportWithFilteredData(FilterData filterData)
+        public async Task<IActionResult> GetDonorsCorrespondencesReportWithFilteredData(ReceiptWithFilter_VM receiptWithFilter_VM)
         {
 
 
@@ -284,7 +307,7 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
 
-            var receipts = await _receiptRepository.GetFilteredData(filterData);
+            var receipts = await _receiptRepository.GetFilteredData(receiptWithFilter_VM);
 
             if (receipts == null)
             {
@@ -292,7 +315,8 @@ namespace ReceiptVoucher.Server.Controllers
             }
 
             List<GrantDestination_VM> grantDestination = mapper.Map<List<GrantDestination_VM>>(receipts.GroupBy(x => x.Mobile)
-               .Select(group => group.First()));
+    .Select(group => group.Key == null ? group.ToList() : new List<GetReceiptDto> { group.First() })
+    .SelectMany(x => x));
 
 
             string path = webHostEnvironment.WebRootPath + @"\_Reports\GrantDestinationsReport\GrantDestinationsReport.rdlc";

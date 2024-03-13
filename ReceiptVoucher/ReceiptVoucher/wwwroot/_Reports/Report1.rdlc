@@ -538,14 +538,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox3">
+                    <Textbox Name="ReceiptBranchNumWithBranchNum">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Number.Value</Value>
+                              <Value>=Fields!ReceiptBranchNumWithBranchNum.Value</Value>
                               <Style>
                                 <FontFamily>Tajawal</FontFamily>
                               </Style>
@@ -556,7 +556,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox3</rd:DefaultName>
+                      <rd:DefaultName>ReceiptBranchNumWithBranchNum</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -568,6 +568,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -997,6 +998,10 @@
         </Field>
         <Field Name="DateToString">
           <DataField>DateToString</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiptBranchNumWithBranchNum">
+          <DataField>ReceiptBranchNumWithBranchNum</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

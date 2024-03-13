@@ -15,6 +15,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels.UserModels
         public string? Mobile { get; set; }
         public string? Email { get; set; }
         public int? BranchId { get; set; }
+        public string BranchName { get; set; } =string.Empty;
+        public int BranchAccountNumber { get; set; } 
         public bool IsEnabled { get; set; }
         public IEnumerable<string>? Roles { get; set; } = new List<string>();
     }

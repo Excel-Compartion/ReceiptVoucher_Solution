@@ -59,7 +59,7 @@
         </MudNavLink>
 
     }
-    else if (UserRole.Equals(RolesNames.User))
+    else if (currentUser.Roles.Contains(RolesNames.User))
     {
         <MudNavLink Href="/Receipt" Match="NavLinkMatch.Prefix" Class="mud-nav-link-right navLinkBtn">
             <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Class="icon-color" />
@@ -177,43 +177,50 @@
     public string UserRole  = string.Empty;
     public UserViewModel currentUser { get; set; } = new();
 
-    private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
+    // private async Task<UserViewModel?> GetCurrentUserDetailsFromApiAsync()
+    // {
+    //     try
+    //     {
+    //         var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
+    //         return UserResponse;
+    //     }
+    //     catch (HttpRequestException ex)
+    //     {
+    //         Console.WriteLine(ex.Message);
+    //         return null; // Or provide a default value
+    //     }
+    // }
+    protected override async Task OnInitializedAsync()
     {
         try
         {
-            var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
-            return UserResponse;
-        }
-        catch (HttpRequestException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return null; // Or provide a default value
-        }
-    }
+            var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState?.User;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState?.User;
-
-        if (user != null && user.Identity.IsAuthenticated )
-        {
-            // User is authenticated
-
-            var roleClaim = user.FindFirst("roles");
-            if (roleClaim != null)
+            if (user != null && user.Identity.IsAuthenticated)
             {
-                UserRole = roleClaim.Value;
+                // User is authenticated
+
+                var roleClaim = user.FindFirst("roles");
+                if (roleClaim != null)
+                {
+                    UserRole = roleClaim.Value;
+                }
+
+                currentUser = await _IAuthservice.GetCurrentUserDetailsFromTokenAsync() ?? new UserViewModel();
             }
 
-            currentUser = await GetCurrentUserDetailsAsync();
+            else
+            {
+                // User is not authenticated, redirect to login
+                NavigationManager.NavigateTo("/Login");
+            }
         }
-
-        else
+        catch (Exception ex )
         {
-            // User is not authenticated, redirect to login
-            NavigationManager.NavigateTo("/Login");
+            Console.WriteLine(ex.Message);
         }
+        
 
     }
 

@@ -13,7 +13,6 @@
 @inject IDialogService _DialogService
 @inject ISnackbar _Snackbar
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IAuthService _IAuthservice
 @inject IMapper _Mapper
@@ -62,7 +61,7 @@
 </p>
 
 <MudTable Class="GetReceiptDtoTable" ServerData="@(new Func<TableState, Task<TableData<GetReceiptDto>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table">
+          Dense="true" Hover="true" @ref="table" >
     <ToolBarContent>
         @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
         <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
@@ -93,7 +92,14 @@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="رقم السند">@context.Number</MudTd>
+        <MudTd DataLabel="رقم السند">
+            @{
+                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+            }
+
+            @BranchNumWithReceiptNum
+
+        </MudTd>
         <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
         <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
@@ -147,7 +153,7 @@
 
 
 
-    @code {
+@code {
     public IEnumerable<GetReceiptDto>? pagedData;
     private MudTable<GetReceiptDto>? table;
 
@@ -155,10 +161,10 @@
     private string? searchString;
 
 
-    public List<Branch> Branches { get; set; } = new List<Branch>();
-    public List<Project> Projects { get; set; } = new List<Project>();
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
+    public List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
 
-    public List<SubProject> SubProjects { get; set; } = new List<SubProject>();
+    public List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
 
 
     public int RecId;
@@ -202,18 +208,13 @@
     // }
 
 
-    // private async Task<UserViewModel?> GetCurrentUserDetailsAsync()
-    // {
-    //     var UserResponse = await Http.GetFromJsonAsync<UserViewModel>("api/users/GetUserDetails");
-
-    //     return UserResponse;
-    // }
+    
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            currentUser = await _IAuthservice.GetCurrentUserDetailsAsync();
+            currentUser = await _IAuthservice.GetCurrentUserDetailsFromTokenAsync() ?? throw new Exception();
 
             if (currentUser != null)
             {
@@ -229,41 +230,11 @@
                 // User is not authenticated, redirect to login
                 NavigationManager.NavigateTo("/Login");
             }
-
-
-            <!----------->
-            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
-
-            if (response != null)
-            {
-                Branches = response;
-            }
-
-            <!----------->
-            var responseProject = await Http.GetFromJsonAsync<List<Project>>("api/Projects/GetAllAsync");
-
-            if (responseProject != null)
-            {
-                Projects = responseProject;
-            }
-
-            <!----------->
-            var SubProjectresponse = await Http.GetFromJsonAsync<List<SubProject>>("api/SubProjects/Get");
-
-            if (SubProjectresponse != null)
-            {
-                SubProjects = SubProjectresponse;
-            }
-
-
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message); // Write error message to browser console
-                                           // Optionally, replace with a user-friendly message for display in Blazor:
-                                           //_snackbar.Add("An error occurred while retrieving user details", Severity.Error);
+            Console.WriteLine(ex.Message);
         }
-       
 
 
     }
@@ -289,8 +260,11 @@
 
             pagination.Search = searchString ?? "";
 
+            pagination.NoPagination = true;
 
-            var response = await Http.PostAsJsonAsync("api/Receipts/GetAllReceiptsWithGetDto", pagination);
+
+
+            var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId??0}", pagination);
 
 
             BaseResponse<IEnumerable<GetReceiptDto>> content = await response.Content.ReadFromJsonAsync<BaseResponse<IEnumerable<GetReceiptDto>>>();
@@ -303,19 +277,8 @@
                 if (currentUser != null)
                 {
 
-                    if (role != null && role != RolesNames.Admin)
-                    {
-                        data = content.Data
-      .Where(x => x.BranchId == currentUser.BranchId)
-      .OrderByDescending(x => x.Date)
-      .ToList();
+                    data = content.Data;
 
-                    }
-
-                    else
-                    {
-                        data = content.Data.OrderByDescending(x => x.Number);
-                    }
                 }
             }
             else if (content != null)
@@ -331,28 +294,36 @@
 
 
         data = data.Where(GetReceiptDto =>
-     {
-         if (string.IsNullOrWhiteSpace(searchString))
-             return true;
-         if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-             return true;
-         if ($"{GetReceiptDto.Number}".Contains(searchString))
-             return true;
-         if ($"{GetReceiptDto.Mobile}".Contains(searchString))
-             return true;
-         if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
-             return true;
-         return false;
-     }).ToArray();
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{GetReceiptDto.Number}".Contains(searchString))
+                return true;
+            if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+                return true;
+            if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+                return true;
+            return false;
+        }).ToArray();
 
         totalItems = data.Count();
         switch (state.SortLabel)
         {
 
             case "id_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Id);
+                if (UserBranchId == null)
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.Number);
+
+                }
+                else
+                {
+                    data = data.OrderByDirection(state.SortDirection, o => o.ReceiptBranchNumber);
+                }
                 break;
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.ReceivedFrom);
@@ -406,14 +377,53 @@
 
 
 
-    @code {
+@code {
 
 
 
     //<!--==================     Add / Edit Dialog      =========================================-->
 
-    private void OpenAddDialog()
+    private async Task OpenAddDialog()
     {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
+
         var parameters = new DialogParameters();
         parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
 
@@ -433,8 +443,46 @@
         _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
     }
 
-    private void OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
+    private async Task OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
     {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Branches = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                Projects = response;
+            }
+
+
+        }
+        catch { }
+
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
+
+            if (response != null)
+            {
+                SubProjects = response;
+            }
+
+
+        }
+        catch { }
 
 
         var parameters = new DialogParameters();
@@ -449,11 +497,11 @@
         try
         {
 
-            var UserName = _UserManager.Users.Where(x => x.Id == GetReceiptDto.ReceivedBy).FirstOrDefault();
-            if (UserName != null)
+            var UserViewModel = await _IAuthservice.GetCurrentUserDetailsFromApiAsync();
+            if (UserViewModel != null)
             {
-                ReceivedByName = UserName.FirstName + " " + UserName.LastName;
-                ReceivedBy = UserName.Id;
+                ReceivedByName = UserViewModel.FirstName + " " + UserViewModel.LastName;
+                ReceivedBy = UserViewModel.Id;
             }
 
 

@@ -65,6 +65,9 @@ namespace ReceiptVoucher.Server.Controllers
             ReceiptRdclViewModel receiptRdclViewModel = new ReceiptRdclViewModel();
 
             receiptRdclViewModel.Id = Receipt.Id;
+
+            receiptRdclViewModel.ReceiptBranchNumWithBranchNum= Receipt.Branch.BranchNumber + " - "  + Receipt.ReceiptBranchNumber;
+
             receiptRdclViewModel.ReceivedFrom = Receipt.ReceivedFrom;
 
 

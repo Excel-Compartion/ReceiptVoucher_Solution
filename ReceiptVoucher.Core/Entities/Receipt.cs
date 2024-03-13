@@ -73,6 +73,8 @@ public class Receipt
     
     public int Number { get;set; }
 
+    public int ReceiptBranchNumber { get; set; }
+
 
     //-------- Navigation Properties ---
     [ForeignKey(nameof(ReceivedBy))]
