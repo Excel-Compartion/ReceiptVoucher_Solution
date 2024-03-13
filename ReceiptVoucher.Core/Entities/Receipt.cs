@@ -75,6 +75,12 @@ public class Receipt
 
     public int ReceiptBranchNumber { get; set; }
 
+    public string? UpdateReceivedFrom { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal UpdateAmount { get; set; }
+
+    public DateOnly? UpdateDate { get; set; }
 
     //-------- Navigation Properties ---
     [ForeignKey(nameof(ReceivedBy))]
@@ -89,4 +95,6 @@ public class Receipt
 
     [ForeignKey("SubProjectId")]
     public SubProject? SubProject { get; set; } = null!;
+
+
 }
