@@ -201,7 +201,7 @@
 
     public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
 
-    public List<Branch> Branches { get; set; } = new List<Branch>();
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -210,7 +210,7 @@
 
         try
         {
-            var response = await Http.GetFromJsonAsync<List<Branch>>("api/Branches/GetAllAsync");
+            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
 
             if (response != null)
             {
