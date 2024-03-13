@@ -398,7 +398,7 @@
 
 
 
-    
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -409,11 +409,11 @@
             if (currentUser != null)
             {
                 UserBranchId = currentUser.BranchId;
-               
+
 
                 var roles = currentUser.Roles.ToList();
 
-            
+
             }
             else
             {
@@ -467,7 +467,7 @@
         catch { }
 
 
-        // await SendFilterData();
+        RadioDateType = "Day";
 
 
     }
