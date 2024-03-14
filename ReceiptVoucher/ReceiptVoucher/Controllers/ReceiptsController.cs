@@ -166,7 +166,7 @@ namespace ReceiptVoucher.Server.Controllers
             {
                 lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
                 ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
-                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.AnyAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.AnyAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum && x.BranchId == receipt.BranchId);
             }
 
             receipt.ReceiptBranchNumber = ReceiptBranchNum;
