@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiptVoucher.Core", "Rece
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiptVoucher.EF", "ReceiptVoucher.EF\ReceiptVoucher.EF.csproj", "{BC6225CE-D16C-48E3-9B5C-DD4AAB6C2864}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp5", "WinFormsApp5\WinFormsApp5.csproj", "{437EE5FA-449B-496B-AC33-648A09627E2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp5", "WinFormsApp5\WinFormsApp5.csproj", "{437EE5FA-449B-496B-AC33-648A09627E2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

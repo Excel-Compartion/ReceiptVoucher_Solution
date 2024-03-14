@@ -100,8 +100,8 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
-        [HttpPost("GetAllReceiptsWithGetDto/{UserBranchId}")]
-        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllReceiptsWithGetDto([FromBody] Pagination pagination,int? UserBranchId)
+        [HttpPost("GetAllReceiptsWithGetDto/{UserBranchId}/{IsViewReceiptsUpdate}")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetReceiptDto>>>> GetAllReceiptsWithGetDto([FromBody] Pagination pagination,int? UserBranchId,bool IsViewReceiptsUpdate=false)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace ReceiptVoucher.Server.Controllers
                     UserBranchId = null;
                
 
-                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination,UserBranchId: UserBranchId);
+                IEnumerable<GetReceiptDto> items = await _unitOfWork.Receipts.GetAllReceiptAsyncV2(search: pagination?.Search, criteria: null, PageSize: pagination.PageSize, PageNumber: pagination.PageNumber,NoPagination: pagination.NoPagination,UserBranchId: UserBranchId,IsViewReceiptsUpdate:IsViewReceiptsUpdate);
 
                 return Ok(new BaseResponse<IEnumerable<GetReceiptDto>>(items, "تم جلب العناصر بنجاح", null, true));
             }

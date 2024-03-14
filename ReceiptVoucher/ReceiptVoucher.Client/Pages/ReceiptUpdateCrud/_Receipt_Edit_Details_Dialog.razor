@@ -1,0 +1,780 @@
+﻿@using ReceiptVoucher.Core.Models.ResponseModels
+@inject ISnackbar _Snackbar
+@rendermode InteractiveAuto
+@inject HttpClient Http
+@inject UserManager<ApplicationUser> _UserManager
+
+
+
+
+<MudDialog Class="receipt-dialog" Style=" ">
+    <DialogContent>
+
+        <EditForm Model="@ReceiptViewModel" OnValidSubmit="Submit" Class="custom-form">
+            <DataAnnotationsValidator />
+
+
+
+
+            <MudGrid>
+                <MudItem sm="6" xs="12">
+                    <MudTextField Label="المودع" For="@(()=>ReceiptViewModel.ReceivedFrom)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Info" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                </MudItem>
+                <MudItem sm="3" xs="6">
+                    <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
+                        @*   <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
+                        <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
+
+                    </MudSelect>
+                </MudItem>
+                <MudItem sm="3" xs="6">
+                    @if (BtnName == ButtonTypes.Details)
+                    {
+                        TotalAmountFinal = ReceiptViewModel.TotalAmountFinal;
+
+                        <MudTextField Label=" المبلغ" Immediate="true" @bind-Value="@TotalAmountFinal" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+
+                    }
+                    else
+                    {
+                        <MudTextField Label=" المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+
+                    }
+
+                </MudItem>
+            </MudGrid>
+
+            @{
+                if (BtnName == ButtonTypes.Edit)
+                {
+
+
+
+
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudTextField Label="مبلغ التعديل" For="@(()=>ReceiptViewModel.UpdateAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateAmount" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+
+                            <div>تعديل المبلغ</div>
+
+                            <MudRadioGroup @bind-Value="IsAmountpositive" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
+                                <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">زياده المبلغ</MudRadio>
+                                <MudRadio Value="false" Color="Color.Error" Size="Size.Small">خصم من المبلغ</MudRadio>
+                            </MudRadioGroup>
+
+                        </MudItem>
+                    </MudGrid>
+
+
+                }
+
+            }
+
+
+
+
+
+            @{
+
+                if (ReceiptViewModel.PaymentType == PaymentTypes.Cash)
+                {
+
+                    ReceiptViewModel.CheckNumber = 10000000;
+                    ReceiptViewModel.CheckDate = DateTime.Now;
+
+                    ReceiptViewModel.AccountNumber = 10000000;
+                    ReceiptViewModel.Bank = "--";
+
+
+
+
+                }
+
+                // نوع الدفع عبر شيك
+                if (ReceiptViewModel.PaymentType == PaymentTypes.Check)
+                {
+
+
+
+                    if (ReceiptViewModel.CheckNumber == 10000000)
+                    {
+                        ReceiptViewModel.CheckNumber = null;
+                        ReceiptViewModel.CheckDate = null;
+
+                        isCheckNumberCleared = true;
+                        isCheckDateCleared = true;
+                    }
+
+
+
+                    ReceiptViewModel.AccountNumber = 10000000;
+                    ReceiptViewModel.Bank = "--";
+
+                    <MudGrid>
+                        <MudItem xs="7">
+                            <MudTextField Label="رقم الشيك" Immediate="true" For="@(()=>ReceiptViewModel.CheckNumber)" @bind-Value="@ReceiptViewModel.CheckNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                        </MudItem>
+                        <MudItem xs="5">
+                            <MudDatePicker Color="Color.Info" For="@(()=>ReceiptViewModel.CheckDate)" @bind-Date="ReceiptViewModel.CheckDate" Label="تاريخ الشيك" ReadOnly="@ReadOnlyStatus" />
+                        </MudItem>
+                    </MudGrid>
+
+
+
+
+
+
+                }
+
+                // نوع الدفع عبر نقطة البيع
+                else if (ReceiptViewModel.PaymentType == PaymentTypes.Account)
+                {
+
+                    if (ReceiptViewModel.AccountNumber == 10000000)
+                    {
+                        ReceiptViewModel.AccountNumber = null;
+                        isAccountNumberCleared = true;
+                    }
+
+                    ReceiptViewModel.CheckNumber = 10000000;
+
+                    ReceiptViewModel.CheckDate = DateTime.Now;
+
+                    ReceiptViewModel.Bank = "--";
+
+                    ReceiptViewModel.AccountNumber = Branches.Where(x => x.Id == ReceiptViewModel.BranchId).Select(x => x.AccountNumber).FirstOrDefault();
+
+                    <MudTextField Label="رقم نقطة البيع" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="true"></MudTextField>
+
+
+                }
+
+                //نوع الدفع عبر البنك
+                else if (ReceiptViewModel.PaymentType == PaymentTypes.Bank)
+                {
+
+                    if (ReceiptViewModel.Bank == "--")
+                    {
+                        ReceiptViewModel.Bank = null;
+                        isBankNameCleared = true;
+                    }
+                    ReceiptViewModel.CheckNumber = 10000000;
+
+                    ReceiptViewModel.AccountNumber = 10000000;
+
+                    ReceiptViewModel.CheckDate = DateTime.Now;
+
+
+
+                    <MudTextField Label="البنك" For="@(()=>ReceiptViewModel.Bank)" Immediate="true" @bind-Value="@ReceiptViewModel.Bank" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+                }
+
+            }
+
+
+
+
+
+
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudSelect Label="الجهة المانحة" For="@(()=>ReceiptViewModel.GrantDestinations)" @bind-Value="@ReceiptViewModel.GrantDestinations" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="@GrantDest.Message">@GrantDest.Message.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Individual">@GrantDest.Individual.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Company">@GrantDest.Company.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Association">@GrantDest.Association.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@GrantDest.Foundation">@GrantDest.Foundation.GetDisplayName()</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="رقم الجوال" For="@(()=>ReceiptViewModel.Mobile)" Immediate="true" @bind-Value="@ReceiptViewModel.Mobile" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                </MudItem>
+            </MudGrid>
+
+            @if (ReceiptViewModel.GrantDestinations == GrantDest.Individual)
+            {
+
+                <br />
+
+
+
+
+
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudSelect Label="العمر" For="@(()=>ReceiptViewModel.Age)" @bind-Value="@ReceiptViewModel.Age" ReadOnly="@ReadOnlyStatus">
+                            <MudSelectItem Value="@Age.Message">@Age.Message.GetDisplayName()</MudSelectItem>
+
+                            <MudSelectItem Value="@Age.TwentyYounger">@Age.TwentyYounger.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.OverTwenty">@Age.OverTwenty.GetDisplayName()</MudSelectItem>
+
+                            <MudSelectItem Value="@Age.OverThirty">@Age.OverThirty.GetDisplayName()</MudSelectItem>
+                            <MudSelectItem Value="@Age.OverForty">@Age.OverForty.GetDisplayName()</MudSelectItem>
+
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <div>الجنس</div>
+
+                        <MudRadioGroup @bind-Value="ReceiptViewModel.Gender" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
+                            <MudRadio Value="Gender.Male" Color="Color.Primary" Size="Size.Small">@Gender.Male.GetDisplayName()</MudRadio>
+                            <MudRadio Value="Gender.Female" Color="Color.Secondary" Size="Size.Small">@Gender.Female.GetDisplayName()</MudRadio>
+                        </MudRadioGroup>
+
+                    </MudItem>
+                </MudGrid>
+
+
+
+            }
+            ///تعيين قيم افتراضيه ل كل من Age ,Gender لتجنب المطالبه
+            else
+            {
+                ReceiptViewModel.Age = Age.TwentyYounger;
+
+                ReceiptViewModel.Gender = Gender.Male;
+            }
+
+
+            @*             <MudTextField Label="اسم المحاسب" For="@(()=>ReceiptViewModel.ReceivedBy)" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedBy" Adornment="Adornment.End"   AdornmentColor="Color.Success"></MudTextField>
+            *@
+
+
+
+
+
+
+
+            <br />
+
+
+
+            <MudGrid>
+                <MudItem sm="4" xs="12">
+                    <MudSelect Label="المكتب" For="@(()=>ReceiptViewModel.BranchId)" @bind-Value="@ReceiptViewModel.BranchId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار المكتب ---</MudSelectItem>
+                        @{
+                            if (UserBranchId != null)
+                            {
+
+                                @foreach (var branch in Branches)
+                                {
+                                    if (branch.Id == UserBranchId)
+                                    {
+
+                                        <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+
+                                    }
+
+                                }
+
+                            }
+
+                            else
+                            {
+                                @foreach (var branch in Branches)
+                                {
+
+                                    <MudSelectItem Value="@branch.Id">@branch.Name</MudSelectItem>
+
+
+                                }
+                            }
+
+
+
+                        }
+
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem sm="4" xs="6">
+                    <MudSelect Label="المشروع الرئيسي" For="@(()=>ReceiptViewModel.ProjectId)" @bind-Value="@ReceiptViewModel.ProjectId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار المشروع الرئيسي ---</MudSelectItem>
+                        @foreach (var project in Projects)
+                        {
+                            <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+
+                @if (ReceiptViewModel.ProjectId == 0)
+                {
+                    ReceiptViewModel.SubProjectId = 0;
+                }
+
+                @{
+                    int SubprojectCount = SubProjects.Where(x => x.ProjectId == ReceiptViewModel.ProjectId).Count();
+
+                    if (SubprojectCount == 0)
+                    {
+                        ReceiptViewModel.SubProjectId = 0;
+                    }
+
+                    else
+                    {
+                        var subProject = SubProjects.Where(x => x.ProjectId == ReceiptViewModel.ProjectId && x.Id == ReceiptViewModel.SubProjectId).FirstOrDefault();
+
+                        if (subProject == null)
+                        {
+                            ReceiptViewModel.SubProjectId = 0;
+                        }
+
+                    }
+                }
+
+
+                <MudItem sm="4" xs="6">
+                    <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
+                        <MudSelectItem Value="0">--- اختيار المشروع الفرعي ---</MudSelectItem>
+                        @{
+
+
+
+                            foreach (var subProject in SubProjects)
+                            {
+                                @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)
+
+
+                                {
+                                    <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
+
+                                }
+
+
+
+                            }
+
+
+                        }
+
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+
+
+
+
+
+
+
+            @{
+                if (BtnName == ButtonTypes.Details)
+                {
+
+                    if (ReceiptViewModel.UpdateDate!=null && ReceiptViewModel.UpdateReceivedFrom != null)
+                    {
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudTextField Label="تم التعديل بواسطة" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                            </MudItem>
+                        </MudGrid>
+                    }
+
+                    else
+                    {
+                        <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+                    }
+
+                    // <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
+
+                }
+
+            }
+
+
+
+
+
+            <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
+
+
+
+
+
+
+
+
+            @if (BtnName != ButtonTypes.Details)
+            {
+                <div class="mt-5 d-flex" style="gap: 10px;">
+                    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-info mud-button-outlined-size-medium mud-ripple " style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>@BtnName</MudButton>
+                    <MudButton OnClick="Cancel" Class="mud-button-root mud-button mud-button-outlined mud-button-outlined-error mud-button-outlined-size-medium mud-ripple" style='font-size: 13px;
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    padding: 5px 0px;'>الغاء</MudButton>
+                </div>
+            }
+
+            <br />
+
+        </EditForm>
+    </DialogContent>
+
+</MudDialog>
+
+
+
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public ReceiptViewModel? OriginalReceiptViewModel { get; set; }
+
+
+    [Parameter]
+    public string BtnName { get; set; } = null!;
+
+
+
+    string Icon = string.Empty;
+
+
+    [Parameter]
+    public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
+
+    [Parameter]
+    public List<ProjectVMForDrowpDownSelect> Projects { get; set; } = new List<ProjectVMForDrowpDownSelect>();
+
+    [Parameter]
+    public List<SubProjectVMForDrowpDownSelect> SubProjects { get; set; } = new List<SubProjectVMForDrowpDownSelect>();
+
+    public ReceiptViewModel ReceiptViewModel { get; set; } = new ReceiptViewModel();
+
+
+    bool isCheckNumberCleared = false;
+
+    bool isCheckDateCleared = false;
+
+    bool isAccountNumberCleared = false;
+
+    bool isBankNameCleared = false;
+
+
+    string ProjectName = "";
+
+    bool ReadOnlyStatus = false;
+
+    [Parameter]
+    public int? UserBranchId { get; set; }
+
+    [Parameter]
+    public string UserId { get; set; } = null!;
+
+    bool IsAmountpositive;
+
+    bool IsAmountnegative;
+
+    public decimal TotalAmountFinal { get; set; }
+
+
+
+    protected override void OnParametersSet()
+    {
+
+
+
+        if (OriginalReceiptViewModel == null)
+        {
+            ReceiptViewModel = new ReceiptViewModel();
+
+
+            // Set the default value for PaymentType
+            ReceiptViewModel.PaymentType = PaymentTypes.Account;
+
+
+            if (UserBranchId != null && Branches != null)
+            {
+                var branch = Branches.Where(x => x.Id == UserBranchId).FirstOrDefault();
+
+                if (branch != null)
+                {
+                    ReceiptViewModel.BranchId = branch.Id;
+                }
+
+            }
+
+
+
+
+        }
+
+
+
+        else
+        {
+
+
+
+            ReceiptViewModel = OriginalReceiptViewModel;
+
+
+
+            if (BtnName == ButtonTypes.Details)
+            {
+                ReadOnlyStatus = true;
+            }
+
+            if (BtnName == ButtonTypes.Edit)
+            {
+                if (ReceiptViewModel.UpdateAmount >= 0)
+                {
+                    IsAmountpositive = true;
+
+                }
+                else
+                {
+                    ReceiptViewModel.UpdateAmount = Math.Abs(ReceiptViewModel.UpdateAmount);
+                }
+            }
+
+        }
+    }
+
+    <!---------------------------------------------->
+    // private Receipt _receiptForMessage; // Assuming receipt is a property elsewhere
+
+    async Task<bool> SendSMSMessage(Receipt receipt)
+    {
+
+        try
+        {
+            // _receiptForMessage = receipt;
+
+            var response = await Http.PostAsJsonAsync("api/SMSMessage", receipt);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم ارسال رسالة ال SMS بنجاح", Severity.Success);
+
+                return true;
+            }
+            else
+            {
+
+                BaseResponse<string> content = await response.Content.ReadFromJsonAsync<BaseResponse<string>>();
+
+                _Snackbar.Add($"{content.Message} \n {content.Data} ", Severity.Error);
+
+                return false;
+
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging and potential user feedback
+            // _logger.LogError("Error sending SMS message: {Message}", ex.Message);
+
+            _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
+            return false; // Indicate unsuccessful message sending (optional)
+        }
+
+    }
+
+        // private bool _isTaskCancelled = false; // Declare the field
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         // Initial tasks after render
+    //     }
+    //     else
+    //     {
+    //         // After refresh, retry tasks cancelled due to disconnection
+    //         if (_isTaskCancelled)
+    //         {
+    //             await SendSMSMessage(_receiptForMessage);
+    //             _isTaskCancelled = false;
+    //         }
+    //     }
+    // }
+
+    <!---------------------------------------------->
+    // public void SubrojectValueRest()
+    // {
+    //     ReceiptViewModel.SubProjectId = null;
+    // }
+
+
+    async void Submit()
+    {
+
+
+
+
+        Receipt receipt = new Receipt();
+
+
+        receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
+        receipt.TotalAmount = ReceiptViewModel.TotalAmount;
+        receipt.BranchId = ReceiptViewModel.BranchId;
+
+        receipt.ForPurpose = ReceiptViewModel.ForPurpose;
+        receipt.Date = ReceiptViewModel.Date;
+        receipt.PaymentType = ReceiptViewModel.PaymentType;
+        receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
+        receipt.Mobile = ReceiptViewModel.Mobile;
+        receipt.ProjectId = ReceiptViewModel.ProjectId;
+        receipt.SubProjectId = ReceiptViewModel.SubProjectId;
+
+
+
+
+
+
+
+
+
+        if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
+
+
+
+
+
+        switch (ReceiptViewModel.PaymentType)
+        {
+            case PaymentTypes.Check:
+                receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+
+
+
+                // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
+                // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
+                receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+
+                break;
+            case PaymentTypes.Account:
+                receipt.AccountNumber = ReceiptViewModel.AccountNumber;
+                break;
+            case PaymentTypes.Bank:
+                receipt.Bank = ReceiptViewModel.Bank;
+                break;
+
+        }
+
+
+        if (ReceiptViewModel.Id == 0)
+        {
+            receipt.ReceivedBy = UserId;
+
+
+
+            receipt.Code = "";
+
+            var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
+
+            BaseResponse<Receipt> content = await response.Content.ReadFromJsonAsync<BaseResponse<Receipt>>();
+
+            if (content.Success)
+            {
+                _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
+
+                if (receipt.Mobile != "" && receipt.Mobile != null)
+                {
+                    SendSMSMessage(content.Data);
+                }
+
+            }
+            else
+            {
+                try
+                {
+
+
+                    var messageErrors = content.Errors;
+
+                    string allMessages = string.Empty;
+
+                    if (messageErrors is not null)
+                    {
+
+                        allMessages = string.Join("\n", messageErrors);
+                    }
+
+                    _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+                }
+                catch
+                {
+                    _Snackbar.Add($"حدث خطاء", Severity.Error);
+                }
+            }
+
+
+        }
+        else
+        {
+            receipt.Id = ReceiptViewModel.Id;
+
+            receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+
+            receipt.UpdateReceivedFrom = UserId;
+
+            receipt.Number = ReceiptViewModel.Number;
+            receipt.Code = ReceiptViewModel.Code;
+
+            receipt.ReceiptBranchNumber = ReceiptViewModel.ReceiptBranchNumber;
+
+
+
+            if (IsAmountpositive == false && ReceiptViewModel.UpdateAmount != 0)
+            {
+                receipt.UpdateAmount = -ReceiptViewModel.UpdateAmount;
+            }
+            else
+            {
+                receipt.UpdateAmount = ReceiptViewModel.UpdateAmount;
+            }
+
+
+
+            var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
+            if (response.IsSuccessStatusCode)
+            {
+                _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
+            }
+            else
+            {
+                _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
+            }
+
+
+
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+        // Trigger the OnClose event
+        OnClose.InvokeAsync(true);
+
+    }
+
+
+
+    void Cancel() => MudDialog.Cancel();
+
+
+}
+
+
+
+
