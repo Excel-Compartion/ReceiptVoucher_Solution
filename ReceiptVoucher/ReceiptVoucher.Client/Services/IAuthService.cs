@@ -14,6 +14,8 @@ namespace ReceiptVoucher.Client.Services
 
         Task<UserViewModel?> GetCurrentUserDetailsFromTokenAsync();
         Task<UserViewModel?> GetCurrentUserDetailsFromApiAsync();
+        Task<UserViewModel?> GetUserDetailsByIdAsync(string userId);
+
 
         //Task<string> AddRoleAsync(AddRoleModel roleModel);
         //Task<AuthModel> RefreshTokenAsync(string token);
