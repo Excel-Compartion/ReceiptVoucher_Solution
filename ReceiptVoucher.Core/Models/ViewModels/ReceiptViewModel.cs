@@ -22,6 +22,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
 
         public string? ReceivedByName { get; set; }
+        
+        public string? UpdateReceivedFromName { get; set; }
 
         [Range(1.0, 9999999999999999.0, ErrorMessage = "--- يرجى ادخال اجمالي المبلغ بشكل صحيح ---")]
         [Column(TypeName = "decimal(18, 2)")]
@@ -83,6 +85,17 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
 
         public int Number { get; set; }
+
+        public string? UpdateReceivedFrom { get; set; }
+
+     
+        public decimal UpdateAmount { get; set; }
+
+        public decimal TotalAmountFinal => TotalAmount + UpdateAmount;
+
+        public DateOnly? UpdateDate { get; set; }
+
+        public int ReceiptBranchNumber { get; set; } 
 
 
     }

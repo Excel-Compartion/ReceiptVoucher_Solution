@@ -1,4 +1,4 @@
-﻿@page "/Receipt"
+﻿@page "/ReceiptUpdate"
 @rendermode InteractiveAuto
 
 @using System.Net.Http.Json
@@ -35,12 +35,6 @@
 </style>
 
 <br />
-<!-- كود خاص بالطباعه في نفس الصفحه-->
-@* <div style="position:absolute;margin-top:-1000000px;">
-    <div id="printGetReceiptDto">
-        <_PrintGetReceiptDtoPage RecId="RecId" />
-    </div>
-</div> *@
 
 
 <!--اسم الصفحه-->
@@ -52,8 +46,7 @@
 
         <MudIcon Icon="@Icons.Material.Filled.ChromeReaderMode" Size="Size.Large" Style="color:#566D7E ;margin-bottom:2px" />
 
-        السندات
-
+        السندات المعدلة
 
 
     </span>
@@ -61,14 +54,14 @@
 </p>
 
 <MudTable Class="GetReceiptDtoTable" ServerData="@(new Func<TableState, Task<TableData<GetReceiptDto>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table" >
+          Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        @* <MudButton OnClick="OpenAddDialog" Class="btn "Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Style="background-color:var(--color-custom);color:white" Size="Size.Small" Label="اضافه" /> *@
-        <MudButton Class="custom-btn" OnClick="OpenAddDialog" Variant="Variant.Filled" Color="Color.Primary">
-            <MudIcon Icon="@Icons.Material.Filled.Add" Title="add" />
 
-            <span>إضافة</span>
-        </MudButton>
+        <MudRadioGroup @bind-Value="IsViewReceiptsUpdate" Style="margin-right:0%" >
+            <MudRadio Value="true" Color="Color.Primary" Size="Size.Small" onchange="@UpdateTable">السندات المعدله</MudRadio>
+            <MudRadio Value="false" Color="Color.Error" Size="Size.Small" onchange="@UpdateTable">جميع السندات</MudRadio>
+        </MudRadioGroup>
+
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="عن ماذا تبحث؟" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 search"></MudTextField>
@@ -88,6 +81,7 @@
 
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="GetReceiptDto">المشروع الفرعي</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="Date_field" T="GetReceiptDto">تاريخ الاضافة</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="UpdateDate_field" T="GetReceiptDto">تاريخ التعديل</MudTableSortLabel></MudTh>
         @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="GetReceiptDto">نوع الدفع</MudTableSortLabel></MudTh> *@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
@@ -104,7 +98,7 @@
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
         <MudTd DataLabel="اجمالي المبلغ">
             @{
-               var totalAmount= context.TotalAmount + context.UpdateAmount;
+                var totalAmount = context.TotalAmount + context.UpdateAmount;
             }
 
             @totalAmount
@@ -120,27 +114,43 @@
 
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
-        <MudTd DataLabel="تاريخ الاضافة">@context.Date.ToString("yyyy-MM-dd")</MudTd>
-        @*  <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd> *@
+        <MudTd DataLabel="تاريخ الانشاء">@context.Date.ToString("yyyy-MM-dd")</MudTd>
+        <MudTd DataLabel="تاريخ التعديل">
+          
+            @{
+                string UpdateDate="----------";
+
+                
+
+                if (@context.UpdateDate != null)
+                {
+                    DateOnly date = DateOnly.Parse(@context.UpdateDate + "");
+
+                    UpdateDate = date.ToString("yyyy-MM-dd");
+
+                }
+            }
+        
+            @UpdateDate
+
+        </MudTd>
+       
         <MudTd DataLabel="الاجراءت">
             @* GetGetReceiptDtoRdcl *@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-
-               @*  @if(UserBranchId==null)
+                @if (UserBranchId == null)
                 {
                     <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
 
-                } *@
-
+                }
                 <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
 
                 <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintGetReceiptDto(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
 
 
-@*                 <MudButton Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => DeleteGetReceiptDto(context.Id))" StartIcon="@Icons.Material.Outlined.DeleteOutline">حدف</MudButton>
- *@
+               
             </MudButtonGroup>
 
 
@@ -193,9 +203,9 @@
 
     public string UserId { get; set; } = null!;
 
-
-
     string? role;
+
+    public bool IsViewReceiptsUpdate { get; set; } = true;
 
     void PrintGetReceiptDto(string code)
     {
@@ -203,7 +213,10 @@
         JSRuntime.InvokeVoidAsync("open", url, "_blank");
     }
 
-
+    public void UpdateTable()
+    {
+        table.ReloadServerData();
+    }
 
 
 
@@ -221,7 +234,7 @@
     // }
 
 
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -277,7 +290,7 @@
 
 
 
-            var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId??0}/false", pagination);
+            var response = await Http.PostAsJsonAsync($"api/Receipts/GetAllReceiptsWithGetDto/{currentUser.BranchId ?? 0}/{IsViewReceiptsUpdate}", pagination);
 
 
             BaseResponse<IEnumerable<GetReceiptDto>> content = await response.Content.ReadFromJsonAsync<BaseResponse<IEnumerable<GetReceiptDto>>>();
@@ -320,7 +333,9 @@
                 return true;
             if ($"{GetReceiptDto.ReceivedFrom}".Contains(searchString))
                 return true;
-            if (GetReceiptDto.Date.ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن التاريخ
+            if (GetReceiptDto.Date.ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن تاريخ الاضافة
+                return true;
+            if (DateOnly.Parse(GetReceiptDto.UpdateDate + "").ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن تاريخ التعديل
                 return true;
             return false;
         }).ToArray();
@@ -368,6 +383,10 @@
                 data = data.OrderByDirection(state.SortDirection, o => o.Date);
                 break;
 
+            case "UpdateDate_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.UpdateDate);
+                break;
+
             case "PaymentType_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.PaymentType.GetDisplayName());
                 break;
@@ -398,65 +417,7 @@
 
     //<!--==================     Add / Edit Dialog      =========================================-->
 
-    private async Task OpenAddDialog()
-    {
-        try
-        {
-            var response = await Http.GetFromJsonAsync<List<BranchVMForDrowpDownSelect>>("api/Branches/GetAllForDrowpDownSelectAsync");
 
-            if (response != null)
-            {
-                Branches = response;
-            }
-
-
-        }
-        catch { }
-
-        try
-        {
-            var response = await Http.GetFromJsonAsync<List<ProjectVMForDrowpDownSelect>>("api/Projects/GetAllForDrowpDownSelectAsync");
-
-            if (response != null)
-            {
-                Projects = response;
-            }
-
-
-        }
-        catch { }
-
-        try
-        {
-            var response = await Http.GetFromJsonAsync<List<SubProjectVMForDrowpDownSelect>>("api/SubProjects/GetAllForDrowpDownSelectAsync");
-
-            if (response != null)
-            {
-                SubProjects = response;
-            }
-
-
-        }
-        catch { }
-
-        var parameters = new DialogParameters();
-        parameters.Add("OnClose", EventCallback.Factory.Create<bool>(this, RefreshData));
-
-        parameters.Add("BtnName", "اضافه");
-
-        parameters.Add("Branches", Branches);
-
-        parameters.Add("Projects", Projects);
-
-        parameters.Add("SubProjects", SubProjects);
-
-        parameters.Add("UserBranchId", UserBranchId);
-
-        parameters.Add("UserId", UserId);
-
-        var options = new DialogOptions() { CloseButton = true };
-        _DialogService.Show<_Receipt_Add_Dialog>("اضافة سند جديد", parameters, options);
-    }
 
     private async Task OpenEditDialog(GetReceiptDto GetReceiptDto, string optionalParameter = "")
     {
@@ -507,7 +468,6 @@
 
         ReceiptViewModel receiptViewModel = _Mapper.Map<ReceiptViewModel>(GetReceiptDto);
 
-
         string ReceivedByName = "";
         try
         {
@@ -546,11 +506,8 @@
 
             receiptViewModel.UpdateReceivedFromName = UpdateReceivedFromName;
         }
-       
 
 
-        
-        
 
 
         parameters.Add("OriginalReceiptViewModel", receiptViewModel);
@@ -569,19 +526,15 @@
 
         if (optionalParameter == ButtonTypes.Details)
         {
-           
-
-
-            receiptViewModel.ReceivedByName = ReceivedByName;
 
             parameters.Add("BtnName", ButtonTypes.Details);
-            _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
+            _DialogService.Show<_Receipt_Edit_Details_Dialog>("تفاصيل السند", parameters, options);
         }
 
         else
         {
             parameters.Add("BtnName", "تعديل");
-            _DialogService.Show<_Receipt_Add_Dialog>("تعديل السند", parameters, options);
+            _DialogService.Show<_Receipt_Edit_Details_Dialog>("تعديل السند", parameters, options);
         }
 
 
@@ -604,42 +557,7 @@
 
 
 
-    private async Task DeleteGetReceiptDto(int GetReceiptDtoId)
-    {
-        GetReceiptDto? selectedGetReceiptDto = data.SingleOrDefault(b => b.Id == GetReceiptDtoId);
-
-        if (selectedGetReceiptDto != null)
-        {
-            var parameters = new DialogParameters() { { "GetReceiptDtoId", selectedGetReceiptDto.Number } };
-            var dialog = _DialogService.Show<_ReceiptConfirmDeleteDialog>("الرجاء التأكيد", parameters);
-
-            var result = await dialog.Result;
-
-            if (!result.Cancelled && result.Data is bool data && data)
-            {
-                // User confirmed deletion, proceed with deletion
-
-                // Try to delete the branch using the API controller
-                var response = await Http.DeleteAsync($"api/GetReceiptDtos/{GetReceiptDtoId}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Show a success message
-                    _Snackbar.Add("تم حذف بيانات السند بنجاح", Severity.Success);
-
-                    // Reload the table data
-                    if (table != null) { await table.ReloadServerData(); }
-                }
-                else
-                {
-                    // Deletion failed
-                    _Snackbar.Add("حدث خطاء اثناء حذف بيانات السند!", Severity.Error);
-                }
-
-                StateHasChanged();
-            }
-        }
-    }
+   
 
 
 

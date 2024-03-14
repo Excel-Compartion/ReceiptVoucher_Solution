@@ -22,7 +22,6 @@
                 </MudItem>
                 <MudItem sm="3" xs="6">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
-                        @*   <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
                         <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
@@ -34,12 +33,12 @@
                     {
                         TotalAmountFinal = ReceiptViewModel.TotalAmountFinal;
 
-                                            <MudTextField Label=" المبلغ"  Immediate="true" @bind-Value="@TotalAmountFinal" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+                        <MudTextField Label=" المبلغ" Immediate="true" @bind-Value="@TotalAmountFinal" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
 
                     }
                     else
                     {
-                                            <MudTextField Label=" المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+                        <MudTextField Label=" المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
 
                     }
 
@@ -179,7 +178,7 @@
 
 
 
-             
+
 
             <MudGrid>
                 <MudItem xs="6">
@@ -366,7 +365,8 @@
             @{
                 if (BtnName == ButtonTypes.Details)
                 {
-                    if (ReceiptViewModel.UpdateDate != null && ReceiptViewModel.UpdateReceivedFrom != null)
+
+                    if (ReceiptViewModel.UpdateDate!=null && ReceiptViewModel.UpdateReceivedFrom != null)
                     {
                         <MudGrid>
                             <MudItem xs="6">
@@ -384,6 +384,10 @@
                         <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
                     }
+
+                    // <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+
+
 
                 }
 
@@ -480,7 +484,7 @@
 
     bool IsAmountnegative;
 
-    public decimal TotalAmountFinal{ get; set; } 
+    public decimal TotalAmountFinal { get; set; }
 
 
 
@@ -497,8 +501,6 @@
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentTypes.Account;
 
-            ReceiptViewModel.GrantDestinations = GrantDest.Individual;
-            ReceiptViewModel.Gender = Gender.Male;
 
             if (UserBranchId != null && Branches != null)
             {
@@ -524,7 +526,7 @@
 
 
             ReceiptViewModel = OriginalReceiptViewModel;
-           
+
 
 
             if (BtnName == ButtonTypes.Details)
@@ -536,7 +538,7 @@
             {
                 if (ReceiptViewModel.UpdateAmount >= 0)
                 {
-                    IsAmountpositive=true;
+                    IsAmountpositive = true;
 
                 }
                 else
@@ -675,7 +677,7 @@
         {
             receipt.ReceivedBy = UserId;
 
-           
+
 
             receipt.Code = "";
 
@@ -732,9 +734,9 @@
 
             receipt.ReceiptBranchNumber = ReceiptViewModel.ReceiptBranchNumber;
 
-            
 
-            if (IsAmountpositive==false &&ReceiptViewModel.UpdateAmount!=0)
+
+            if (IsAmountpositive == false && ReceiptViewModel.UpdateAmount != 0)
             {
                 receipt.UpdateAmount = -ReceiptViewModel.UpdateAmount;
             }

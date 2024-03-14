@@ -64,7 +64,7 @@
     <HeaderContent>
 
         <MudTh><MudTableSortLabel SortLabel="name_field" T="Branch">المكتب</MudTableSortLabel></MudTh>
-
+        <MudTh><MudTableSortLabel SortLabel="BranchNumber_field" T="Branch">رقم المكتب</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="area_field" T="Branch">المنطقة</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="responsiblePerson_field" T="Branch">الشخص المسؤول</MudTableSortLabel></MudTh>
 
@@ -81,6 +81,7 @@
     <RowTemplate>
 
         <MudTd DataLabel="المكتب">@context.Name</MudTd>
+        <MudTd DataLabel="رقم المكتب">@context.BranchNumber</MudTd>
             <MudTd DataLabel="المنطقة">@context.Area</MudTd>
             <MudTd DataLabel="الشخص المسؤول">@context.ResponsiblePerson</MudTd>
             <MudTd DataLabel="الجوال">@context.Mobile</MudTd>
@@ -156,6 +157,10 @@
 
             case "name_field":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+
+            case "BranchNumber_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.BranchNumber);
                 break;
 
             case "area_field":
