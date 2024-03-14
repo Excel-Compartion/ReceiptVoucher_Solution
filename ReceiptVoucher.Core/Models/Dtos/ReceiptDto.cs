@@ -94,7 +94,16 @@ namespace ReceiptVoucher.Core.Models.Dtos
 
         public int ReceiptBranchNumber { get; set; }
 
-        public string? ReceiptBranchNumWithBranchNum => BranchNumber + " - " +  ReceiptBranchNumber;
+        public string? ReceiptBranchNumWithBranchNum => ReceiptBranchNumber + " - " +   BranchNumber;
+
+        public string? UpdateReceivedFrom { get; set; }
+
+       
+        public decimal UpdateAmount { get; set; }
+
+        public DateOnly? UpdateDate { get; set; }
+
+        public decimal TotalAmountFinal => TotalAmount + UpdateAmount;
 
 
     }
@@ -179,5 +188,14 @@ namespace ReceiptVoucher.Core.Models.Dtos
         public int Number { get; set; }
 
         public int ReceiptBranchNumber { get; set; }
+
+        public string? UpdateReceivedFrom { get; set; }
+
+      
+        public decimal UpdateAmount { get; set; }
+
+        public DateOnly? UpdateDate { get; set; }
+
+    
     }
 }

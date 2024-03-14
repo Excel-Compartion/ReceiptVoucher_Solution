@@ -76,7 +76,7 @@ namespace ReceiptVoucher.Server.Controllers
 
 
 
-            receiptRdclViewModel.TotalAmount = Receipt.TotalAmount + "";
+            receiptRdclViewModel.TotalAmount = Receipt.TotalAmount+Receipt.UpdateAmount + "";
             receiptRdclViewModel.Branch = Receipt.Branch.Name + "";
             receiptRdclViewModel.SubProject = Receipt.SubProject.Name + "";
             receiptRdclViewModel.ForPurpose = Receipt.ForPurpose;
@@ -109,7 +109,7 @@ namespace ReceiptVoucher.Server.Controllers
             receiptRdclViewModel.Mobile = Receipt.Mobile + "";
 
 
-            NumberToWord numberToWord = new(Convert.ToDecimal(Receipt.TotalAmount), new CurrencyInfo(CurrencyInfo.Currencies.SaudiArabia));
+            NumberToWord numberToWord = new(Convert.ToDecimal(Receipt.TotalAmount+Receipt.UpdateAmount), new CurrencyInfo(CurrencyInfo.Currencies.SaudiArabia));
 
             string Text = numberToWord.ConvertToArabic();
             receiptRdclViewModel.TotalAmountWord = Text.Replace(".", "");

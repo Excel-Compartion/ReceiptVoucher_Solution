@@ -94,7 +94,7 @@
     <RowTemplate>
         <MudTd DataLabel="رقم السند">
             @{
-                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+                string? BranchNumWithReceiptNum = context.ReceiptBranchNumWithBranchNum;
             }
 
             @BranchNumWithReceiptNum
@@ -102,7 +102,14 @@
         </MudTd>
         <MudTd DataLabel="المودع">@context.ReceivedFrom</MudTd>
         <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
-        <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+        <MudTd DataLabel="اجمالي المبلغ">
+            @{
+               var totalAmount= context.TotalAmount + context.UpdateAmount;
+            }
+
+            @totalAmount
+
+        </MudTd>
 
 
 
@@ -119,8 +126,11 @@
             @* GetGetReceiptDtoRdcl *@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-@*                 <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
- *@                <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
+                @if(UserBranchId==null)
+                {
+                    <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
+                }
+                <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
 
                 <MudButton Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" @onclick="()=>PrintGetReceiptDto(context.Code)" StartIcon="@Icons.Material.Outlined.Print">طباعة</MudButton>
@@ -297,13 +307,15 @@
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;
-            if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
+            // if (GetReceiptDto.ReceivedFrom.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            //     return true;
             if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
             if ($"{GetReceiptDto.Number}".Contains(searchString))
                 return true;
             if ($"{GetReceiptDto.Mobile}".Contains(searchString))
+                return true;
+            if ($"{GetReceiptDto.ReceivedFrom}".Contains(searchString))
                 return true;
             if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
                 return true;
@@ -512,7 +524,7 @@
         receiptViewModel.ReceivedBy=ReceivedBy;
 
         receiptViewModel.ReceivedByName = ReceivedByName;
-
+        
 
 
         parameters.Add("OriginalReceiptViewModel", receiptViewModel);

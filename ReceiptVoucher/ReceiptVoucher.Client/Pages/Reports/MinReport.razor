@@ -202,7 +202,7 @@
     &nbsp; &nbsp;&nbsp; &nbsp;
 
 
-    <span style="font-size:15px;font-weight:500;color:grey"> اجمالي مبالغ التبرعات : @data.Select(x => x.TotalAmount).Sum() ر. س</span>
+    <span style="font-size:15px;font-weight:500;color:grey"> اجمالي مبالغ التبرعات : @data.Select(x => x.TotalAmount+x.UpdateAmount).Sum() ر. س</span>
 
 </div>
 <br />
@@ -256,7 +256,7 @@
     <RowTemplate>
         <MudTd DataLabel="رقم السند">
             @{
-                string BranchNumWithReceiptNum = context.ReceiptBranchNumber + " - " + context.BranchNumber;
+                string? BranchNumWithReceiptNum = context.ReceiptBranchNumWithBranchNum;
             }
 
             @BranchNumWithReceiptNum
@@ -265,7 +265,7 @@
             <MudTd DataLabel="اسم المودع">@context.ReceivedFrom</MudTd>
             <MudTd DataLabel="رقم الجوال">@context.Mobile</MudTd>
             <MudTd DataLabel="الجهة المانحة">@context.GrantDestinations.GetDisplayName()</MudTd>
-            <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmount</MudTd>
+            <MudTd DataLabel="اجمالي المبلغ">@context.TotalAmountFinal</MudTd>
 
             
         
@@ -398,7 +398,7 @@
 
 
 
-    
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -409,11 +409,11 @@
             if (currentUser != null)
             {
                 UserBranchId = currentUser.BranchId;
-               
+
 
                 var roles = currentUser.Roles.ToList();
 
-            
+
             }
             else
             {
@@ -467,7 +467,7 @@
         catch { }
 
 
-        // await SendFilterData();
+        RadioDateType = "Day";
 
 
     }
@@ -637,7 +637,7 @@
               return true;
           if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
               return true;
-          if ($"{GetReceiptDto.Number}".Contains(searchString))
+          if ($"{GetReceiptDto.ReceiptBranchNumWithBranchNum}".Contains(searchString))
               return true;
           if ($"{GetReceiptDto.Mobile}".Contains(searchString))
               return true;
@@ -651,7 +651,9 @@
 
         switch (state.SortLabel)
         {
-            case "id_field":
+
+                 case "id_field":
+
                 if (UserBranchId == null)
                 {
                     data = state.SortDirection == SortDirection.Ascending ? data.OrderBy(r => r.Number).ToList() : data.OrderByDescending(r => r.Number).ToList();
@@ -702,7 +704,7 @@
         return new TableData<GetReceiptDto>() { TotalItems = totalItems, Items = pagedData };
     }
 
-   
+
     private void OnSearch(string text)
     {
         searchString = text;
@@ -732,7 +734,10 @@
         ReceiptViewModel.Gender = GetReceiptDto.Gender;
         ReceiptViewModel.Age = GetReceiptDto.Age;
         ReceiptViewModel.Mobile = GetReceiptDto.Mobile;
+        ReceiptViewModel.UpdateAmount = GetReceiptDto.UpdateAmount;
 
+
+        
 
 
 
