@@ -160,13 +160,13 @@ namespace ReceiptVoucher.Server.Controllers
             var lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
             int ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
 
-            var ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+            var ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.AnyAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum && x.BranchId== receipt.BranchId);
 
-            while (ReceiptIsExByReceiptBranchNum != null)
+            while (ReceiptIsExByReceiptBranchNum )
             {
                 lastReceiptByBranch = await _receiptRepository.GetLastReceiptWitheBranchAsync(receipt.BranchId);
                 ReceiptBranchNum = (lastReceiptByBranch?.ReceiptBranchNumber ?? 0) + 1;
-                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.FindAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
+                ReceiptIsExByReceiptBranchNum = await _unitOfWork.Receipts.AnyAsync(x => x.ReceiptBranchNumber == ReceiptBranchNum);
             }
 
             receipt.ReceiptBranchNumber = ReceiptBranchNum;
@@ -269,7 +269,7 @@ namespace ReceiptVoucher.Server.Controllers
 
             ReceiptsInformation receiptsInformation = new ReceiptsInformation()
             {
-                TotalAmount=  $"اجمالي مبالغ التبرعات : {receiptWithRelatedDataDto.Select(x => x.TotalAmount).Sum()} ر.س",
+                TotalAmount=  $"اجمالي مبالغ التبرعات : {receiptWithRelatedDataDto.Select(x => x.TotalAmount+x.UpdateAmount).Sum()} ر.س",
                 ReceiptsCount= $"اجمالي عدد السندات : {receiptWithRelatedDataDto.Count()}"
             };
 
@@ -347,6 +347,8 @@ namespace ReceiptVoucher.Server.Controllers
 
             // Edit Entity in Database using Service Or UnitOfWork : var entity = _service.Edit(model)
 
+            receipt.UpdateDate = DateOnly.FromDateTime(DateTime.Now);
+           
             Receipt? editedReceipt = _unitOfWork.Receipts.Update(receipt);
 
             // check if entity null , means that BadRequest , this happen during edting

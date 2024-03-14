@@ -154,6 +154,8 @@ namespace ReceiptVoucher.EF.Repositories
                             SubProjectId = a.SubProjectId
                             ,ReceiptBranchNumber=a.ReceiptBranchNumber
                            ,BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                            UpdateAmount=a.UpdateAmount,
+                            UpdateDate=a.UpdateDate,
 
                         })
                         .ToListAsync();
@@ -198,6 +200,8 @@ namespace ReceiptVoucher.EF.Repositories
                             ReceiptBranchNumber = a.ReceiptBranchNumber
                             ,
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                            UpdateAmount = a.UpdateAmount,
+                            UpdateDate = a.UpdateDate,
                         })
                         .ToListAsync();
 
@@ -257,6 +261,8 @@ namespace ReceiptVoucher.EF.Repositories
                             ReceiptBranchNumber = a.ReceiptBranchNumber
                             ,
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                            UpdateAmount = a.UpdateAmount,
+                            UpdateDate = a.UpdateDate,
                         })
                         .ToListAsync();
 
@@ -302,6 +308,8 @@ namespace ReceiptVoucher.EF.Repositories
                             ReceiptBranchNumber = a.ReceiptBranchNumber
                             ,
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
+                            UpdateAmount = a.UpdateAmount,
+                            UpdateDate = a.UpdateDate,
                         })
                         .ToListAsync();
 
@@ -376,7 +384,11 @@ namespace ReceiptVoucher.EF.Repositories
                 BranchId = a.BranchId,
                 ProjectId = a.ProjectId,
                 SubProjectId = a.SubProjectId,
-                ReceiptBranchNumber = a.ReceiptBranchNumber
+                ReceiptBranchNumber = a.ReceiptBranchNumber,
+                UpdateAmount=a.UpdateAmount,
+                UpdateReceivedFrom = a.UpdateReceivedFrom,
+                UpdateDate=a.UpdateDate
+                
 
             })
             .ToListAsync();

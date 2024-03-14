@@ -22,7 +22,7 @@
                 </MudItem>
                 <MudItem sm="3" xs="6">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
-                      @*   <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
+                        @*   <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
                         <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
@@ -30,11 +30,49 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem sm="3" xs="6">
-                    <MudTextField Label="اجمالي المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    @if (BtnName == ButtonTypes.Details)
+                    {
+                        TotalAmountFinal = ReceiptViewModel.TotalAmountFinal;
+
+                                            <MudTextField Label=" المبلغ"  Immediate="true" @bind-Value="@TotalAmountFinal" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+
+                    }
+                    else
+                    {
+                                            <MudTextField Label=" المبلغ" For="@(()=>ReceiptViewModel.TotalAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.TotalAmount" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="BtnName==ButtonTypes.Edit||ReadOnlyStatus"></MudTextField>
+
+                    }
+
                 </MudItem>
             </MudGrid>
 
+            @{
+                if (BtnName == ButtonTypes.Edit)
+                {
 
+
+
+
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudTextField Label="مبلغ التعديل" For="@(()=>ReceiptViewModel.UpdateAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateAmount" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+
+                            <div>تعديل المبلغ</div>
+
+                            <MudRadioGroup @bind-Value="IsAmountpositive" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
+                                <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">زياده المبلغ</MudRadio>
+                                <MudRadio Value="false" Color="Color.Error" Size="Size.Small">خصم من المبلغ</MudRadio>
+                            </MudRadioGroup>
+
+                        </MudItem>
+                    </MudGrid>
+
+
+                }
+
+            }
 
 
 
@@ -108,9 +146,9 @@
 
                     ReceiptViewModel.Bank = "--";
 
-                    ReceiptViewModel.AccountNumber = Branches.Where(x=>x.Id==ReceiptViewModel.BranchId).Select(x=>x.AccountNumber).FirstOrDefault();
-                    
-                    <MudTextField Label="رقم نقطة البيع"  Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="true"></MudTextField>
+                    ReceiptViewModel.AccountNumber = Branches.Where(x => x.Id == ReceiptViewModel.BranchId).Select(x => x.AccountNumber).FirstOrDefault();
+
+                    <MudTextField Label="رقم نقطة البيع" Immediate="true" For="@(()=>ReceiptViewModel.AccountNumber)" @bind-Value="@ReceiptViewModel.AccountNumber" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="true"></MudTextField>
 
 
                 }
@@ -141,6 +179,7 @@
 
 
 
+             
 
             <MudGrid>
                 <MudItem xs="6">
@@ -277,7 +316,7 @@
                         ReceiptViewModel.SubProjectId = 0;
                     }
 
-                    else 
+                    else
                     {
                         var subProject = SubProjects.Where(x => x.ProjectId == ReceiptViewModel.ProjectId && x.Id == ReceiptViewModel.SubProjectId).FirstOrDefault();
 
@@ -285,18 +324,18 @@
                         {
                             ReceiptViewModel.SubProjectId = 0;
                         }
-                       
+
                     }
                 }
-               
+
 
                 <MudItem sm="4" xs="6">
                     <MudSelect Label="المشروع الفرعي" For="@(()=>ReceiptViewModel.SubProjectId)" @bind-Value="@ReceiptViewModel.SubProjectId" ReadOnly="@ReadOnlyStatus">
                         <MudSelectItem Value="0">--- اختيار المشروع الفرعي ---</MudSelectItem>
                         @{
-                            
-                          
-                           
+
+
+
                             foreach (var subProject in SubProjects)
                             {
                                 @if (ReceiptViewModel.ProjectId != 0 && subProject.ProjectId == ReceiptViewModel.ProjectId)
@@ -304,21 +343,21 @@
 
                                 {
                                     <MudSelectItem Value="@subProject.Id">@subProject.Name</MudSelectItem>
-                                    
+
                                 }
 
 
 
                             }
 
-                           
+
                         }
-                       
+
                     </MudSelect>
                 </MudItem>
             </MudGrid>
 
-            
+
 
 
 
@@ -338,9 +377,12 @@
             }
 
 
+
+
+
             <MudTextField T="string" Label="الوصف" Variant="Variant.Text" For="@(()=>ReceiptViewModel.ForPurpose)" Immediate="true" @bind-Value="@ReceiptViewModel.ForPurpose" AdornmentColor="Color.Success" Lines="2" ReadOnly="@ReadOnlyStatus" />
 
-         
+
 
 
 
@@ -390,7 +432,7 @@
     string Icon = string.Empty;
 
 
-   [Parameter]
+    [Parameter]
     public List<BranchVMForDrowpDownSelect> Branches { get; set; } = new List<BranchVMForDrowpDownSelect>();
 
     [Parameter]
@@ -421,12 +463,18 @@
     [Parameter]
     public string UserId { get; set; } = null!;
 
+    bool IsAmountpositive;
+
+    bool IsAmountnegative;
+
+    public decimal TotalAmountFinal{ get; set; } 
+
 
 
     protected override void OnParametersSet()
     {
 
-      
+
 
         if (OriginalReceiptViewModel == null)
         {
@@ -460,37 +508,8 @@
 
 
 
-            ReceiptViewModel = new ReceiptViewModel
-                {
-                    Id = OriginalReceiptViewModel.Id,
-                    ReceivedFrom = OriginalReceiptViewModel.ReceivedFrom,
-                    ReceivedBy = OriginalReceiptViewModel.ReceivedBy,
-                    TotalAmount = OriginalReceiptViewModel.TotalAmount,
-                    BranchId = OriginalReceiptViewModel.BranchId,
-                    SubProjectId = OriginalReceiptViewModel.SubProjectId,
-                    ForPurpose = OriginalReceiptViewModel.ForPurpose,
-                    Date = OriginalReceiptViewModel.Date,
-                    GrantDestinations = OriginalReceiptViewModel.GrantDestinations,
-                    Mobile = OriginalReceiptViewModel.Mobile,
-                    Age = OriginalReceiptViewModel.Age,
-                    Gender = OriginalReceiptViewModel.Gender,
-                    ProjectId = OriginalReceiptViewModel.ProjectId,
-                    Number= OriginalReceiptViewModel.Number,
-                    Code = OriginalReceiptViewModel.Code,
-                    ReceivedByName = OriginalReceiptViewModel.ReceivedByName,
-
-
-
-                    //PaymentType Related prop
-                    PaymentType = OriginalReceiptViewModel.PaymentType,
-                    CheckNumber = OriginalReceiptViewModel.CheckNumber,
-                    CheckDate = OriginalReceiptViewModel.CheckDate,
-                    AccountNumber = OriginalReceiptViewModel.AccountNumber,
-                    Bank = OriginalReceiptViewModel.Bank,
-
-
-
-                };
+            ReceiptViewModel = OriginalReceiptViewModel;
+           
 
 
             if (BtnName == ButtonTypes.Details)
@@ -498,6 +517,18 @@
                 ReadOnlyStatus = true;
             }
 
+            if (BtnName == ButtonTypes.Edit)
+            {
+                if (ReceiptViewModel.UpdateAmount >= 0)
+                {
+                    IsAmountpositive=true;
+
+                }
+                else
+                {
+                    ReceiptViewModel.UpdateAmount = Math.Abs(ReceiptViewModel.UpdateAmount);
+                }
+            }
 
         }
     }
@@ -507,7 +538,7 @@
 
     async Task<bool> SendSMSMessage(Receipt receipt)
     {
-        
+
         try
         {
             // _receiptForMessage = receipt;
@@ -538,10 +569,10 @@
             _Snackbar.Add($"حدث خطاء تاكد من الاتصال بالانترنت", Severity.Error);
             return false; // Indicate unsuccessful message sending (optional)
         }
-       
+
     }
 
-    // private bool _isTaskCancelled = false; // Declare the field
+        // private bool _isTaskCancelled = false; // Declare the field
 
     // protected override async Task OnAfterRenderAsync(bool firstRender)
     // {
@@ -561,7 +592,6 @@
     // }
 
     <!---------------------------------------------->
-
     // public void SubrojectValueRest()
     // {
     //     ReceiptViewModel.SubProjectId = null;
@@ -589,8 +619,8 @@
         receipt.ProjectId = ReceiptViewModel.ProjectId;
         receipt.SubProjectId = ReceiptViewModel.SubProjectId;
 
-        
-        
+
+
 
 
 
@@ -630,6 +660,8 @@
         {
             receipt.ReceivedBy = UserId;
 
+           
+
             receipt.Code = "";
 
             var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
@@ -640,11 +672,11 @@
             {
                 _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
 
-                if(receipt.Mobile!="" && receipt.Mobile!=null)
+                if (receipt.Mobile != "" && receipt.Mobile != null)
                 {
                     SendSMSMessage(content.Data);
                 }
-               
+
             }
             else
             {
@@ -678,8 +710,25 @@
 
             receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
 
+            receipt.UpdateReceivedFrom = UserId;
+
             receipt.Number = ReceiptViewModel.Number;
             receipt.Code = ReceiptViewModel.Code;
+
+            receipt.ReceiptBranchNumber = ReceiptViewModel.ReceiptBranchNumber;
+
+            
+
+            if (IsAmountpositive==false &&ReceiptViewModel.UpdateAmount!=0)
+            {
+                receipt.UpdateAmount = -ReceiptViewModel.UpdateAmount;
+            }
+            else
+            {
+                receipt.UpdateAmount = ReceiptViewModel.UpdateAmount;
+            }
+
+
 
             var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
             if (response.IsSuccessStatusCode)

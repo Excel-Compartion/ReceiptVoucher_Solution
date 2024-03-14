@@ -84,6 +84,17 @@ namespace ReceiptVoucher.Core.Models.ViewModels
 
         public int Number { get; set; }
 
+        public string? UpdateReceivedFrom { get; set; }
+
+     
+        public decimal UpdateAmount { get; set; }
+
+        public decimal TotalAmountFinal => TotalAmount + UpdateAmount;
+
+        public DateOnly? UpdateDate { get; set; }
+
+        public int ReceiptBranchNumber { get; set; } 
+
 
     }
 }

@@ -11,5 +11,7 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         public string? TotalAmount { get; set; }
 
         public string? ReceiptsCount { get; set; }
+
+     
     }
 }
