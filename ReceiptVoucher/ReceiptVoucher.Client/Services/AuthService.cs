@@ -167,5 +167,25 @@ namespace ReceiptVoucher.Client.Services
 
             return null;
         }
+
+        public async Task<UserViewModel?> GetUserDetailsByIdAsync(string userId)
+        {
+            try
+            {
+                var UserResponse = await _httpClient.GetFromJsonAsync<BaseResponse<UserViewModel>>($"api/users/GetUserDetailsById/{userId}");
+
+                if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
+                {
+                    return UserResponse.Data;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
     }
 }

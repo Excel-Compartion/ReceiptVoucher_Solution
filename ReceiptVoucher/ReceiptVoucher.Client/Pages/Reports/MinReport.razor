@@ -712,7 +712,7 @@
 
     }
 
-    private void OpenDetailsDialog(GetReceiptDto GetReceiptDto)
+    private async Task OpenDetailsDialog(GetReceiptDto GetReceiptDto)
     {
         var parameters = new DialogParameters();
 
@@ -751,6 +751,45 @@
 
         ReceiptViewModel.AccountNumber = GetReceiptDto.AccountNumber;
         ReceiptViewModel.Bank = GetReceiptDto.Bank;
+
+        string ReceivedByName = "";
+        try
+        {
+
+            var ReceivedBy = await _IAuthservice.GetUserDetailsByIdAsync(ReceiptViewModel.ReceivedBy) ?? new UserViewModel();
+            if (ReceivedBy != null)
+            {
+                ReceivedByName = ReceivedBy.FirstName + " " + ReceivedBy.LastName;
+
+            }
+
+
+        }
+        catch { }
+
+        ReceiptViewModel.ReceivedByName = ReceivedByName;
+
+
+        if (ReceiptViewModel.UpdateReceivedFrom != null)
+        {
+            string UpdateReceivedFromName = "";
+            try
+            {
+
+                var UpdateReceivedFrom = await _IAuthservice.GetUserDetailsByIdAsync(ReceiptViewModel.UpdateReceivedFrom) ?? new UserViewModel();
+                if (UpdateReceivedFrom != null)
+                {
+                    UpdateReceivedFromName = UpdateReceivedFrom.FirstName + " " + UpdateReceivedFrom.LastName;
+
+                }
+
+
+
+            }
+            catch { }
+
+            ReceiptViewModel.UpdateReceivedFromName = UpdateReceivedFromName;
+        }
 
 
 

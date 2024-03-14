@@ -185,6 +185,50 @@ namespace ReceiptVoucher.Server.Controllers
         }
 
 
+        [HttpGet("GetUserDetailsById/{userId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<BaseResponse<UserViewModel>>> GetUserDetailsById(string userId)
+        {
+            try
+            {
+                // Query the database for the user
+                var applicationUser = await _unitOfWork.Users.FindAsync(u => u.Id == userId, [nameof(Branch)]);
+
+                IList<string> userRoels = await _userManager.GetRolesAsync(applicationUser);
+
+                if (applicationUser == null)
+                {
+                    return NotFound();
+                }
+
+                var userVM = new UserViewModel
+                {
+                    Id = applicationUser.Id,
+                    UserName = applicationUser.UserName,
+                    FirstName = applicationUser.FirstName,
+                    LastName = applicationUser.LastName,
+                    Mobile = applicationUser.PhoneNumber,
+                    Email = applicationUser.Email,
+                    BranchId = applicationUser.BranchId,
+                    BranchName = applicationUser.Branch != null ? applicationUser.Branch.Name : "ليس مرتبط بمكتب",
+                    BranchAccountNumber = applicationUser.Branch != null ? applicationUser.Branch.AccountNumber : 0,
+                    IsEnabled = applicationUser.IsEnabled,
+                    Roles = userRoels
+                };
+
+
+
+
+                return Ok(new BaseResponse<UserViewModel>(userVM, " تم جلب بيانات المستخدم", null, true));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BaseResponse<UserViewModel>(null, ex.Message, null, false));
+
+
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateUser(  CreateUserModel model)
         {

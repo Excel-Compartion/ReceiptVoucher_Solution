@@ -329,14 +329,21 @@ namespace ReceiptVoucher.EF.Repositories
         }
 
         public async Task<IEnumerable<GetReceiptDto>> GetAllReceiptAsyncV2(Expression<Func<Receipt, bool>> criteria, int? PageSize, int? PageNumber, string? search,
-           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true, int? UserBranchId = null)
+           Expression<Func<Receipt, object>> orderBy = null, string orderByDirection = OrderBy.Decending, bool NoPagination = false, bool OrderByNumber = true, int? UserBranchId = null, bool IsViewReceiptsUpdate = false)
         {
             IQueryable<Receipt> query = _context.Set<Receipt>().AsNoTracking();
+
+            if (IsViewReceiptsUpdate )
+            {
+                query = query.Where(x=>x.UpdateDate!=null & x.UpdateReceivedFrom!=null);
+            }
 
             if (criteria != null)
             {
                 query = query.Where(criteria);
             }
+
+            
 
             if (UserBranchId != null)
             {
