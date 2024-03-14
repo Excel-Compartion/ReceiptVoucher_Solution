@@ -119,14 +119,15 @@ namespace ReceiptVoucher.Client.Services
             return state;
         }
 
-        private byte[] ParseBase64WithoutPadding(string base64)
+        private byte[] ParseBase64WithoutPadding(string base64Url)
         {
-            switch (base64.Length % 4)
+            base64Url = base64Url.Replace('-', '+').Replace('_', '/');
+            switch (base64Url.Length % 4)
             {
-                case 2: base64 += "=="; break;
-                case 3: base64 += "="; break;
+                case 2: base64Url += "=="; break;
+                case 3: base64Url += "="; break;
             }
-            return Convert.FromBase64String(base64);
+            return Convert.FromBase64String(base64Url);
         }
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
