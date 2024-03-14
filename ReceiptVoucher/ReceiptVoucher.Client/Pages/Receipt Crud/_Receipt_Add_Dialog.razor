@@ -484,6 +484,8 @@
             // Set the default value for PaymentType
             ReceiptViewModel.PaymentType = PaymentTypes.Account;
 
+            ReceiptViewModel.GrantDestinations = GrantDest.Individual;
+            ReceiptViewModel.Gender = Gender.Male;
 
             if (UserBranchId != null && Branches != null)
             {

@@ -505,26 +505,49 @@
 
         ReceiptViewModel receiptViewModel = _Mapper.Map<ReceiptViewModel>(GetReceiptDto);
 
-        string ReceivedBy = "";
+
         string ReceivedByName = "";
         try
         {
 
-            var UserViewModel = await _IAuthservice.GetCurrentUserDetailsFromApiAsync();
-            if (UserViewModel != null)
+            var ReceivedBy = await _IAuthservice.GetUserDetailsByIdAsync(receiptViewModel.ReceivedBy) ?? new UserViewModel();
+            if (ReceivedBy != null)
             {
-                ReceivedByName = UserViewModel.FirstName + " " + UserViewModel.LastName;
-                ReceivedBy = UserViewModel.Id;
+                ReceivedByName = ReceivedBy.FirstName + " " + ReceivedBy.LastName;
+
             }
 
 
         }
         catch { }
 
-
-        receiptViewModel.ReceivedBy=ReceivedBy;
-
         receiptViewModel.ReceivedByName = ReceivedByName;
+
+
+        if (receiptViewModel.UpdateReceivedFrom != null)
+        {
+            string UpdateReceivedFromName = "";
+            try
+            {
+
+                var UpdateReceivedFrom = await _IAuthservice.GetUserDetailsByIdAsync(receiptViewModel.UpdateReceivedFrom) ?? new UserViewModel();
+                if (UpdateReceivedFrom != null)
+                {
+                    UpdateReceivedFromName = UpdateReceivedFrom.FirstName + " " + UpdateReceivedFrom.LastName;
+
+                }
+
+
+
+            }
+            catch { }
+
+            receiptViewModel.UpdateReceivedFromName = UpdateReceivedFromName;
+        }
+       
+
+
+        
         
 
 
@@ -544,6 +567,10 @@
 
         if (optionalParameter == ButtonTypes.Details)
         {
+           
+
+
+            receiptViewModel.ReceivedByName = ReceivedByName;
 
             parameters.Add("BtnName", ButtonTypes.Details);
             _DialogService.Show<_Receipt_Add_Dialog>("تفاصيل السند", parameters, options);
