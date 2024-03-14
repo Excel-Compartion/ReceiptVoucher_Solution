@@ -229,6 +229,33 @@ namespace ReceiptVoucher.Server.Controllers
             }
         }
 
+
+        // GetUSerIdBy FirstName and LastName
+        //GET /api/Users/GetUserIdByFullName? FirstName = John & LastName = Doe
+        [HttpGet("GetUserIdByFullName")]
+        [AllowAnonymous]
+        public async Task<ActionResult<BaseResponse<string>>> GetUserIdByFullName(string FirstName, string LastName)
+        {
+            try
+            {
+                ApplicationUser user = await _unitOfWork.Users.FindAsync(x => x.FirstName == FirstName && x.LastName == LastName);
+
+                if (user == null)
+                {
+                    return NotFound(new BaseResponse<string>(null, "المستخدم غير موجود", null, false));
+                }
+
+                return Ok(new BaseResponse<string>(user.Id, "تم جلب رقم المستخدم بنجاح", null, true));
+            }
+            catch (Exception ex)
+            {
+                // log error in console 
+                Console.WriteLine(ex.Message);
+
+                return BadRequest(new BaseResponse<string>(null, "حدث خطاء اثناء جلب رقم المستخدم", null, false));
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateUser(  CreateUserModel model)
         {
