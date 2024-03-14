@@ -114,15 +114,20 @@
 
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
-        <MudTd DataLabel="تاريخ الانشاء">@context.Date</MudTd>
+        <MudTd DataLabel="تاريخ الانشاء">@context.Date.ToString("yyyy-MM-dd")</MudTd>
         <MudTd DataLabel="تاريخ التعديل">
           
             @{
                 string UpdateDate="----------";
 
+                
+
                 if (@context.UpdateDate != null)
                 {
-                    UpdateDate = @context.UpdateDate+"";
+                    DateOnly date = DateOnly.Parse(@context.UpdateDate + "");
+
+                    UpdateDate = date.ToString("yyyy-MM-dd");
+
                 }
             }
         
@@ -322,13 +327,15 @@
             //     return true;
             if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{GetReceiptDto.Number}".Contains(searchString))
+            if ($"{GetReceiptDto.ReceiptBranchNumWithBranchNum}".Contains(searchString))
                 return true;
             if ($"{GetReceiptDto.Mobile}".Contains(searchString))
                 return true;
             if ($"{GetReceiptDto.ReceivedFrom}".Contains(searchString))
                 return true;
-            if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+            if (GetReceiptDto.Date.ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن تاريخ الاضافة
+                return true;
+            if (DateOnly.Parse(GetReceiptDto.UpdateDate + "").ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن تاريخ التعديل
                 return true;
             return false;
         }).ToArray();
@@ -461,26 +468,45 @@
 
         ReceiptViewModel receiptViewModel = _Mapper.Map<ReceiptViewModel>(GetReceiptDto);
 
-        string ReceivedBy = "";
         string ReceivedByName = "";
         try
         {
 
-            var UserViewModel = await _IAuthservice.GetCurrentUserDetailsFromApiAsync();
-            if (UserViewModel != null)
+            var ReceivedBy = await _IAuthservice.GetUserDetailsByIdAsync(receiptViewModel.ReceivedBy) ?? new UserViewModel();
+            if (ReceivedBy != null)
             {
-                ReceivedByName = UserViewModel.FirstName + " " + UserViewModel.LastName;
-                ReceivedBy = UserViewModel.Id;
+                ReceivedByName = ReceivedBy.FirstName + " " + ReceivedBy.LastName;
+
             }
 
 
         }
         catch { }
 
-
-        receiptViewModel.ReceivedBy = ReceivedBy;
-
         receiptViewModel.ReceivedByName = ReceivedByName;
+
+
+        if (receiptViewModel.UpdateReceivedFrom != null)
+        {
+            string UpdateReceivedFromName = "";
+            try
+            {
+
+                var UpdateReceivedFrom = await _IAuthservice.GetUserDetailsByIdAsync(receiptViewModel.UpdateReceivedFrom) ?? new UserViewModel();
+                if (UpdateReceivedFrom != null)
+                {
+                    UpdateReceivedFromName = UpdateReceivedFrom.FirstName + " " + UpdateReceivedFrom.LastName;
+
+                }
+
+
+
+            }
+            catch { }
+
+            receiptViewModel.UpdateReceivedFromName = UpdateReceivedFromName;
+        }
+
 
 
 

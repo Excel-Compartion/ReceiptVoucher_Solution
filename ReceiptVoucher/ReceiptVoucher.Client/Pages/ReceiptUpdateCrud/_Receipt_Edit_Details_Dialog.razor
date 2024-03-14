@@ -22,7 +22,6 @@
                 </MudItem>
                 <MudItem sm="3" xs="6">
                     <MudSelect Label="نوع الدفع" Immediate="true" For="@(()=>ReceiptViewModel.PaymentType)" @bind-Value="@ReceiptViewModel.PaymentType" ReadOnly="@ReadOnlyStatus">
-                        @*   <MudSelectItem Value="@PaymentTypes.Cash">@PaymentTypes.Cash.GetDisplayName()</MudSelectItem> *@
                         <MudSelectItem Value="@PaymentTypes.Check">@PaymentTypes.Check.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Account">@PaymentTypes.Account.GetDisplayName()</MudSelectItem>
                         <MudSelectItem Value="@PaymentTypes.Bank">@PaymentTypes.Bank.GetDisplayName()</MudSelectItem>
@@ -375,7 +374,7 @@
 
                             </MudItem>
                             <MudItem xs="6">
-                                <MudTextField Label="تم التعديل بواسطة" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateReceivedFrom" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                                <MudTextField Label="تم التعديل بواسطة" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateReceivedFromName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
                             </MudItem>
                         </MudGrid>
                     }

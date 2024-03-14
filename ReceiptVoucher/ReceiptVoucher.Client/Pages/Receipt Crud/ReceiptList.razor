@@ -87,7 +87,7 @@
         }
 
         <MudTh><MudTableSortLabel SortLabel="SubProject_field" T="GetReceiptDto">المشروع الفرعي</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Date_field" T="GetReceiptDto">التاريخ</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date_field" T="GetReceiptDto">تاريخ الاضافة</MudTableSortLabel></MudTh>
         @*  <MudTh><MudTableSortLabel SortLabel="PaymentType_field" T="GetReceiptDto">نوع الدفع</MudTableSortLabel></MudTh> *@
         <MudTh><MudTableSortLabel T="GetReceiptDto">الاجراءت</MudTableSortLabel></MudTh>
     </HeaderContent>
@@ -120,17 +120,19 @@
 
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
-        <MudTd DataLabel="التاريخ">@context.Date</MudTd>
+        <MudTd DataLabel="تاريخ الاضافة">@context.Date.ToString("yyyy-MM-dd")</MudTd>
         @*  <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd> *@
         <MudTd DataLabel="الاجراءت">
             @* GetGetReceiptDtoRdcl *@
 
             <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
-                @if(UserBranchId==null)
+
+               @*  @if(UserBranchId==null)
                 {
                     <MudButton Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context))" StartIcon="@Icons.Material.Outlined.Edit">تعديل</MudButton>
 
-                }
+                } *@
+
                 <MudButton Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small" @onclick="@(() => OpenEditDialog(context, ButtonTypes.Details))" StartIcon="@Icons.Material.Outlined.AddRoad">تفاصيل</MudButton>
 
 
@@ -312,13 +314,13 @@
             //     return true;
             if (GetReceiptDto.GrantDestinations.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{GetReceiptDto.Number}".Contains(searchString))
+            if ($"{GetReceiptDto.ReceiptBranchNumWithBranchNum}".Contains(searchString))
                 return true;
             if ($"{GetReceiptDto.Mobile}".Contains(searchString))
                 return true;
             if ($"{GetReceiptDto.ReceivedFrom}".Contains(searchString))
                 return true;
-            if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+            if (GetReceiptDto.Date.ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن التاريخ
                 return true;
             return false;
         }).ToArray();

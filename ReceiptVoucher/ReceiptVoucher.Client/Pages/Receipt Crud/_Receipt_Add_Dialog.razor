@@ -366,11 +366,24 @@
             @{
                 if (BtnName == ButtonTypes.Details)
                 {
+                    if (ReceiptViewModel.UpdateDate != null && ReceiptViewModel.UpdateReceivedFrom != null)
+                    {
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudTextField Label="تم التعديل بواسطة" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateReceivedFromName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                            </MudItem>
+                        </MudGrid>
+                    }
 
-                    <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
+                    else
+                    {
+                        <MudTextField Label="المستلم" Immediate="true" @bind-Value="@ReceiptViewModel.ReceivedByName" Adornment="Adornment.End" AdornmentColor="Color.Success" ReadOnly="@ReadOnlyStatus"></MudTextField>
 
-
+                    }
 
                 }
 

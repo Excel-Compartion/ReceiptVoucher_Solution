@@ -156,6 +156,7 @@ namespace ReceiptVoucher.EF.Repositories
                            ,BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                             UpdateAmount=a.UpdateAmount,
                             UpdateDate=a.UpdateDate,
+                            UpdateReceivedFrom=a.UpdateReceivedFrom,
 
                         })
                         .ToListAsync();
@@ -202,6 +203,7 @@ namespace ReceiptVoucher.EF.Repositories
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                             UpdateAmount = a.UpdateAmount,
                             UpdateDate = a.UpdateDate,
+                            UpdateReceivedFrom = a.UpdateReceivedFrom,
                         })
                         .ToListAsync();
 
@@ -263,6 +265,7 @@ namespace ReceiptVoucher.EF.Repositories
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                             UpdateAmount = a.UpdateAmount,
                             UpdateDate = a.UpdateDate,
+                            UpdateReceivedFrom = a.UpdateReceivedFrom,
                         })
                         .ToListAsync();
 
@@ -310,6 +313,7 @@ namespace ReceiptVoucher.EF.Repositories
                             BranchNumber = a.Branch != null ? a.Branch.BranchNumber : null,
                             UpdateAmount = a.UpdateAmount,
                             UpdateDate = a.UpdateDate,
+                            UpdateReceivedFrom = a.UpdateReceivedFrom,
                         })
                         .ToListAsync();
 

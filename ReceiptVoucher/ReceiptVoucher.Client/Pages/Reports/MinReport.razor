@@ -273,7 +273,7 @@
         
 
         <MudTd DataLabel="المشروع الفرعي">@context.SubProjectName</MudTd>
-            <MudTd DataLabel="التاريخ">@context.Date</MudTd>
+        <MudTd DataLabel="التاريخ">@context.Date.ToString("yyyy-MM-dd")</MudTd>
             <MudTd DataLabel="نوع الدفع">@context.PaymentType.GetDisplayName()</MudTd>
             <MudTd DataLabel="الاجراءت">
                 <MudButtonGroup Variant="Variant.Outlined" OverrideStyles="false">
@@ -641,7 +641,7 @@
               return true;
           if ($"{GetReceiptDto.Mobile}".Contains(searchString))
               return true;
-          if (GetReceiptDto.Date.ToString().Equals(searchString)) // إضافة البحث عن التاريخ
+          if (GetReceiptDto.Date.ToString("yyyy-MM-dd").Equals(searchString)) // إضافة البحث عن التاريخ
               return true;
           return false;
       }).ToList();
@@ -652,7 +652,7 @@
         switch (state.SortLabel)
         {
 
-                 case "id_field":
+            case "id_field":
 
                 if (UserBranchId == null)
                 {
@@ -735,7 +735,8 @@
         ReceiptViewModel.Age = GetReceiptDto.Age;
         ReceiptViewModel.Mobile = GetReceiptDto.Mobile;
         ReceiptViewModel.UpdateAmount = GetReceiptDto.UpdateAmount;
-
+        ReceiptViewModel.UpdateReceivedFrom = GetReceiptDto.UpdateReceivedFrom;
+        ReceiptViewModel.UpdateDate = GetReceiptDto.UpdateDate;
 
         
 
