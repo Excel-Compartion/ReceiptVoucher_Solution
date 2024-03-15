@@ -621,8 +621,8 @@
 
     async void Submit()
     {
-        bool? result = await DialogService.ShowMessageBox("تأكيد", $"هل أنت متأكد من تعديل سند {ReceiptViewModel.ReceivedFrom}؟", yesText: "نعم", cancelText: "لا");
-        if (result == true)
+        bool? ConfirmResult = await DialogService.ShowMessageBox("تأكيد", $"هل أنت متأكد من تعديل سند {ReceiptViewModel.ReceivedFrom}؟", yesText: "نعم", cancelText: "لا");
+        if (ConfirmResult == true)
         {
             Receipt receipt = new Receipt();
 
@@ -764,13 +764,24 @@
 
             }
 
-           
+
         }
 
 
-         MudDialog.Close(DialogResult.Ok(true));
+
+
+        if (ConfirmResult != null && ConfirmResult==true)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
             // Trigger the OnClose event
             OnClose.InvokeAsync(true);
+        }
+        else
+        {
+
+            MudDialog.Cancel();
+        }
+
 
 
     }
