@@ -3,6 +3,7 @@
 @rendermode InteractiveAuto
 @inject HttpClient Http
 @inject UserManager<ApplicationUser> _UserManager
+@inject IDialogService DialogService
 
 
 
@@ -488,6 +489,9 @@
 
 
 
+
+
+
     protected override void OnParametersSet()
     {
 
@@ -617,153 +621,157 @@
 
     async void Submit()
     {
-
-
-
-
-        Receipt receipt = new Receipt();
-
-
-        receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
-        receipt.TotalAmount = ReceiptViewModel.TotalAmount;
-        receipt.BranchId = ReceiptViewModel.BranchId;
-
-        receipt.ForPurpose = ReceiptViewModel.ForPurpose;
-        receipt.Date = ReceiptViewModel.Date;
-        receipt.PaymentType = ReceiptViewModel.PaymentType;
-        receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
-        receipt.Mobile = ReceiptViewModel.Mobile;
-        receipt.ProjectId = ReceiptViewModel.ProjectId;
-        receipt.SubProjectId = ReceiptViewModel.SubProjectId;
-
-
-
-
-
-
-
-
-
-        if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
-
-
-
-
-
-        switch (ReceiptViewModel.PaymentType)
+        bool? result = await DialogService.ShowMessageBox("تأكيد", $"هل أنت متأكد من تعديل سند {ReceiptViewModel.ReceivedFrom}؟", yesText: "نعم", cancelText: "لا");
+        if (result == true)
         {
-            case PaymentTypes.Check:
-                receipt.CheckNumber = ReceiptViewModel.CheckNumber;
+            Receipt receipt = new Receipt();
+
+
+            receipt.ReceivedFrom = ReceiptViewModel.ReceivedFrom;
+            receipt.TotalAmount = ReceiptViewModel.TotalAmount;
+            receipt.BranchId = ReceiptViewModel.BranchId;
+
+            receipt.ForPurpose = ReceiptViewModel.ForPurpose;
+            receipt.Date = ReceiptViewModel.Date;
+            receipt.PaymentType = ReceiptViewModel.PaymentType;
+            receipt.GrantDestinations = ReceiptViewModel.GrantDestinations;
+            receipt.Mobile = ReceiptViewModel.Mobile;
+            receipt.ProjectId = ReceiptViewModel.ProjectId;
+            receipt.SubProjectId = ReceiptViewModel.SubProjectId;
 
 
 
-                // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
-                // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
-                receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
-
-
-                break;
-            case PaymentTypes.Account:
-                receipt.AccountNumber = ReceiptViewModel.AccountNumber;
-                break;
-            case PaymentTypes.Bank:
-                receipt.Bank = ReceiptViewModel.Bank;
-                break;
-
-        }
-
-
-        if (ReceiptViewModel.Id == 0)
-        {
-            receipt.ReceivedBy = UserId;
 
 
 
-            receipt.Code = "";
 
-            var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
 
-            BaseResponse<Receipt> content = await response.Content.ReadFromJsonAsync<BaseResponse<Receipt>>();
 
-            if (content.Success)
+            if (ReceiptViewModel.GrantDestinations == GrantDest.Individual) { receipt.Gender = ReceiptViewModel.Gender; receipt.Age = ReceiptViewModel.Age; }
+
+
+
+
+
+            switch (ReceiptViewModel.PaymentType)
             {
-                _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
+                case PaymentTypes.Check:
+                    receipt.CheckNumber = ReceiptViewModel.CheckNumber;
 
-                if (receipt.Mobile != "" && receipt.Mobile != null)
-                {
-                    SendSMSMessage(content.Data);
-                }
+
+
+                    // إذا كان ReceiptViewModel.CheckDate ليس فارغًا null ، فقم بتحويله إلى DateOnly وتعيينه لـ receipt.CheckDate
+                    // إذا كان ReceiptViewModel.CheckDate فارغًا null ، فاترك receipt.CheckDate كما هو
+                    receipt.CheckDate = ReceiptViewModel.CheckDate.HasValue ? DateOnly.FromDateTime(ReceiptViewModel.CheckDate.Value) : receipt.CheckDate;
+
+
+                    break;
+                case PaymentTypes.Account:
+                    receipt.AccountNumber = ReceiptViewModel.AccountNumber;
+                    break;
+                case PaymentTypes.Bank:
+                    receipt.Bank = ReceiptViewModel.Bank;
+                    break;
 
             }
-            else
+
+
+            if (ReceiptViewModel.Id == 0)
             {
-                try
+                receipt.ReceivedBy = UserId;
+
+
+
+                receipt.Code = "";
+
+                var response = await Http.PostAsJsonAsync("api/Receipts/AddReceipt", receipt);
+
+                BaseResponse<Receipt> content = await response.Content.ReadFromJsonAsync<BaseResponse<Receipt>>();
+
+                if (content.Success)
                 {
+                    _Snackbar.Add("تم اضافه السند بنجاح", Severity.Success);
 
-
-                    var messageErrors = content.Errors;
-
-                    string allMessages = string.Empty;
-
-                    if (messageErrors is not null)
+                    if (receipt.Mobile != "" && receipt.Mobile != null)
                     {
-
-                        allMessages = string.Join("\n", messageErrors);
+                        SendSMSMessage(content.Data);
                     }
 
-                    _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
                 }
-                catch
+                else
                 {
-                    _Snackbar.Add($"حدث خطاء", Severity.Error);
+                    try
+                    {
+
+
+                        var messageErrors = content.Errors;
+
+                        string allMessages = string.Empty;
+
+                        if (messageErrors is not null)
+                        {
+
+                            allMessages = string.Join("\n", messageErrors);
+                        }
+
+                        _Snackbar.Add($"{content.Message} \n {allMessages}: ", Severity.Error);
+                    }
+                    catch
+                    {
+                        _Snackbar.Add($"حدث خطاء", Severity.Error);
+                    }
                 }
-            }
 
 
-        }
-        else
-        {
-            receipt.Id = ReceiptViewModel.Id;
-
-            receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
-
-            receipt.UpdateReceivedFrom = UserId;
-
-            receipt.Number = ReceiptViewModel.Number;
-            receipt.Code = ReceiptViewModel.Code;
-
-            receipt.ReceiptBranchNumber = ReceiptViewModel.ReceiptBranchNumber;
-
-
-
-            if (IsAmountpositive == false && ReceiptViewModel.UpdateAmount != 0)
-            {
-                receipt.UpdateAmount = -ReceiptViewModel.UpdateAmount;
             }
             else
             {
-                receipt.UpdateAmount = ReceiptViewModel.UpdateAmount;
+                receipt.Id = ReceiptViewModel.Id;
+
+                receipt.ReceivedBy = ReceiptViewModel.ReceivedBy;
+
+                receipt.UpdateReceivedFrom = UserId;
+
+                receipt.Number = ReceiptViewModel.Number;
+                receipt.Code = ReceiptViewModel.Code;
+
+                receipt.ReceiptBranchNumber = ReceiptViewModel.ReceiptBranchNumber;
+
+
+
+                if (IsAmountpositive == false && ReceiptViewModel.UpdateAmount != 0)
+                {
+                    receipt.UpdateAmount = -ReceiptViewModel.UpdateAmount;
+                }
+                else
+                {
+                    receipt.UpdateAmount = ReceiptViewModel.UpdateAmount;
+                }
+
+
+
+                var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
+                if (response.IsSuccessStatusCode)
+                {
+                    _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
+                }
+                else
+                {
+                    _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
+                }
+
+
+
             }
 
-
-
-            var response = await Http.PutAsJsonAsync("api/Receipts", receipt);
-            if (response.IsSuccessStatusCode)
-            {
-                _Snackbar.Add("تم تعديل السند بنجاح", Severity.Success);
-            }
-            else
-            {
-                _Snackbar.Add($"فشل في تعديل السند : {response.StatusCode}", Severity.Error);
-            }
-
-
-
+           
         }
 
-        MudDialog.Close(DialogResult.Ok(true));
-        // Trigger the OnClose event
-        OnClose.InvokeAsync(true);
+
+         MudDialog.Close(DialogResult.Ok(true));
+            // Trigger the OnClose event
+            OnClose.InvokeAsync(true);
+
 
     }
 
