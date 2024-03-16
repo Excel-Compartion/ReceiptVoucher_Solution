@@ -20,6 +20,9 @@ html, body {
             font-style: normal;
        
 }
+.mud-rtl-provider.mud-application-layout-rtl * {
+    font-family: "Tajawal", sans-serif;
+}
 
 
 a, .btn-link {
