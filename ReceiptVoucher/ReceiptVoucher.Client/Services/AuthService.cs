@@ -187,5 +187,25 @@ namespace ReceiptVoucher.Client.Services
 
             return null;
         }
+
+        public async Task<string?> GetUserIdByFullNameAsync(string firstName , string lastName)
+        {
+            try
+            {
+                var UserResponse = await _httpClient.GetFromJsonAsync<BaseResponse<string>>($"api/users/GetUserIdByFullName?FirstName={firstName}&LastName={lastName}");
+
+                if (UserResponse != null && UserResponse.Success && UserResponse.Data != null)
+                {
+                    return UserResponse.Data;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
     }
 }
