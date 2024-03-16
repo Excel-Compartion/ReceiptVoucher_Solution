@@ -621,7 +621,7 @@
 
     async void Submit()
     {
-        bool? ConfirmResult = await DialogService.ShowMessageBox("تأكيد", $"هل أنت متأكد من تعديل سند {ReceiptViewModel.ReceivedFrom}؟", yesText: "نعم", cancelText: "لا");
+        bool? ConfirmResult = await DialogService.ShowMessageBox("تأكيد", $"هل أنت متأكد من تعديل سند ل ({ReceiptViewModel.ReceivedFrom}) \n للمشروع الفرعي ({ReceiptViewModel.SubProjectName}) اجمالي المبلغ ({ReceiptViewModel.TotalAmountFinal})؟", yesText: "نعم", cancelText: "لا");
         if (ConfirmResult == true)
         {
             Receipt receipt = new Receipt();
