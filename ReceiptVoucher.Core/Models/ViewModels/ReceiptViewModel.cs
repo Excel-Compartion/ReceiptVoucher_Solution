@@ -41,6 +41,8 @@ namespace ReceiptVoucher.Core.Models.ViewModels
         [Column("Sub_ProjectId")]
         public int SubProjectId { get; set; }   // Foreign Key
 
+        public string? SubProjectName { get; set; }
+
         [StringLength(500)]
         public string? ForPurpose { get; set; }
 
