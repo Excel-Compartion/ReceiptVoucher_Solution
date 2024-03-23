@@ -467,6 +467,15 @@
 
 
         ReceiptViewModel receiptViewModel = _Mapper.Map<ReceiptViewModel>(GetReceiptDto);
+        if (GetReceiptDto.CheckDate.HasValue)
+        {
+            receiptViewModel.CheckDate = new DateTime(GetReceiptDto.CheckDate.Value.Year, GetReceiptDto.CheckDate.Value.Month, GetReceiptDto.CheckDate.Value.Day);
+        }
+        else
+        {
+            receiptViewModel.CheckDate = null;
+        }
+
 
         string ReceivedByName = "";
         try

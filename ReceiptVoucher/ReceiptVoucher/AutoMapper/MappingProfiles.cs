@@ -33,7 +33,9 @@ namespace ReceiptVoucher.Server.AutoMapper
 
                 .ReverseMap();
 
-            CreateMap<GetReceiptDto, ReceiptViewModel>().ReverseMap();
+            CreateMap<GetReceiptDto, ReceiptViewModel>()
+                .ForMember(dest => dest.CheckDate, opt => opt.Ignore())
+                .ReverseMap();
 
 
             CreateMap<PostReceiptDto, GetReceiptDto>().ReverseMap();
