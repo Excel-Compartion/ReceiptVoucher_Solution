@@ -55,16 +55,19 @@
 
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudTextField Label="مبلغ التعديل" For="@(()=>ReceiptViewModel.UpdateAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateAmount" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
+                        
+
+                            <MudSelect Label="نوع تعديل المبلغ"  @bind-Value="IsAmountpositive" ReadOnly="@ReadOnlyStatus">
+                                <MudSelectItem Value="true">زياده المبلغ</MudSelectItem>
+                                <MudSelectItem Value="false">خصم من المبلغ</MudSelectItem>
+                            </MudSelect>
+
+                           
                         </MudItem>
                         <MudItem xs="6">
 
-                            <div>تعديل المبلغ</div>
+                            <MudTextField Label="مبلغ التعديل" For="@(()=>ReceiptViewModel.UpdateAmount)" Immediate="true" @bind-Value="@ReceiptViewModel.UpdateAmount" Adornment="Adornment.End" AdornmentColor="Color.Success"></MudTextField>
 
-                            <MudRadioGroup @bind-Value="IsAmountpositive" Style="margin-right:10%" ReadOnly="@ReadOnlyStatus">
-                                <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">زياده المبلغ</MudRadio>
-                                <MudRadio Value="false" Color="Color.Error" Size="Size.Small">خصم من المبلغ</MudRadio>
-                            </MudRadioGroup>
 
                         </MudItem>
                     </MudGrid>
