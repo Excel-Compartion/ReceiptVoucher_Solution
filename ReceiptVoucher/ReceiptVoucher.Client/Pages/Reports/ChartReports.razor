@@ -8,7 +8,7 @@
     <MudItem xs="12">
         @if (Series != null && XAxisLabels != null && BarChartNoData != true)
         {
-            <MudChart class="" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
+            <MudChart class="" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" CanHideSeries>
                 <CustomGraphics>
                     <style>
                         .heavy {
@@ -34,7 +34,7 @@
         @if (Series2 != null && XAxisLabels2 != null && LineChartNoData != true)
         {
             <div>
-                <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px" />
+                <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px" CanHideSeries />
             </div>
         }
         else
