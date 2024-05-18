@@ -287,7 +287,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             private global::System.Data.DataColumn columnReceivedByName;
             
-            private global::System.Data.DataColumn columnTotalAmountToString;
+            private global::System.Data.DataColumn columnTotalAmount;
             
             private global::System.Data.DataColumn columnBranchName;
             
@@ -388,9 +388,9 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn TotalAmountToStringColumn {
+            public global::System.Data.DataColumn TotalAmountColumn {
                 get {
-                    return this.columnTotalAmountToString;
+                    return this.columnTotalAmount;
                 }
             }
             
@@ -564,7 +564,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                         string ReceivedFrom, 
                         string ReceivedBy, 
                         string ReceivedByName, 
-                        decimal TotalAmountToString, 
+                        decimal TotalAmount, 
                         string BranchName, 
                         string SubProjectName, 
                         string ProjectName, 
@@ -587,7 +587,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                         ReceivedFrom,
                         ReceivedBy,
                         ReceivedByName,
-                        TotalAmountToString,
+                        TotalAmount,
                         BranchName,
                         SubProjectName,
                         ProjectName,
@@ -630,7 +630,7 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 this.columnReceivedFrom = base.Columns["ReceivedFrom"];
                 this.columnReceivedBy = base.Columns["ReceivedBy"];
                 this.columnReceivedByName = base.Columns["ReceivedByName"];
-                this.columnTotalAmountToString = base.Columns["TotalAmountToString"];
+                this.columnTotalAmount = base.Columns["TotalAmount"];
                 this.columnBranchName = base.Columns["BranchName"];
                 this.columnSubProjectName = base.Columns["SubProjectName"];
                 this.columnProjectName = base.Columns["ProjectName"];
@@ -660,8 +660,8 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
                 base.Columns.Add(this.columnReceivedBy);
                 this.columnReceivedByName = new global::System.Data.DataColumn("ReceivedByName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnReceivedByName);
-                this.columnTotalAmountToString = new global::System.Data.DataColumn("TotalAmountToString", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalAmountToString);
+                this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalAmount);
                 this.columnBranchName = new global::System.Data.DataColumn("BranchName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBranchName);
                 this.columnSubProjectName = new global::System.Data.DataColumn("SubProjectName", typeof(string), null, global::System.Data.MappingType.Element);
@@ -903,18 +903,18 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public decimal TotalAmountToString {
+            public decimal TotalAmount {
                 get {
                     try {
-                        return ((decimal)(this[this.tableReceiptWithRelatedDataDto.TotalAmountToStringColumn]));
+                        return ((decimal)(this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmountToString\' in table \'ReceiptWithRelatedDataDto\' i" +
-                                "s DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmount\' in table \'ReceiptWithRelatedDataDto\' is DBNull" +
+                                ".", e);
                     }
                 }
                 set {
-                    this[this.tableReceiptWithRelatedDataDto.TotalAmountToStringColumn] = value;
+                    this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn] = value;
                 }
             }
             
@@ -1235,14 +1235,14 @@ namespace ReceiptVoucher.Server.wwwroot._Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsTotalAmountToStringNull() {
-                return this.IsNull(this.tableReceiptWithRelatedDataDto.TotalAmountToStringColumn);
+            public bool IsTotalAmountNull() {
+                return this.IsNull(this.tableReceiptWithRelatedDataDto.TotalAmountColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetTotalAmountToStringNull() {
-                this[this.tableReceiptWithRelatedDataDto.TotalAmountToStringColumn] = global::System.Convert.DBNull;
+            public void SetTotalAmountNull() {
+                this[this.tableReceiptWithRelatedDataDto.TotalAmountColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
