@@ -105,7 +105,7 @@ namespace ReceiptVoucher.EF.Repositories
         {
             IQueryable<Project> query = _context.Set<Project>().AsNoTracking();
 
-            var Items = await query.Select(a => new ProjectVMForDrowpDownSelect
+            var Items = await query.Where(x=>x.IsActive).Select(a => new ProjectVMForDrowpDownSelect
             {
                 Id = a.Id,
                 Name = a.Name
